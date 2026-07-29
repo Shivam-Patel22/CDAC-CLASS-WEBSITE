@@ -7,8 +7,13 @@ class AuthRequiredMiddleware:
         self.get_response = get_response
         # Paths that do not require authentication
         self.exceptions = [
-            re.compile(r'^/accounts/'),
-            re.compile(r'^/admin/'),
+            re.compile(r'^/$'),
+            re.compile(r'^/login/'),
+            re.compile(r'^/register/'),
+            re.compile(r'^/guest-login/'),
+            re.compile(r'^/logout/'),
+            re.compile(r'^/admin-panel/login/'),
+            re.compile(r'^/django-admin/'),
             re.compile(r'^/static/'),
             re.compile(r'^/media/'),
         ]
