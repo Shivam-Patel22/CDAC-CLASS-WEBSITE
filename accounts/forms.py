@@ -3,31 +3,53 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
+ROLE_CHOICES = [
+    ('user', 'User / Student'),
+    ('admin', 'Admin / Staff'),
+]
+
 class StudentRegistrationForm(forms.Form):
     full_name = forms.CharField(
         max_length=150,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name', 'required': 'required'})
+        widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Full Name', 'required': 'required'})
+    )
+    username = forms.CharField(
+        max_length=150,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Username', 'required': 'required'})
     )
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email Address', 'required': 'required'})
+        widget=forms.EmailInput(attrs={'class': 'form-input', 'placeholder': 'Email Address', 'required': 'required'})
     )
     phone = forms.CharField(
         max_length=20,
         required=False,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number (Optional)'})
+        widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Phone Number'})
     )
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password', 'required': 'required'})
+        widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Password', 'required': 'required'})
     )
     confirm_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password', 'required': 'required'})
+        widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Confirm Password', 'required': 'required'})
+    )
+    role = forms.ChoiceField(
+        choices=ROLE_CHOICES,
+        initial='user',
+        required=False,
+        widget=forms.RadioSelect
     )
 
     def clean_email(self):
         email = self.cleaned_data.get('email', '').strip().lower()
-        if User.objects.filter(email__iexact=email).exists() or User.objects.filter(username__iexact=email).exists():
+        if User.objects.filter(email__iexact=email).exists():
             raise ValidationError("A user with this email address already exists.")
         return email
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username', '').strip()
+        if username and User.objects.filter(username__iexact=username).exists():
+            raise ValidationError("This username is already taken.")
+        return username
 
     def clean(self):
         cleaned_data = super().clean()
@@ -46,9 +68,21 @@ class StudentRegistrationForm(forms.Form):
         return cleaned_data
 
 class StudentLoginForm(forms.Form):
+    username_or_email = forms.CharField(
+        max_length=150,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Email or Username', 'required': 'required'})
+    )
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email Address', 'required': 'required'})
+        required=False,
+        widget=forms.EmailInput(attrs={'class': 'form-input', 'placeholder': 'Email Address'})
     )
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password', 'required': 'required'})
+        widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': 'Password', 'required': 'required'})
+    )
+    role = forms.ChoiceField(
+        choices=ROLE_CHOICES,
+        initial='user',
+        required=False,
+        widget=forms.RadioSelect
     )

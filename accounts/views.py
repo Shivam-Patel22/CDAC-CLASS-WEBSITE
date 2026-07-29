@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
+from django.db.models import Q
 from .forms import StudentRegistrationForm, StudentLoginForm
 from .models import StudentProfile
 from certificates.models import Certificate
@@ -16,21 +17,28 @@ def register(request):
         form = StudentRegistrationForm(request.POST)
         if form.is_valid():
             full_name = form.cleaned_data['full_name']
+            username = form.cleaned_data.get('username')
             email = form.cleaned_data['email']
             phone = form.cleaned_data.get('phone', '')
             password = form.cleaned_data['password']
+            role = request.POST.get('role', 'user')
+
+            # Default username to email if not explicitly provided
+            if not username:
+                username = email
 
             first_name = full_name.split(' ')[0] if ' ' in full_name else full_name
             last_name = ' '.join(full_name.split(' ')[1:]) if ' ' in full_name else ''
+            is_staff_user = (role == 'admin')
 
             with transaction.atomic():
                 user = User.objects.create_user(
-                    username=email,
+                    username=username,
                     email=email,
                     password=password,
                     first_name=first_name,
                     last_name=last_name,
-                    is_staff=False,
+                    is_staff=is_staff_user,
                     is_superuser=False
                 )
                 StudentProfile.objects.create(
@@ -38,46 +46,53 @@ def register(request):
                     phone=phone
                 )
 
-            messages.success(request, "Registration successful! You can now log in to access your student dashboard.")
+            messages.success(
+                request, 
+                f"Registration successful as {'Admin' if is_staff_user else 'User'}! You can now log in."
+            )
             return redirect('accounts:login')
     else:
         form = StudentRegistrationForm()
 
-    return render(request, 'accounts/register.html', {'form': form})
+    return render(request, 'signup.html', {'form': form})
 
 def login(request):
     if request.user.is_authenticated:
+        if request.user.is_staff:
+            return redirect('dashboard:index')
         return redirect('accounts:dashboard')
 
     if request.method == 'POST':
         form = StudentLoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
+        identifier = request.POST.get('username_or_email') or request.POST.get('email', '')
+        password = request.POST.get('password', '')
+        selected_role = request.POST.get('role', 'user')
 
-            # Lookup username corresponding to email
-            try:
-                user_obj = User.objects.get(email__iexact=email)
-                username = user_obj.username
-            except User.DoesNotExist:
-                username = email
+        if identifier and password:
+            # Lookup user by username OR email
+            user_obj = User.objects.filter(
+                Q(username__iexact=identifier) | Q(email__iexact=identifier)
+            ).first()
 
-            user = authenticate(request, username=username, password=password)
+            username_to_auth = user_obj.username if user_obj else identifier
+            user = authenticate(request, username=username_to_auth, password=password)
 
             if user is not None:
-                if user.is_staff:
-                    messages.warning(request, "Staff accounts must log in via the Staff Portal.")
-                    return redirect('dashboard:login')
-                
                 auth_login(request, user)
-                messages.success(request, f"Welcome back, {user.first_name or user.username}!")
+                role_title = "Admin" if user.is_staff else "User/Student"
+                messages.success(request, f"Welcome back, {user.first_name or user.username}! Logged in as {role_title}.")
+                
+                if user.is_staff or selected_role == 'admin':
+                    return redirect('dashboard:index')
                 return redirect('accounts:dashboard')
             else:
-                messages.error(request, "Invalid email or password.")
+                messages.error(request, "Invalid email/username or password.")
+        else:
+            messages.error(request, "Please enter your email/username and password.")
     else:
         form = StudentLoginForm()
 
-    return render(request, 'accounts/login.html', {'form': form})
+    return render(request, 'login.html', {'form': form})
 
 def logout(request):
     auth_logout(request)
@@ -86,6 +101,5 @@ def logout(request):
 
 @login_required(login_url='accounts:login')
 def dashboard(request):
-    # Rule 3: Strictly query Certificate.objects.filter(student=request.user)
     certificates = Certificate.objects.filter(student=request.user).select_related('course').order_by('-issue_date')
     return render(request, 'accounts/dashboard.html', {'certificates': certificates})

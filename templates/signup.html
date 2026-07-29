@@ -1,0 +1,385 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sign Up | Computer Class Portal{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card auth-card-wide" id="authCard">
+        <!-- Header & Logo Section -->
+        <div class="auth-brand-header">
+            <div class="auth-logo-badge" id="logoBadge">
+                💻
+            </div>
+            <h1 class="auth-portal-title">Computer Class Portal</h1>
+            <p class="auth-portal-subtitle">Create your new account to access our training courses & administrative dashboard.</p>
+        </div>
+
+        <!-- Admin Alert Notice Banner (Visually highlighted when Admin role is selected) -->
+        <div class="auth-admin-banner" id="adminNotice">
+            <span>🛡️</span>
+            <span><strong>Admin Mode Active:</strong> Creating an Administrative Staff Account. Admin approval may be required.</span>
+        </div>
+
+        <!-- Django Messages Container -->
+        {% if messages %}
+        <div class="auth-alerts-container">
+            {% for message in messages %}
+            <div class="auth-alert auth-alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}" role="alert">
+                <span>{% if message.tags == 'success' %}✓{% elif message.tags == 'error' or message.tags == 'danger' %}✕{% else %}ℹ{% endif %}</span>
+                <span>{{ message }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Form Validation General Error -->
+        {% if form.non_field_errors %}
+        <div class="auth-alerts-container">
+            {% for error in form.non_field_errors %}
+            <div class="auth-alert auth-alert-danger" role="alert">
+                <span>✕</span>
+                <span>{{ error }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Sign-Up / Register Form -->
+        <form method="POST" action="{% url 'accounts:register' %}" class="auth-form" id="signupForm" novalidate>
+            {% csrf_token %}
+
+            <!-- Role Selection (User vs Admin) -->
+            <div class="role-selection-wrapper">
+                <label class="role-label-title">Select Account Role <span style="color: var(--auth-error);">*</span></label>
+                <div class="role-options-grid">
+                    <div class="role-option-card">
+                        <input type="radio" name="role" id="role_user" value="user" {% if request.POST.role != 'admin' %}checked{% endif %} onchange="handleRoleChange(this.value)">
+                        <label for="role_user" class="role-tile">
+                            <span>👤</span> User / Student
+                        </label>
+                    </div>
+                    <div class="role-option-card">
+                        <input type="radio" name="role" id="role_admin" value="admin" {% if request.POST.role == 'admin' %}checked{% endif %} onchange="handleRoleChange(this.value)">
+                        <label for="role_admin" class="role-tile">
+                            <span>🛡️</span> Admin <span class="admin-badge">Staff</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 1: Full Name & Username -->
+            <div class="form-grid-2">
+                <!-- Full Name -->
+                <div class="form-group">
+                    <label for="full_name">Full Name <span style="color: var(--auth-error);">*</span></label>
+                    <div class="input-icon-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input 
+                            type="text" 
+                            name="full_name" 
+                            id="full_name" 
+                            class="form-input {% if form.full_name.errors %}is-invalid{% endif %}" 
+                            placeholder="e.g. John Doe" 
+                            value="{{ request.POST.full_name|default:'' }}" 
+                            required
+                            autocomplete="name"
+                        >
+                    </div>
+                    {% if form.full_name.errors %}
+                        <div class="field-error-text">⚠️ {{ form.full_name.errors.0 }}</div>
+                    {% endif %}
+                    <div class="field-error-text" id="fullNameError" style="display: none;"></div>
+                </div>
+
+                <!-- Username -->
+                <div class="form-group">
+                    <label for="username">Username <span style="color: var(--auth-error);">*</span></label>
+                    <div class="input-icon-wrapper">
+                        <span class="input-icon">🆔</span>
+                        <input 
+                            type="text" 
+                            name="username" 
+                            id="username" 
+                            class="form-input {% if form.username.errors %}is-invalid{% endif %}" 
+                            placeholder="e.g. johndoe22" 
+                            value="{{ request.POST.username|default:'' }}" 
+                            required
+                            autocomplete="username"
+                        >
+                    </div>
+                    {% if form.username.errors %}
+                        <div class="field-error-text">⚠️ {{ form.username.errors.0 }}</div>
+                    {% endif %}
+                    <div class="field-error-text" id="usernameError" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Row 2: Email & Phone Number -->
+            <div class="form-grid-2">
+                <!-- Email Address -->
+                <div class="form-group">
+                    <label for="email">Email Address <span style="color: var(--auth-error);">*</span></label>
+                    <div class="input-icon-wrapper">
+                        <span class="input-icon">✉️</span>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            id="email" 
+                            class="form-input {% if form.email.errors %}is-invalid{% endif %}" 
+                            placeholder="name@example.com" 
+                            value="{{ request.POST.email|default:'' }}" 
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+                    {% if form.email.errors %}
+                        <div class="field-error-text">⚠️ {{ form.email.errors.0 }}</div>
+                    {% endif %}
+                    <div class="field-error-text" id="emailError" style="display: none;"></div>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="form-group">
+                    <label for="phone">Phone Number <span style="color: var(--auth-error);">*</span></label>
+                    <div class="input-icon-wrapper">
+                        <span class="input-icon">📞</span>
+                        <input 
+                            type="tel" 
+                            name="phone" 
+                            id="phone" 
+                            class="form-input {% if form.phone.errors %}is-invalid{% endif %}" 
+                            placeholder="+1 (555) 000-0000" 
+                            value="{{ request.POST.phone|default:'' }}" 
+                            required
+                            autocomplete="tel"
+                        >
+                    </div>
+                    {% if form.phone.errors %}
+                        <div class="field-error-text">⚠️ {{ form.phone.errors.0 }}</div>
+                    {% endif %}
+                    <div class="field-error-text" id="phoneError" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Row 3: Password & Confirm Password -->
+            <div class="form-grid-2">
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="signup_password">Password <span style="color: var(--auth-error);">*</span></label>
+                    <div class="input-icon-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            id="signup_password" 
+                            class="form-input {% if form.password.errors %}is-invalid{% endif %}" 
+                            placeholder="Min. 8 characters" 
+                            required
+                            autocomplete="new-password"
+                        >
+                        <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('signup_password', this)" aria-label="Toggle password visibility">
+                            👁️
+                        </button>
+                    </div>
+                    {% if form.password.errors %}
+                        <div class="field-error-text">⚠️ {{ form.password.errors.0 }}</div>
+                    {% endif %}
+                    <div class="field-error-text" id="passwordError" style="display: none;"></div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password <span style="color: var(--auth-error);">*</span></label>
+                    <div class="input-icon-wrapper">
+                        <span class="input-icon">🔑</span>
+                        <input 
+                            type="password" 
+                            name="confirm_password" 
+                            id="confirm_password" 
+                            class="form-input {% if form.confirm_password.errors %}is-invalid{% endif %}" 
+                            placeholder="Re-enter password" 
+                            required
+                            autocomplete="new-password"
+                        >
+                        <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('confirm_password', this)" aria-label="Toggle confirm password visibility">
+                            👁️
+                        </button>
+                    </div>
+                    {% if form.confirm_password.errors %}
+                        <div class="field-error-text">⚠️ {{ form.confirm_password.errors.0 }}</div>
+                    {% endif %}
+                    <div class="field-error-text" id="confirmPasswordError" style="display: none;"></div>
+                    <div class="field-success-text" id="confirmPasswordMatch" style="display: none;">✓ Passwords match</div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="auth-submit-btn" id="submitBtn">
+                <span>Create Account</span>
+                <span>&rarr;</span>
+            </button>
+        </form>
+
+        <!-- Footer Link to Login -->
+        <div class="auth-footer">
+            Already have an account? 
+            <a href="{% url 'accounts:login' %}" class="auth-footer-link">Log In Here</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Toggle Password Visibility
+    function togglePasswordVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            btn.textContent = '🙈';
+        } else {
+            input.type = 'password';
+            btn.textContent = '👁️';
+        }
+    }
+
+    // Role Change Handler (Visually Highlight Admin selection)
+    function handleRoleChange(roleValue) {
+        const card = document.getElementById('authCard');
+        const submitBtnText = document.querySelector('#submitBtn span:first-child');
+        
+        if (roleValue === 'admin') {
+            card.classList.add('admin-mode-active');
+            if (submitBtnText) submitBtnText.textContent = 'Create Admin Account';
+        } else {
+            card.classList.remove('admin-mode-active');
+            if (submitBtnText) submitBtnText.textContent = 'Create Account';
+        }
+    }
+
+    // Live password match feedback
+    function validatePasswordMatch() {
+        const password = document.getElementById('signup_password').value;
+        const confirmPassword = document.getElementById('confirm_password').value;
+        const confirmErr = document.getElementById('confirmPasswordError');
+        const confirmMatch = document.getElementById('confirmPasswordMatch');
+        const confirmInput = document.getElementById('confirm_password');
+
+        if (!confirmPassword) {
+            confirmInput.classList.remove('is-invalid');
+            confirmErr.style.display = 'none';
+            confirmMatch.style.display = 'none';
+            return true;
+        }
+
+        if (password !== confirmPassword) {
+            confirmInput.classList.add('is-invalid');
+            confirmErr.textContent = '⚠️ Passwords do not match.';
+            confirmErr.style.display = 'flex';
+            confirmMatch.style.display = 'none';
+            return false;
+        } else {
+            confirmInput.classList.remove('is-invalid');
+            confirmErr.style.display = 'none';
+            confirmMatch.style.display = 'block';
+            return true;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const adminRadio = document.getElementById('role_admin');
+        if (adminRadio && adminRadio.checked) {
+            handleRoleChange('admin');
+        }
+
+        const pwdInput = document.getElementById('signup_password');
+        const confirmInput = document.getElementById('confirm_password');
+
+        pwdInput.addEventListener('input', validatePasswordMatch);
+        confirmInput.addEventListener('input', validatePasswordMatch);
+
+        // Form Submit Validation
+        const form = document.getElementById('signupForm');
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+
+            // Full Name validation
+            const nameInput = document.getElementById('full_name');
+            const nameErr = document.getElementById('fullNameError');
+            if (!nameInput.value.trim()) {
+                nameInput.classList.add('is-invalid');
+                nameErr.textContent = '⚠️ Full Name is required.';
+                nameErr.style.display = 'flex';
+                isValid = false;
+            } else {
+                nameInput.classList.remove('is-invalid');
+                nameErr.style.display = 'none';
+            }
+
+            // Username validation
+            const userInput = document.getElementById('username');
+            const userErr = document.getElementById('usernameError');
+            if (!userInput.value.trim()) {
+                userInput.classList.add('is-invalid');
+                userErr.textContent = '⚠️ Username is required.';
+                userErr.style.display = 'flex';
+                isValid = false;
+            } else {
+                userInput.classList.remove('is-invalid');
+                userErr.style.display = 'none';
+            }
+
+            // Email validation
+            const emailInput = document.getElementById('email');
+            const emailErr = document.getElementById('emailError');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailInput.value.trim() || !emailRegex.test(emailInput.value.trim())) {
+                emailInput.classList.add('is-invalid');
+                emailErr.textContent = '⚠️ Please enter a valid email address.';
+                emailErr.style.display = 'flex';
+                isValid = false;
+            } else {
+                emailInput.classList.remove('is-invalid');
+                emailErr.style.display = 'none';
+            }
+
+            // Phone validation
+            const phoneInput = document.getElementById('phone');
+            const phoneErr = document.getElementById('phoneError');
+            if (!phoneInput.value.trim()) {
+                phoneInput.classList.add('is-invalid');
+                phoneErr.textContent = '⚠️ Phone number is required.';
+                phoneErr.style.display = 'flex';
+                isValid = false;
+            } else {
+                phoneInput.classList.remove('is-invalid');
+                phoneErr.style.display = 'none';
+            }
+
+            // Password validation
+            const passErr = document.getElementById('passwordError');
+            if (!pwdInput.value || pwdInput.value.length < 6) {
+                pwdInput.classList.add('is-invalid');
+                passErr.textContent = '⚠️ Password must be at least 6 characters.';
+                passErr.style.display = 'flex';
+                isValid = false;
+            } else {
+                pwdInput.classList.remove('is-invalid');
+                passErr.style.display = 'none';
+            }
+
+            // Password match validation
+            if (!validatePasswordMatch()) {
+                isValid = false;
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
+{% endblock %}
