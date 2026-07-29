@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "Applying Django migrations after pull..."
+python manage.py migrate
+echo "Migrations applied successfully!"
