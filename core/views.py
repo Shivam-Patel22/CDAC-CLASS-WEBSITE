@@ -26,16 +26,22 @@ def contact(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             name = form.cleaned_data['name']
+            phone = form.cleaned_data['phone']
             email = form.cleaned_data['email']
-            subject = form.cleaned_data.get('subject', 'General Inquiry')
+            course = form.cleaned_data.get('course')
+            course_name = course.name if course else "General Inquiry"
             message_text = form.cleaned_data['message']
             
-            # Print message to console per spec
-            print(f"[CONTACT FORM] From: {name} <{email}> | Subject: {subject}\nMessage: {message_text}")
+            # Print inquiry details to console
+            print(f"[COURSE INQUIRY] From: {name} <{email}> | Phone: {phone} | Course: {course_name}\nMessage: {message_text}")
             
-            messages.success(request, f"Thank you, {name}! Your message has been received. We will get back to you shortly.")
+            messages.success(request, f"Thank you, {name}! Your inquiry has been received. We will get back to you shortly.")
             return redirect('core:contact')
     else:
-        form = ContactForm()
+        initial_data = {}
+        course_id = request.GET.get('course')
+        if course_id:
+            initial_data['course'] = course_id
+        form = ContactForm(initial=initial_data)
     
     return render(request, 'core/contact.html', {'form': form})

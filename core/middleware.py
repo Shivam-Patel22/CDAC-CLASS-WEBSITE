@@ -16,6 +16,12 @@ class AuthRequiredMiddleware:
             re.compile(r'^/django-admin/'),
             re.compile(r'^/static/'),
             re.compile(r'^/media/'),
+            re.compile(r'^/contact/'),
+            re.compile(r'^/about/'),
+            re.compile(r'^/courses/'),
+            re.compile(r'^/certificates/'),
+            re.compile(r'^/verify-certificate/'),
+            re.compile(r'^/verify/'),
         ]
 
     def __call__(self, request):
@@ -30,5 +36,9 @@ class AuthRequiredMiddleware:
         if request.user.is_authenticated or request.session.get('is_guest'):
             return self.get_response(request)
 
-        # Redirect unauthenticated requests to the login page
-        return redirect(reverse('accounts:login'))
+        # Redirect unauthenticated requests for admin panel
+        if path.startswith('/admin-panel/'):
+            return redirect(reverse('dashboard:login'))
+
+        # Redirect unauthenticated requests to the student login page with next param
+        return redirect(f"{reverse('accounts:login')}?next={path}")

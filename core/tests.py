@@ -1,3 +1,36 @@
 from django.test import TestCase
+from django.urls import reverse
+from courses.models import Course
 
-# Create your tests here.
+class CoreTestCase(TestCase):
+    def setUp(self):
+        self.course1 = Course.objects.create(name="Python Web Development", description="Learn Django & Python", duration="3 Months")
+        self.course2 = Course.objects.create(name="Data Science Fundamentals", description="Learn Data Science", duration="6 Months")
+
+    def test_contact_page_renders_with_courses(self):
+        response = self.client.get(reverse('core:contact'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Full Name *")
+        self.assertContains(response, "Phone Number *")
+        self.assertContains(response, "Email Address *")
+        self.assertContains(response, "Interested in Course")
+        self.assertContains(response, "Python Web Development")
+        self.assertContains(response, "Data Science Fundamentals")
+
+    def test_contact_page_preselects_course_from_query_param(self):
+        response = self.client.get(f"{reverse('core:contact')}?course={self.course1.id}")
+        self.assertEqual(response.status_code, 200)
+        form = response.context['form']
+        self.assertEqual(form.initial.get('course'), str(self.course1.id))
+
+    def test_contact_form_submission(self):
+        data = {
+            'name': 'Jane Student',
+            'phone': '9876543210',
+            'email': 'jane@example.com',
+            'course': self.course1.id,
+            'message': 'I would like to inquire about course fees and batch timings.',
+        }
+        response = self.client.post(reverse('core:contact'), data)
+        self.assertRedirects(response, reverse('core:contact'))
+
