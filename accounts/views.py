@@ -119,7 +119,7 @@ def register(request):
 def logout(request):
     auth_logout(request)
     messages.info(request, "You have been logged out successfully.")
-    return redirect('core:home')
+    return redirect('accounts:login')
 
 @login_required(login_url='accounts:login')
 def dashboard(request):
