@@ -14,7 +14,7 @@ class AccountsTestCase(TestCase):
             'confirm_password': 'StrongPassword123!',
         }
         response = self.client.post(url, data)
-        self.assertRedirects(response, reverse('accounts:login'))
+        self.assertRedirects(response, reverse('core:home'))
         
         user = User.objects.get(email='john@example.com')
         self.assertFalse(user.is_staff)

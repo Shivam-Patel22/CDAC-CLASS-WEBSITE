@@ -5,4 +5,5 @@ app_name = 'certificates'
 
 urlpatterns = [
     path('verify-certificate/', views.verify, name='verify'),
+    path('verify/', views.verify, name='verify_alt'),
 ]
