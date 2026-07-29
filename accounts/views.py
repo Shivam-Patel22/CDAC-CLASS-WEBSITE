@@ -3,8 +3,6 @@ from django.contrib.auth import login as auth_login, logout as auth_logout, auth
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
-
 from django.db import transaction
 from django.db.models import Q
 from .forms import StudentRegistrationForm, StudentLoginForm
