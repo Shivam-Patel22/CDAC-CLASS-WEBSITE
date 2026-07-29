@@ -7,6 +7,18 @@ import sys
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'computer_class_site.settings')
+
+    # Automatically run migrations when starting the server
+    if len(sys.argv) > 1 and sys.argv[1] == 'runserver':
+        import subprocess
+        print("\n==============================================")
+        print("Auto-applying database migrations...")
+        print("==============================================\n")
+        try:
+            subprocess.run([sys.executable, sys.argv[0], "migrate"], check=False)
+        except Exception as e:
+            print(f"Warning: Auto-migration failed: {e}")
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
