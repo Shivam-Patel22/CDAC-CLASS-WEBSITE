@@ -156,6 +156,47 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* Auth Tabs Switcher */
+.auth-tabs {
+    display: flex;
+    gap: 0.5rem;
+    background: var(--auth-gray-100);
+    padding: 0.35rem;
+    border-radius: var(--auth-radius-md);
+    border: 1px solid var(--auth-gray-200);
+    margin-bottom: 1.5rem;
+}
+
+.auth-tab-btn {
+    flex: 1;
+    padding: 0.75rem;
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: inherit;
+    color: var(--auth-gray-600);
+    border-radius: var(--auth-radius-sm);
+    cursor: pointer;
+    transition: var(--auth-transition);
+}
+
+.auth-tab-btn:hover {
+    color: var(--auth-blue-600);
+}
+
+.auth-tab-btn.active {
+    background-color: var(--auth-white);
+    color: var(--auth-blue-600);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+}
+
+.auth-card.admin-mode-active .auth-tab-btn.active {
+    background-color: var(--auth-admin-indigo);
+    color: var(--auth-white);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
 /* Role Selection Segmented Control */
 .role-selection-wrapper {
     margin-bottom: 1.5rem;
