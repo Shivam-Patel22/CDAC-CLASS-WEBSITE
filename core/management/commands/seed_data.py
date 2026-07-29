@@ -8,7 +8,23 @@ class Command(BaseCommand):
     help = 'Seeds initial sample courses and certificates into the database'
 
     def handle(self, *args, **options):
-        self.stdout.write("Seeding courses and certificates...")
+        self.stdout.write("Seeding courses, certificates, and admin user...")
+
+        # Create or update default Admin Staff user
+        admin_user, created = User.objects.get_or_create(
+            username='admin',
+            defaults={
+                'email': 'admin@techclassinstitute.edu',
+                'is_staff': True,
+                'is_superuser': True
+            }
+        )
+        admin_user.set_password('adminpassword123')
+        admin_user.is_staff = True
+        admin_user.is_superuser = True
+        admin_user.save()
+        admin_status = "Created" if created else "Updated password for"
+        self.stdout.write(f"Admin User: {admin_user.username} ({admin_status})")
 
         courses_data = [
             {
