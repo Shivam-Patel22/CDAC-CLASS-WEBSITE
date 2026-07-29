@@ -3,7 +3,45 @@
 
 {% block title %}Home | Computer Training Institute{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+<style>
+.login-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 1rem;
+}
+.login-modal-content {
+    width: 100%;
+    max-width: 520px;
+}
+/* Override auth-wrapper styles when inside modal */
+.login-modal-overlay .auth-wrapper {
+    min-height: auto;
+    padding: 0;
+    background: none;
+}
+.login-modal-overlay .auth-wrapper::before {
+    display: none;
+}
+</style>
+{% endblock %}
+
 {% block content %}
+{% if not user.is_authenticated and not request.session.is_guest %}
+<div class="login-modal-overlay">
+    <div class="login-modal-content">
+        {% include "accounts/partials/auth_form.html" %}
+    </div>
+</div>
+{% endif %}
 <!-- Hero Section -->
 <section class="hero-section">
     <div class="hero-content">

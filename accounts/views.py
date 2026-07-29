@@ -125,7 +125,13 @@ def register(request):
 def logout(request):
     auth_logout(request)
     messages.info(request, "You have been logged out successfully.")
-    return redirect('accounts:login')
+    return redirect('core:home')
+
+def guest_login(request):
+    if request.method == 'POST':
+        request.session['is_guest'] = True
+        messages.success(request, "You are browsing as a guest.")
+    return redirect('core:home')
 
 @login_required(login_url='accounts:login')
 def dashboard(request):
