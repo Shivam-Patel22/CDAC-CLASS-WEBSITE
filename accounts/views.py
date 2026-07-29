@@ -23,7 +23,7 @@ def auth_page(request, tab='login'):
     if request.user.is_authenticated:
         if request.user.is_staff:
             return redirect('dashboard:index')
-        return redirect('accounts:dashboard')
+        return redirect('core:home')
 
     login_form = StudentLoginForm()
     signup_form = StudentRegistrationForm()
@@ -31,7 +31,6 @@ def auth_page(request, tab='login'):
 
     if request.method == 'POST':
         action_type = request.POST.get('action_type')
-        # Infer action type if not explicitly set
         if not action_type:
             if 'full_name' in request.POST or 'confirm_password' in request.POST:
                 action_type = 'register'
@@ -69,8 +68,15 @@ def auth_page(request, tab='login'):
                         phone=phone
                     )
 
-                messages.success(request, f"Registration successful! You can now log in.")
-                return redirect('accounts:login')
+                # Automatically authenticate and log in newly registered student, taking them to homepage
+                user_auth = authenticate(request, username=username, password=password)
+                if user_auth is not None:
+                    auth_login(request, user_auth)
+                    messages.success(request, f"Welcome to TechClass, {first_name}! Your account has been created.")
+                    return redirect('core:home')
+                else:
+                    messages.success(request, "Registration successful! Please log in with your credentials.")
+                    active_tab = 'login'
             else:
                 form = signup_form
         else: # login
@@ -95,7 +101,7 @@ def auth_page(request, tab='login'):
                         return redirect('dashboard:index')
                     else:
                         messages.success(request, f"Welcome back, {user.first_name or user.username}!")
-                        return redirect('accounts:dashboard')
+                        return redirect('core:home')
                 else:
                     messages.error(request, "Invalid email/username or password. Please check your credentials.")
             else:
@@ -119,7 +125,7 @@ def register(request):
 def logout(request):
     auth_logout(request)
     messages.info(request, "You have been logged out successfully.")
-    return redirect('core:home')
+    return redirect('accounts:login')
 
 @login_required(login_url='accounts:login')
 def dashboard(request):

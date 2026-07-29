@@ -4,6 +4,10 @@ from .forms import ContactForm
 from courses.models import Course
 
 def home(request):
+    # Require login first when website is loaded
+    if not request.user.is_authenticated:
+        return redirect('accounts:login')
+
     try:
         featured_courses = Course.objects.all().order_by('-created_at')[:3]
     except Exception:
