@@ -124,8 +124,10 @@ def register(request):
 
 def logout(request):
     auth_logout(request)
+    if 'is_guest' in request.session:
+        del request.session['is_guest']
     messages.info(request, "You have been logged out successfully.")
-    return redirect('core:home')
+    return redirect('accounts:login')
 
 def guest_login(request):
     if request.method == 'POST':
@@ -133,7 +135,9 @@ def guest_login(request):
         messages.success(request, "You are browsing as a guest.")
     return redirect('core:home')
 
-@login_required(login_url='accounts:login')
 def dashboard(request):
-    certificates = Certificate.objects.filter(student=request.user).select_related('course').order_by('-issue_date')
+    if request.user.is_authenticated:
+        certificates = Certificate.objects.filter(student=request.user).select_related('course').order_by('-issue_date')
+    else:
+        certificates = []
     return render(request, 'accounts/dashboard.html', {'certificates': certificates})

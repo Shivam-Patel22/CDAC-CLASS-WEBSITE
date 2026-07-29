@@ -37,11 +37,14 @@
                 </ul>
 
                 <div class="nav-auth">
-                    {% if user.is_authenticated %}
+                    {% if user.is_authenticated or request.session.is_guest %}
                         {% if user.is_staff %}
                             <a href="{% url 'dashboard:index' %}" class="btn btn-outline btn-sm">Admin Panel</a>
                             <a href="{% url 'accounts:logout' %}" class="btn btn-primary btn-sm">Logout</a>
                         {% else %}
+                            {% if request.session.is_guest %}
+                                <span class="nav-link" style="color: var(--white); margin-right: 0.5rem; font-weight: 600;">Guest</span>
+                            {% endif %}
                             <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline btn-sm">Dashboard</a>
                             <a href="{% url 'accounts:logout' %}" class="btn btn-primary btn-sm">Logout</a>
                         {% endif %}
