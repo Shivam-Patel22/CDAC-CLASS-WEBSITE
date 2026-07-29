@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} | Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="margin-bottom: 1.5rem;">
+        <a href="{% url 'dashboard:manage_certificates' %}" style="color: var(--gray-600); font-weight: 500;">&larr; Back to Certificate Management</a>
+    </div>
+
+    <div class="form-card" style="max-width: 650px;">
+        <h1 style="font-size: 1.75rem; margin-bottom: 1.5rem; color: var(--gray-900);">{{ title }}</h1>
+
+        <form method="post" data-validate="true">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.certificate_id.id_for_label }}">Auto-Generated Certificate ID (Read-only)</label>
+                {{ form.certificate_id }}
+                <small style="color: var(--gray-500); font-size: 0.8rem;">Format: CERT-YYYY-XXXXXX (Server auto-generated)</small>
+                {% if form.certificate_id.errors %}<div class="form-error">{{ form.certificate_id.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.student_name.id_for_label }}">Student Full Name (Printed on Certificate) *</label>
+                {{ form.student_name }}
+                {% if form.student_name.errors %}<div class="form-error">{{ form.student_name.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.student.id_for_label }}">Link to Student Account (Optional)</label>
+                {{ form.student }}
+                <small style="color: var(--gray-500); font-size: 0.8rem;">Select a registered student account to show this certificate in their student dashboard.</small>
+                {% if form.student.errors %}<div class="form-error">{{ form.student.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.course.id_for_label }}">Completed Course *</label>
+                {{ form.course }}
+                {% if form.course.errors %}<div class="form-error">{{ form.course.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.issue_date.id_for_label }}">Issue Date *</label>
+                {{ form.issue_date }}
+                {% if form.issue_date.errors %}<div class="form-error">{{ form.issue_date.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.grade.id_for_label }}">Grade / Distinction (Optional)</label>
+                {{ form.grade }}
+                {% if form.grade.errors %}<div class="form-error">{{ form.grade.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Save & Issue Certificate</button>
+                <a href="{% url 'dashboard:manage_certificates' %}" class="btn btn-outline-dark">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

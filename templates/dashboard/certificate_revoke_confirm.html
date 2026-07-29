@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm Certificate Revocation | Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-card" style="border-top: 5px solid var(--error);">
+        <h1 style="font-size: 1.5rem; color: var(--error); margin-bottom: 1rem;">Confirm Certificate Revocation</h1>
+        <p style="color: var(--gray-700); margin-bottom: 1.5rem; line-height: 1.6;">
+            Are you sure you want to revoke certificate <strong>"{{ cert.certificate_id }}"</strong> issued to <strong>"{{ cert.student_name }}"</strong> for course <em>{{ cert.course.name }}</em>?
+            Once revoked, verification lookups for this ID will return not found.
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-danger" style="flex: 1;">Yes, Revoke Certificate</button>
+                <a href="{% url 'dashboard:manage_certificates' %}" class="btn btn-outline-dark">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

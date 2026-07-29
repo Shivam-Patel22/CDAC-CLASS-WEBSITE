@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Computer Class Institute{% endblock %} | Computer Class Website</title>
+    <meta name="description" content="Leading Computer Training Institute offering industry-grade courses, certifications, and hands-on technical training.">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Navbar Header -->
+    <header class="navbar-header">
+        <div class="nav-container">
+            <a href="{% url 'core:home' %}" class="nav-logo">
+                <div class="logo-icon">💻</div>
+                <span class="logo-text">Tech<span class="highlight">Class</span></span>
+            </a>
+
+            <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav class="nav-menu" id="nav-menu">
+                <ul class="nav-links">
+                    <li><a href="{% url 'core:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a></li>
+                    <li><a href="{% url 'core:about' %}" class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a></li>
+                    <li><a href="{% url 'courses:course_list' %}" class="nav-link {% if request.resolver_match.url_name == 'course_list' or request.resolver_match.url_name == 'course_detail' %}active{% endif %}">Courses</a></li>
+                    <li><a href="{% url 'certificates:verify' %}" class="nav-link {% if request.resolver_match.url_name == 'verify' %}active{% endif %}">Verify Certificate</a></li>
+                    <li><a href="{% url 'core:contact' %}" class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a></li>
+                </ul>
+
+                <div class="nav-auth">
+                    {% if user.is_authenticated %}
+                        {% if user.is_staff %}
+                            <a href="{% url 'dashboard:index' %}" class="btn btn-outline btn-sm">Admin Panel</a>
+                            <a href="{% url 'accounts:logout' %}" class="btn btn-primary btn-sm">Logout</a>
+                        {% else %}
+                            <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline btn-sm">Dashboard</a>
+                            <a href="{% url 'accounts:logout' %}" class="btn btn-primary btn-sm">Logout</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'accounts:login' %}" class="btn btn-ghost btn-sm">Login</a>
+                        <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-sm">Register</a>
+                        <a href="{% url 'dashboard:login' %}" class="btn btn-dark-subtle btn-sm" title="Staff Only">Staff Portal</a>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Flash Messages -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            <span class="alert-icon">
+                {% if message.tags == 'success' %}✓{% elif message.tags == 'error' or message.tags == 'danger' %}✕{% else %}ℹ{% endif %}
+            </span>
+            <span class="alert-text">{{ message }}</span>
+            <button class="alert-close" onclick="this.parentElement.style.display='none';">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-col brand-col">
+                <a href="{% url 'core:home' %}" class="footer-logo">
+                    <span class="logo-icon">💻</span> TechClass Institute
+                </a>
+                <p>Empowering students with practical computer education, software engineering skills, and verified professional certifications.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'core:home' %}">Home</a></li>
+                    <li><a href="{% url 'core:about' %}">About Us</a></li>
+                    <li><a href="{% url 'courses:course_list' %}">All Courses</a></li>
+                    <li><a href="{% url 'certificates:verify' %}">Certificate Verification</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Student Portal</h4>
+                <ul>
+                    <li><a href="{% url 'accounts:register' %}">Student Registration</a></li>
+                    <li><a href="{% url 'accounts:login' %}">Student Login</a></li>
+                    <li><a href="{% url 'accounts:dashboard' %}">My Certificates</a></li>
+                    <li><a href="{% url 'dashboard:login' %}">Staff Admin Portal</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact Us</h4>
+                <p>📍 101 Tech Tower, Education Street</p>
+                <p>📧 info@techclassinstitute.edu</p>
+                <p>📞 +1 (555) 234-5678</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 TechClass Computer Institute. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

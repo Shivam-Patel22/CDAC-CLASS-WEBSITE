@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Certificate Verification Result | TechClass Institute{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <span class="badge badge-success" style="font-size: 1rem; padding: 0.5rem 1.25rem; margin-bottom: 1rem;">
+            ✓ VERIFIED AUTHENTIC CERTIFICATE
+        </span>
+        <h1 style="font-size: 2rem; color: var(--gray-900);">Official Certificate Record</h1>
+    </div>
+
+    <!-- Official Certificate Render Box -->
+    <div class="certificate-card">
+        <div class="certificate-header">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">💻</div>
+            <h2 class="certificate-title">Certificate of Completion</h2>
+            <p class="certificate-subtitle">TECHCLASS COMPUTER TRAINING INSTITUTE</p>
+        </div>
+
+        <div class="certificate-body">
+            <p style="color: var(--gray-600); font-size: 1.05rem;">This certifies that</p>
+            <h3 class="certificate-student">{{ certificate.student_name }}</h3>
+            <p style="color: var(--gray-600); font-size: 1.05rem; max-width: 500px; margin: 0 auto 1.5rem;">
+                has successfully completed the comprehensive training program and fulfilled all curriculum requirements for
+            </p>
+
+            <h4 style="font-size: 1.6rem; color: var(--gray-900); font-family: var(--font-heading); margin-bottom: 0.5rem;">
+                {{ certificate.course.name }}
+            </h4>
+            <p style="color: var(--primary); font-weight: 600;">Duration: {{ certificate.course.duration }}</p>
+        </div>
+
+        <div class="certificate-meta-grid">
+            <div>
+                <span style="font-size: 0.8rem; color: var(--gray-500); display: block; text-transform: uppercase;">Certificate ID</span>
+                <strong style="font-family: monospace; font-size: 1.1rem; color: var(--gray-900);">{{ certificate.certificate_id }}</strong>
+            </div>
+            <div>
+                <span style="font-size: 0.8rem; color: var(--gray-500); display: block; text-transform: uppercase;">Issue Date</span>
+                <strong style="font-size: 1.05rem; color: var(--gray-900);">{{ certificate.issue_date|date:"F j, Y" }}</strong>
+            </div>
+            {% if certificate.grade %}
+            <div>
+                <span style="font-size: 0.8rem; color: var(--gray-500); display: block; text-transform: uppercase;">Grade Awarded</span>
+                <strong style="font-size: 1.05rem; color: var(--success);">{{ certificate.grade }}</strong>
+            </div>
+            {% endif %}
+            <div>
+                <span style="font-size: 0.8rem; color: var(--gray-500); display: block; text-transform: uppercase;">Status</span>
+                <strong style="font-size: 1.05rem; color: var(--success);">Valid & Active</strong>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 2.5rem; display: flex; gap: 1rem; justify-content: center;">
+        <a href="{% url 'certificates:verify' %}" class="btn btn-outline-dark">&larr; Verify Another Certificate</a>
+        <button onclick="window.print();" class="btn btn-primary">🖨️ Print / Save Certificate</button>
+    </div>
+</div>
+{% endblock %}

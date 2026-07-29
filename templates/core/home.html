@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home | Computer Training Institute{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Master In-Demand Computer & Software Skills</h1>
+        <p class="hero-subtitle">Transform your career with hands-on computer training, expert-led courses, and industry-recognized certifications.</p>
+        <div class="hero-buttons">
+            <a href="{% url 'courses:course_list' %}" class="btn btn-primary btn-lg">Explore Courses</a>
+            <a href="{% url 'certificates:verify' %}" class="btn btn-outline btn-lg">Verify Certificate</a>
+        </div>
+    </div>
+</section>
+
+<!-- Highlights Section -->
+<section class="container">
+    <div class="page-header">
+        <h2 class="page-title">Why Choose TechClass Institute?</h2>
+        <p class="page-subtitle">We provide high-quality education with practical hands-on experience</p>
+    </div>
+
+    <div class="grid grid-3">
+        <div class="card card-hover">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">💻</div>
+            <h3>Modern Computer Labs</h3>
+            <p style="color: var(--gray-600); margin-top: 0.5rem;">Fully equipped computer workstations with up-to-date software tools, IDEs, and high-speed internet.</p>
+        </div>
+
+        <div class="card card-hover">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎓</div>
+            <h3>Expert Instructors</h3>
+            <p style="color: var(--gray-600); margin-top: 0.5rem;">Learn directly from experienced software engineers, database admins, and IT professionals.</p>
+        </div>
+
+        <div class="card card-hover">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">📜</div>
+            <h3>Verified Certification</h3>
+            <p style="color: var(--gray-600); margin-top: 0.5rem;">Receive unique, cryptographically verifiable certificates upon successful course completion.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Courses Section -->
+<section class="container" style="background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); margin-bottom: 3rem; padding: 3rem 2rem;">
+    <div class="page-header">
+        <h2 class="page-title">Featured Courses</h2>
+        <p class="page-subtitle">Get started with our most popular training programs</p>
+    </div>
+
+    {% if featured_courses %}
+    <div class="grid grid-3">
+        {% for course in featured_courses %}
+        <div class="card card-hover">
+            {% if course.image %}
+                <img src="{{ course.image.url }}" alt="{{ course.name }}" style="width: 100%; height: 180px; object-fit: cover; border-radius: var(--radius-md); margin-bottom: 1rem;">
+            {% else %}
+                <div style="width: 100%; height: 180px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: var(--radius-md); margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+                    🖥️
+                </div>
+            {% endif %}
+            <span class="badge badge-primary">{{ course.duration }}</span>
+            <h3 style="margin-top: 0.75rem;">{{ course.name }}</h3>
+            <p style="color: var(--gray-600); font-size: 0.95rem; margin: 0.5rem 0 1rem;">{{ course.description|truncatewords:20 }}</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--gray-100);">
+                <strong style="color: var(--primary); font-size: 1.1rem;">
+                    {% if course.fee %}${{ course.fee }}{% else %}Free / Included{% endif %}
+                </strong>
+                <a href="{% url 'courses:course_detail' course.id %}" class="btn btn-outline-dark btn-sm">View Details</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div style="text-align: center; margin-top: 2.5rem;">
+        <a href="{% url 'courses:course_list' %}" class="btn btn-primary">Browse All Courses &rarr;</a>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">📚</div>
+        <h3>Courses Being Updated</h3>
+        <p>Our upcoming course catalog is being prepared. Check back soon or view all courses!</p>
+        <a href="{% url 'courses:course_list' %}" class="btn btn-primary">View Course Catalog</a>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

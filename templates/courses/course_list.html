@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}All Courses | TechClass Computer Institute{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">Computer & IT Courses</h1>
+        <p class="page-subtitle">Explore our professional training programs designed to advance your technical skills.</p>
+    </div>
+
+    <!-- Search filter bar -->
+    <div style="max-width: 600px; margin: 0 auto 2.5rem;">
+        <input type="text" id="course-search-input" class="form-control" placeholder="🔍 Search courses by name or keyword..." style="font-size: 1rem; padding: 0.85rem 1.2rem; border-radius: var(--radius-full); box-shadow: var(--shadow-sm);">
+    </div>
+
+    {% if courses %}
+    <div class="grid grid-3" id="course-grid">
+        {% for course in courses %}
+        <div class="card card-hover course-card" data-course-name="{{ course.name }}">
+            {% if course.image %}
+                <img src="{{ course.image.url }}" alt="{{ course.name }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: var(--radius-md); margin-bottom: 1.25rem;">
+            {% else %}
+                <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #3b82f6, #6366f1); border-radius: var(--radius-md); margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 3.5rem;">
+                    💻
+                </div>
+            {% endif %}
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span class="badge badge-primary">{{ course.duration }}</span>
+                <span style="font-size: 0.85rem; color: var(--gray-500);">ID: #{{ course.id }}</span>
+            </div>
+
+            <h3 class="course-title" style="margin-bottom: 0.5rem; font-size: 1.3rem;">{{ course.name }}</h3>
+            <p class="course-description" style="color: var(--gray-600); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.6;">
+                {{ course.description|truncatewords:25 }}
+            </p>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--gray-100);">
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--gray-500); display: block;">Course Fee</span>
+                    <strong style="color: var(--primary); font-size: 1.2rem;">
+                        {% if course.fee %}${{ course.fee }}{% else %}Free / Included{% endif %}
+                    </strong>
+                </div>
+                <a href="{% url 'courses:course_detail' course.id %}" class="btn btn-primary btn-sm">View Details &rarr;</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">📚</div>
+        <h3>No Courses Found</h3>
+        <p>No courses are currently available in the catalog. Check back later or contact admin!</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

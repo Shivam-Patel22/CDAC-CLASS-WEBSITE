@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Staff Admin Portal Login | TechClass Institute{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-card" style="border-top: 5px solid var(--primary);">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="font-size: 2.5rem;">🛡️</div>
+            <h1 style="font-size: 1.75rem; color: var(--gray-900);">Staff Admin Portal</h1>
+            <p style="color: var(--gray-500); font-size: 0.9rem;">Restricted to institute staff & administrator accounts</p>
+        </div>
+
+        <form method="post" action="{% url 'dashboard:login' %}" data-validate="true">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Username or Email *</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="form-error">{{ form.username.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">Password *</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <div class="form-error">{{ form.password.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.85rem; background: var(--gray-900);">
+                Staff Login &rarr;
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

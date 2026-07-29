@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm Course Delete | Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-card" style="border-top: 5px solid var(--error);">
+        <h1 style="font-size: 1.5rem; color: var(--error); margin-bottom: 1rem;">Confirm Course Deletion</h1>
+        <p style="color: var(--gray-700); margin-bottom: 1.5rem; line-height: 1.6;">
+            Are you sure you want to delete the course <strong>"{{ course.name }}"</strong>? This action cannot be undone.
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-danger" style="flex: 1;">Yes, Delete Course</button>
+                <a href="{% url 'dashboard:manage_courses' %}" class="btn btn-outline-dark">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

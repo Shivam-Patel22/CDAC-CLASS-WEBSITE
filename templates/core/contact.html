@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us | TechClass Computer Institute{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">Contact TechClass Institute</h1>
+        <p class="page-subtitle">Have questions about admissions, courses, or certificates? Get in touch with us.</p>
+    </div>
+
+    <div class="grid grid-2" style="align-items: start;">
+        <div class="form-card" style="margin: 0; max-width: 100%;">
+            <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Send Us a Message</h2>
+            <form method="post" action="{% url 'core:contact' %}" data-validate="true">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Full Name *</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="form-error">{{ form.name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Email Address *</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="form-error">{{ form.email.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.subject.id_for_label }}">Subject</label>
+                    {{ form.subject }}
+                    {% if form.subject.errors %}
+                        <div class="form-error">{{ form.subject.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.message.id_for_label }}">Message *</label>
+                    {{ form.message }}
+                    {% if form.message.errors %}
+                        <div class="form-error">{{ form.message.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">Send Message &rarr;</button>
+            </form>
+        </div>
+
+        <div>
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3 style="margin-bottom: 1rem;">📍 Location & Address</h3>
+                <p style="color: var(--gray-600); line-height: 1.7;">
+                    <strong>TechClass Computer Institute</strong><br>
+                    101 Tech Tower, Education Street<br>
+                    Silicon Valley Suburb, City Tech 90210
+                </p>
+            </div>
+
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3 style="margin-bottom: 1rem;">📞 Contact Info</h3>
+                <p style="color: var(--gray-600); line-height: 1.8;">
+                    <strong>Phone:</strong> +1 (555) 234-5678<br>
+                    <strong>Email:</strong> info@techclassinstitute.edu<br>
+                    <strong>Admissions:</strong> admissions@techclassinstitute.edu
+                </p>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">⏰ Office Hours</h3>
+                <p style="color: var(--gray-600); line-height: 1.7;">
+                    <strong>Monday – Friday:</strong> 8:00 AM – 7:00 PM<br>
+                    <strong>Saturday:</strong> 9:00 AM – 4:00 PM<br>
+                    <strong>Sunday:</strong> Closed
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

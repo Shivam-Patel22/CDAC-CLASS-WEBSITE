@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Courses | Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1 class="page-title" style="text-align: left; margin-bottom: 0.25rem;">Manage Courses</h1>
+            <p class="page-subtitle" style="text-align: left;">Create, edit, and organize training courses.</p>
+        </div>
+        <a href="{% url 'dashboard:add_course' %}" class="btn btn-primary">+ Add New Course</a>
+    </div>
+
+    {% if courses %}
+    <div class="table-container">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Course Name</th>
+                    <th>Duration</th>
+                    <th>Fee</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td>#{{ course.id }}</td>
+                    <td><strong>{{ course.name }}</strong></td>
+                    <td><span class="badge badge-primary">{{ course.duration }}</span></td>
+                    <td>{% if course.fee %}${{ course.fee }}{% else %}Free{% endif %}</td>
+                    <td>{{ course.created_at|date:"Y-m-d" }}</td>
+                    <td style="display: flex; gap: 0.5rem;">
+                        <a href="{% url 'courses:course_detail' course.id %}" target="_blank" class="btn btn-ghost btn-sm" title="View Public Page">👁️</a>
+                        <a href="{% url 'dashboard:edit_course' course.id %}" class="btn btn-outline-dark btn-sm">Edit</a>
+                        <a href="{% url 'dashboard:delete_course' course.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">📚</div>
+        <h3>No Courses Created</h3>
+        <p>Start by creating your first computer course to populate the catalog!</p>
+        <a href="{% url 'dashboard:add_course' %}" class="btn btn-primary">+ Add Course</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

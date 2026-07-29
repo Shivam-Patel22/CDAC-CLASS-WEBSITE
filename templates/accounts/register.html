@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Registration | TechClass Institute{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form-card">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="font-size: 2.5rem;">🎓</div>
+            <h1 style="font-size: 1.75rem; color: var(--gray-900);">Student Registration</h1>
+            <p style="color: var(--gray-500); font-size: 0.9rem;">Create your student account to access training & certificates</p>
+        </div>
+
+        <form method="post" action="{% url 'accounts:register' %}" data-validate="true">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.full_name.id_for_label }}">Full Name *</label>
+                {{ form.full_name }}
+                {% if form.full_name.errors %}
+                    <div class="form-error">{{ form.full_name.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email Address *</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="form-error">{{ form.email.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.phone.id_for_label }}">Phone Number</label>
+                {{ form.phone }}
+                {% if form.phone.errors %}
+                    <div class="form-error">{{ form.phone.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">Password *</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <div class="form-error">{{ form.password.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.confirm_password.id_for_label }}">Confirm Password *</label>
+                {{ form.confirm_password }}
+                {% if form.confirm_password.errors %}
+                    <div class="form-error">{{ form.confirm_password.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.85rem;">
+                Create Account &rarr;
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-200); font-size: 0.9rem; color: var(--gray-600);">
+            Already have an account? <a href="{% url 'accounts:login' %}" style="font-weight: 600;">Log in here</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

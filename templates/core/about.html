@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us | TechClass Computer Institute{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">About TechClass Institute</h1>
+        <p class="page-subtitle">Dedicated to excellence in practical computer education and skills training.</p>
+    </div>
+
+    <div class="card" style="margin-bottom: 2.5rem; padding: 2.5rem;">
+        <h2 style="margin-bottom: 1rem; color: var(--primary);">Our Mission</h2>
+        <p style="font-size: 1.1rem; color: var(--gray-700); line-height: 1.8; margin-bottom: 1.5rem;">
+            At TechClass Computer Institute, our mission is to bridge the digital skills gap by offering rigorous, practical, and accessible computer training programs. Whether you are looking to start a career in software development, web engineering, database administration, or digital literacy, our hands-on curriculum is designed to get you job-ready.
+        </p>
+
+        <div class="grid grid-3" style="margin-top: 2rem;">
+            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--gray-200);">
+                <h3 style="font-size: 1.2rem; color: var(--gray-900); margin-bottom: 0.5rem;">🎯 Practical Learning</h3>
+                <p style="color: var(--gray-600); font-size: 0.95rem;">Every course emphasizes real-world projects and coding exercises over passive lecture theory.</p>
+            </div>
+            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--gray-200);">
+                <h3 style="font-size: 1.2rem; color: var(--gray-900); margin-bottom: 0.5rem;">🏆 Authentic Certification</h3>
+                <p style="color: var(--gray-600); font-size: 0.95rem;">Certificates issued by TechClass feature unique cryptographic IDs verifiable by employers globally.</p>
+            </div>
+            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--gray-200);">
+                <h3 style="font-size: 1.2rem; color: var(--gray-900); margin-bottom: 0.5rem;">👥 Community Support</h3>
+                <p style="color: var(--gray-600); font-size: 0.95rem;">Dedicated lab assistants, mentor hours, and career placement assistance for all active students.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-2">
+        <div class="card">
+            <h3>🏢 Campus Facilities</h3>
+            <ul style="margin-top: 1rem; line-height: 2;">
+                <li>✔️ High-speed gigabit internet lab environment</li>
+                <li>✔️ Individual workstation assignment for each student</li>
+                <li>✔️ 24/7 access to cloud dev sandboxes</li>
+                <li>✔️ Air-conditioned multimedia seminar halls</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3>📊 Institute Statistics</h3>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem; text-align: center;">
+                <div style="background: var(--primary-light); padding: 1rem; border-radius: var(--radius-md);">
+                    <h4 style="font-size: 2rem; color: var(--primary);">2,500+</h4>
+                    <p style="font-size: 0.85rem; color: var(--gray-600);">Graduated Students</p>
+                </div>
+                <div style="background: var(--primary-light); padding: 1rem; border-radius: var(--radius-md);">
+                    <h4 style="font-size: 2rem; color: var(--primary);">15+</h4>
+                    <p style="font-size: 0.85rem; color: var(--gray-600);">Specialized Courses</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

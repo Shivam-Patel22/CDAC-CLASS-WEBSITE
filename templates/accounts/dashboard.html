@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard | TechClass Institute{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="background: white; border-radius: var(--radius-lg); padding: 2rem; border: 1px solid var(--gray-200); margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1 style="font-size: 1.8rem; color: var(--gray-900);">Student Dashboard</h1>
+            <p style="color: var(--gray-500); margin-top: 0.25rem;">
+                Logged in as <strong>{{ request.user.get_full_name|default:request.user.username }}</strong> ({{ request.user.email }})
+            </p>
+        </div>
+        <div>
+            <a href="{% url 'courses:course_list' %}" class="btn btn-outline-dark btn-sm">Explore Courses</a>
+            <a href="{% url 'certificates:verify' %}" class="btn btn-primary btn-sm">Verify A Certificate</a>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.35rem; color: var(--gray-800);">My Awarded Certificates</h2>
+    </div>
+
+    {% if certificates %}
+    <div class="table-container">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Course Name</th>
+                    <th>Certificate ID</th>
+                    <th>Issue Date</th>
+                    <th>Grade</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cert in certificates %}
+                <tr>
+                    <td><strong>{{ cert.course.name }}</strong></td>
+                    <td><code style="background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); font-weight: 600; color: var(--primary);">{{ cert.certificate_id }}</code></td>
+                    <td>{{ cert.issue_date|date:"N j, Y" }}</td>
+                    <td>
+                        {% if cert.grade %}
+                            <span class="badge badge-success">{{ cert.grade }}</span>
+                        {% else %}
+                            <span style="color: var(--gray-400);">—</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'certificates:verify' %}?certificate_id={{ cert.certificate_id }}" class="btn btn-outline-dark btn-sm">View Certificate</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">📜</div>
+        <h3>No Certificates Found</h3>
+        <p>You haven't been awarded any course certificates yet. Complete a course at TechClass Institute to earn your verified certificate!</p>
+        <a href="{% url 'courses:course_list' %}" class="btn btn-primary">Browse Available Courses</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

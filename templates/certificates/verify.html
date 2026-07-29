@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify Certificate | TechClass Institute{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">Certificate Verification</h1>
+        <p class="page-subtitle">Verify the authenticity of a course certificate issued by TechClass Institute.</p>
+    </div>
+
+    <div class="form-card" style="max-width: 550px;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="font-size: 3rem;">🔍</div>
+            <h2 style="font-size: 1.5rem; color: var(--gray-900);">Enter Certificate ID</h2>
+            <p style="color: var(--gray-500); font-size: 0.9rem;">Certificate IDs are printed at the top-right of official certificates.</p>
+        </div>
+
+        {% if error_message %}
+        <div class="alert alert-error" style="margin-bottom: 1.5rem;">
+            <span class="alert-icon">✕</span>
+            <span class="alert-text">{{ error_message }}</span>
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'certificates:verify' %}" data-validate="true">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.certificate_id.id_for_label }}">Certificate ID *</label>
+                {{ form.certificate_id }}
+                {% if form.certificate_id.errors %}
+                    <div class="form-error">{{ form.certificate_id.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.85rem;">
+                Verify Certificate &rarr;
+            </button>
+        </form>
+
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-200); text-align: center; font-size: 0.85rem; color: var(--gray-500);">
+            💡 Note: Certificate IDs are case-insensitive and require an exact match.
+        </div>
+    </div>
+</div>
+{% endblock %}
