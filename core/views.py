@@ -27,13 +27,12 @@ def contact(request):
         if form.is_valid():
             name = form.cleaned_data['name']
             phone = form.cleaned_data['phone']
-            email = form.cleaned_data['email']
             course = form.cleaned_data.get('course')
             course_name = course.name if course else "General Inquiry"
             message_text = form.cleaned_data['message']
             
             # Print inquiry details to console
-            print(f"[COURSE INQUIRY] From: {name} <{email}> | Phone: {phone} | Course: {course_name}\nMessage: {message_text}")
+            print(f"[COURSE INQUIRY] From: {name} | Phone: {phone} | Course: {course_name}\nMessage: {message_text}")
             
             messages.success(request, f"Thank you, {name}! Your inquiry has been received. We will get back to you shortly.")
             return redirect('core:contact')

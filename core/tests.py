@@ -12,7 +12,6 @@ class CoreTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Full Name *")
         self.assertContains(response, "Phone Number *")
-        self.assertContains(response, "Email Address *")
         self.assertContains(response, "Interested in Course")
         self.assertContains(response, "Python Web Development")
         self.assertContains(response, "Data Science Fundamentals")
@@ -27,7 +26,6 @@ class CoreTestCase(TestCase):
         data = {
             'name': 'Jane Student',
             'phone': '9876543210',
-            'email': 'jane@example.com',
             'course': self.course1.id,
             'message': 'I would like to inquire about course fees and batch timings.',
         }
