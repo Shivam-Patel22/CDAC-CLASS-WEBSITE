@@ -58,13 +58,13 @@
                 <label class="role-label-title">Select Account Role <span style="color: var(--auth-error);">*</span></label>
                 <div class="role-options-grid">
                     <div class="role-option-card">
-                        <input type="radio" name="role" id="role_user" value="user" {% if request.POST.role != 'admin' %}checked{% endif %} onchange="handleRoleChange(this.value)">
+                        <input type="radio" name="role" id="role_user" value="user" {% if form.role.value != 'admin' %}checked{% endif %} onchange="handleRoleChange(this.value)">
                         <label for="role_user" class="role-tile">
                             <span>👤</span> User / Student
                         </label>
                     </div>
                     <div class="role-option-card">
-                        <input type="radio" name="role" id="role_admin" value="admin" {% if request.POST.role == 'admin' %}checked{% endif %} onchange="handleRoleChange(this.value)">
+                        <input type="radio" name="role" id="role_admin" value="admin" {% if form.role.value == 'admin' %}checked{% endif %} onchange="handleRoleChange(this.value)">
                         <label for="role_admin" class="role-tile">
                             <span>🛡️</span> Admin <span class="admin-badge">Staff</span>
                         </label>
@@ -83,7 +83,7 @@
                         id="username_or_email" 
                         class="form-input {% if form.username_or_email.errors or form.email.errors %}is-invalid{% endif %}" 
                         placeholder="Enter email or username" 
-                        value="{{ request.POST.username_or_email|default:request.POST.email|default:'' }}" 
+                        value="{{ form.username_or_email.value|default:form.email.value|default:'' }}" 
                         required
                         autocomplete="username"
                     >
@@ -123,7 +123,7 @@
             <!-- Form Helper Row: Remember Me & Forgot Password -->
             <div class="form-helper-row">
                 <label class="remember-checkbox-label">
-                    <input type="checkbox" name="remember_me" id="remember_me" {% if request.POST.remember_me %}checked{% endif %}>
+                    <input type="checkbox" name="remember_me" id="remember_me" {% if form.remember_me.value %}checked{% endif %}>
                     <span>Remember Me</span>
                 </label>
                 <a href="#" class="forgot-password-link" onclick="alert('Please contact your administrator at admin@computerclass.edu to reset your password.'); return false;">

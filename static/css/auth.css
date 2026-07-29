@@ -551,6 +551,59 @@
     color: #1e40af;
 }
 
+/* Merged Auth Tabs System */
+.auth-tabs-nav {
+    display: flex;
+    background-color: var(--auth-gray-100);
+    padding: 0.35rem;
+    border-radius: var(--auth-radius-md);
+    border: 1px solid var(--auth-gray-200);
+    margin-bottom: 1.75rem;
+    gap: 0.35rem;
+}
+
+.auth-tab-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.925rem;
+    font-weight: 600;
+    font-family: inherit;
+    color: var(--auth-gray-600);
+    background: transparent;
+    border: none;
+    border-radius: var(--auth-radius-sm);
+    cursor: pointer;
+    transition: var(--auth-transition);
+}
+
+.auth-tab-btn:hover {
+    color: var(--auth-blue-600);
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.auth-tab-btn.active {
+    background-color: var(--auth-white);
+    color: var(--auth-blue-600);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+.auth-card.admin-mode-active .auth-tab-btn.active {
+    color: var(--auth-admin-indigo);
+}
+
+.auth-tab-panel {
+    display: none;
+    animation: fadeIn 0.25s ease-in-out forwards;
+}
+
+.auth-tab-panel.active {
+    display: block;
+}
+
 /* Mobile & Tablet Responsiveness */
 @media (max-width: 640px) {
     .auth-wrapper {
@@ -577,3 +630,4 @@
         gap: 0.75rem;
     }
 }
+

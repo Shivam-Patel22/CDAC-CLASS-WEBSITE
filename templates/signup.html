@@ -58,13 +58,13 @@
                 <label class="role-label-title">Select Account Role <span style="color: var(--auth-error);">*</span></label>
                 <div class="role-options-grid">
                     <div class="role-option-card">
-                        <input type="radio" name="role" id="role_user" value="user" {% if request.POST.role != 'admin' %}checked{% endif %} onchange="handleRoleChange(this.value)">
+                        <input type="radio" name="role" id="role_user" value="user" {% if form.role.value != 'admin' %}checked{% endif %} onchange="handleRoleChange(this.value)">
                         <label for="role_user" class="role-tile">
                             <span>👤</span> User / Student
                         </label>
                     </div>
                     <div class="role-option-card">
-                        <input type="radio" name="role" id="role_admin" value="admin" {% if request.POST.role == 'admin' %}checked{% endif %} onchange="handleRoleChange(this.value)">
+                        <input type="radio" name="role" id="role_admin" value="admin" {% if form.role.value == 'admin' %}checked{% endif %} onchange="handleRoleChange(this.value)">
                         <label for="role_admin" class="role-tile">
                             <span>🛡️</span> Admin <span class="admin-badge">Staff</span>
                         </label>
@@ -85,7 +85,7 @@
                             id="full_name" 
                             class="form-input {% if form.full_name.errors %}is-invalid{% endif %}" 
                             placeholder="e.g. John Doe" 
-                            value="{{ request.POST.full_name|default:'' }}" 
+                            value="{{ form.full_name.value|default:'' }}" 
                             required
                             autocomplete="name"
                         >
@@ -107,7 +107,7 @@
                             id="username" 
                             class="form-input {% if form.username.errors %}is-invalid{% endif %}" 
                             placeholder="e.g. johndoe22" 
-                            value="{{ request.POST.username|default:'' }}" 
+                            value="{{ form.username.value|default:'' }}" 
                             required
                             autocomplete="username"
                         >
@@ -132,7 +132,7 @@
                             id="email" 
                             class="form-input {% if form.email.errors %}is-invalid{% endif %}" 
                             placeholder="name@example.com" 
-                            value="{{ request.POST.email|default:'' }}" 
+                            value="{{ form.email.value|default:'' }}" 
                             required
                             autocomplete="email"
                         >
@@ -154,7 +154,7 @@
                             id="phone" 
                             class="form-input {% if form.phone.errors %}is-invalid{% endif %}" 
                             placeholder="+1 (555) 000-0000" 
-                            value="{{ request.POST.phone|default:'' }}" 
+                            value="{{ form.phone.value|default:'' }}" 
                             required
                             autocomplete="tel"
                         >
