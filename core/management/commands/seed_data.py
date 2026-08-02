@@ -14,7 +14,7 @@ class Command(BaseCommand):
         admin_user, created = User.objects.get_or_create(
             username='admin',
             defaults={
-                'email': 'admin@techclassinstitute.edu',
+                'email': 'admin@cdac.in',
                 'is_staff': True,
                 'is_superuser': True
             }

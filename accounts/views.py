@@ -72,7 +72,7 @@ def auth_page(request, tab='login'):
                 user_auth = authenticate(request, username=username, password=password)
                 if user_auth is not None:
                     auth_login(request, user_auth)
-                    messages.success(request, f"Welcome to TechClass, {first_name}! Your account has been created.")
+                    messages.success(request, f"Welcome to C-DAC, {first_name}! Your account has been created.")
                     return redirect('core:home')
                 else:
                     messages.success(request, "Registration successful! Please log in with your credentials.")

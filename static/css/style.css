@@ -1,5 +1,5 @@
 /* ==========================================================================
-   TechClass Computer Institute — Global Stylesheet
+   Centre for Development of Advanced Computing (C-DAC) — Global Stylesheet
    Design System: Modern Glassmorphism & High-Contrast Typography
    ========================================================================== */
 
@@ -121,10 +121,27 @@ img {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--white);
+    text-decoration: none;
 }
 
-.logo-text .highlight {
-    color: var(--secondary);
+.cdac-nav-logo-img {
+    height: 48px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.cdac-nav-logo-img:hover {
+    transform: scale(1.02);
+}
+
+.cdac-footer-logo-img {
+    height: 52px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    margin-bottom: 0.5rem;
 }
 
 .nav-menu {

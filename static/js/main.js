@@ -1,4 +1,4 @@
-/* TechClass Computer Institute — Global JavaScript */
+/* Centre for Development of Advanced Computing (C-DAC) — Global JavaScript */
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Mobile Menu Toggle

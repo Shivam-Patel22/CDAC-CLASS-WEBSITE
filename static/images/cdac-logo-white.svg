@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 72" width="640" height="72">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@600;700&amp;family=Outfit:wght@700;800&amp;display=swap');
+      .hi-left { font-family: 'Mukta', 'Noto Sans Devanagari', 'Segoe UI', sans-serif; font-weight: 700; fill: #FFFFFF; font-size: 24px; }
+      .hi-right { font-family: 'Mukta', 'Noto Sans Devanagari', 'Segoe UI', sans-serif; font-weight: 700; fill: #FFFFFF; font-size: 22px; }
+      .en-right { font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif; font-weight: 800; fill: #E2E8F0; font-size: 17px; letter-spacing: 0.6px; }
+      .line-sep { stroke: #38BDF8; stroke-width: 2.5; }
+    </style>
+  </defs>
+
+  <!-- Left Side: सीडैक | CDAC Emblem -->
+  <g transform="translate(6, 0)">
+    <!-- Hindi सीडैक -->
+    <text x="0" y="27" class="hi-left">सीडैक</text>
+
+    <!-- CDAC Icon Emblem -->
+    <g transform="translate(0, 34)">
+      <!-- Stylized C lines -->
+      <path d="M 16,3 C 8,3 3,8 3,16 C 3,24 8,29 16,29 L 20,29 L 20,24 L 16,24 C 11,24 8,21 8,16 C 8,11 11,8 16,8 L 20,8 L 20,3 Z" fill="#38BDF8"/>
+      <path d="M 12,8 C 9,8 6,11 6,16 C 6,21 9,24 12,24 L 14,24 L 14,20 L 12,20 C 10,20 8,18 8,16 C 8,14 10,12 12,12 L 14,12 L 14,8 Z" fill="#38BDF8"/>
+      <!-- DAC text -->
+      <text x="24" y="25" font-family="'Outfit', sans-serif" font-weight="800" font-size="26px" fill="#FFFFFF" letter-spacing="1.5px">DAC</text>
+    </g>
+  </g>
+
+  <!-- Vertical Separator Line -->
+  <line x1="112" y1="8" x2="112" y2="64" class="line-sep"/>
+
+  <!-- Right Side Text -->
+  <g transform="translate(126, 0)">
+    <!-- Top Line Hindi: प्रगत संगणन विकास केंद्र -->
+    <text x="0" y="28" class="hi-right">प्रगत संगणन विकास केंद्र</text>
+    <!-- Bottom Line English: CENTRE FOR DEVELOPMENT OF ADVANCED COMPUTING -->
+    <text x="0" y="57" class="en-right">CENTRE FOR DEVELOPMENT OF ADVANCED COMPUTING</text>
+  </g>
+</svg>

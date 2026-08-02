@@ -13,14 +13,14 @@
 
         <!-- Header & Logo Section -->
         <div class="auth-brand-header">
-            <div class="auth-logo-badge" id="logoBadge">
-                💻
+            <div class="auth-logo-badge" id="logoBadge" style="background: transparent; border: none; width: auto; height: auto;">
+                <img src="{% static 'images/cdac-logo.svg' %}" alt="C-DAC Logo" style="height: 52px; max-width: 100%;">
             </div>
             <h1 class="auth-portal-title" id="authPortalTitle">
-                {% if active_tab == 'register' %}Create Your Account{% else %}Computer Class Portal{% endif %}
+                {% if active_tab == 'register' %}Create Your Account{% else %}C-DAC Student & Staff Portal{% endif %}
             </h1>
             <p class="auth-portal-subtitle" id="authPortalSubtitle">
-                {% if active_tab == 'register' %}Join TechClass Institute to access interactive courses and earn verified certificates.{% else %}Welcome back! Sign in to access your student or administrative dashboard.{% endif %}
+                {% if active_tab == 'register' %}Join C-DAC to access interactive courses and earn verified certificates.{% else %}Welcome back! Sign in to access your student or administrative dashboard.{% endif %}
             </p>
         </div>
 
@@ -132,7 +132,7 @@
                         <input type="checkbox" name="remember_me" id="remember_me">
                         <span>Remember Me</span>
                     </label>
-                    <a href="#" class="forgot-password-link" onclick="alert('Please contact your administrator at admin@techclassinstitute.edu to reset your password.'); return false;">
+                    <a href="#" class="forgot-password-link" onclick="alert('Please contact your administrator at admin@cdac.in to reset your password.'); return false;">
                         Forgot Password?
                     </a>
                 </div>
@@ -348,14 +348,14 @@
             regBtn.classList.add('active');
             card.classList.add('auth-card-wide');
             title.textContent = 'Create Your Account';
-            subtitle.textContent = 'Join TechClass Institute to access interactive courses and earn verified certificates.';
+            subtitle.textContent = 'Join C-DAC to access interactive courses and earn verified certificates.';
         } else {
             regSec.style.display = 'none';
             loginSec.style.display = 'block';
             regBtn.classList.remove('active');
             loginBtn.classList.add('active');
             card.classList.remove('auth-card-wide');
-            title.textContent = 'Computer Class Portal';
+            title.textContent = 'C-DAC Student & Staff Portal';
             subtitle.textContent = 'Welcome back! Sign in to access your student or administrative dashboard.';
         }
     }

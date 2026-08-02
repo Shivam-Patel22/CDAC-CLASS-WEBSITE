@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Student Dashboard | TechClass Institute{% endblock %}
+{% block title %}Student Dashboard | Centre for Development of Advanced Computing (C-DAC){% endblock %}
 
 {% block content %}
 <div class="container">
@@ -58,7 +58,7 @@
     <div class="empty-state">
         <div class="empty-state-icon">📜</div>
         <h3>No Certificates Found</h3>
-        <p>You haven't been awarded any course certificates yet. Complete a course at TechClass Institute to earn your verified certificate!</p>
+        <p>You haven't been awarded any course certificates yet. Complete a course at C-DAC to earn your verified certificate!</p>
         <a href="{% url 'courses:course_list' %}" class="btn btn-primary">Browse Available Courses</a>
     </div>
     {% endif %}
