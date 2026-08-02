@@ -19,13 +19,24 @@ def home(request):
     return render(request, 'core/home.html', context)
 
 from .models import Inquiry, AboutContent, ContactContent
+from dashboard.forms import AdminAboutForm, AdminContactForm
 
 def about(request):
     about_content = AboutContent.get_solo()
-    return render(request, 'core/about.html', {'about_content': about_content})
+    about_form = None
+    if request.user.is_authenticated and request.user.is_staff:
+        about_form = AdminAboutForm(instance=about_content)
+    return render(request, 'core/about.html', {
+        'about_content': about_content,
+        'about_form': about_form
+    })
 
 def contact(request):
     contact_content = ContactContent.get_solo()
+    contact_form = None
+    if request.user.is_authenticated and request.user.is_staff:
+        contact_form = AdminContactForm(instance=contact_content)
+
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
@@ -58,4 +69,8 @@ def contact(request):
             initial_data['course'] = course_id
         form = ContactForm(initial=initial_data)
     
-    return render(request, 'core/contact.html', {'form': form, 'contact_content': contact_content})
+    return render(request, 'core/contact.html', {
+        'form': form,
+        'contact_content': contact_content,
+        'contact_form': contact_form
+    })

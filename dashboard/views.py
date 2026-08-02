@@ -455,8 +455,13 @@ def edit_about(request):
         form = AdminAboutForm(request.POST, instance=about_obj)
         if form.is_valid():
             form.save()
-            messages.success(request, "About section content updated successfully. Changes are now live on the public website!")
-            return redirect('dashboard:edit_about')
+            messages.success(request, "About section content updated successfully.")
+            next_url = request.GET.get('next') or request.META.get('HTTP_REFERER')
+            if next_url:
+                return redirect(next_url)
+            return redirect('core:about')
+        else:
+            messages.error(request, "Error updating About content. Please check the required fields.")
     else:
         form = AdminAboutForm(instance=about_obj)
 
@@ -474,8 +479,13 @@ def edit_contact(request):
         form = AdminContactForm(request.POST, instance=contact_obj)
         if form.is_valid():
             form.save()
-            messages.success(request, "Contact section details updated successfully. Changes are now live on the public website & footer!")
-            return redirect('dashboard:edit_contact')
+            messages.success(request, "Contact section details updated successfully.")
+            next_url = request.GET.get('next') or request.META.get('HTTP_REFERER')
+            if next_url:
+                return redirect(next_url)
+            return redirect('core:contact')
+        else:
+            messages.error(request, "Error updating Contact details. Please check the required fields.")
     else:
         form = AdminContactForm(instance=contact_obj)
 

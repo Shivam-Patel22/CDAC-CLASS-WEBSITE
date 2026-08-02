@@ -4,9 +4,16 @@
 
 {% block content %}
 <div class="container">
-    <div class="page-header">
-        <h1 class="page-title">{% if about_content and about_content.heading %}{{ about_content.heading }}{% else %}About C-DAC{% endif %}</h1>
-        <p class="page-subtitle">{% if about_content and about_content.subtitle %}{{ about_content.subtitle }}{% else %}Dedicated to excellence in practical computer education, advanced computing research, and skills training.{% endif %}</p>
+    <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1 class="page-title" style="display: inline-flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                {% if about_content and about_content.heading %}{{ about_content.heading }}{% else %}About C-DAC{% endif %}
+                {% if user.is_authenticated and user.is_staff %}
+                    <button type="button" onclick="openEditAboutModal()" class="btn btn-outline-dark btn-sm" style="font-size: 0.82rem; padding: 0.25rem 0.65rem; font-weight: 600; border-color: var(--gray-300);">✏️ Edit Content</button>
+                {% endif %}
+            </h1>
+            <p class="page-subtitle">{% if about_content and about_content.subtitle %}{{ about_content.subtitle }}{% else %}Dedicated to excellence in practical computer education, advanced computing research, and skills training.{% endif %}</p>
+        </div>
     </div>
 
     <div class="card" style="margin-bottom: 2.5rem; padding: 2.5rem;">
@@ -56,4 +63,94 @@
         </div>
     </div>
 </div>
+
+{% if user.is_authenticated and user.is_staff and about_form %}
+<!-- Edit About Modal for Admin -->
+<div id="editAboutModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); z-index: 9999; justify-content: center; align-items: center; padding: 1rem;">
+    <div class="card" style="width: 100%; max-width: 620px; max-height: 90vh; overflow-y: auto; background: var(--white); border-radius: var(--radius-lg); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); border: 1px solid var(--gray-200); padding: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--gray-200); padding-bottom: 1rem;">
+            <h3 style="margin: 0; font-size: 1.35rem; color: var(--gray-900);">✏️ Edit About Page Content</h3>
+            <button type="button" onclick="closeEditAboutModal()" style="background: none; border: none; font-size: 1.6rem; color: var(--gray-400); cursor: pointer; line-height: 1;">&times;</button>
+        </div>
+
+        <form method="POST" action="{% url 'dashboard:edit_about' %}?next={{ request.path }}">
+            {% csrf_token %}
+
+            <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label style="font-weight: 600; font-size: 0.88rem; color: var(--gray-700); margin-bottom: 0.35rem; display: block;">Page Heading *</label>
+                {{ about_form.heading }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label style="font-weight: 600; font-size: 0.88rem; color: var(--gray-700); margin-bottom: 0.35rem; display: block;">Page Subtitle</label>
+                {{ about_form.subtitle }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label style="font-weight: 600; font-size: 0.88rem; color: var(--gray-700); margin-bottom: 0.35rem; display: block;">Section Heading</label>
+                {{ about_form.mission_title }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label style="font-weight: 600; font-size: 0.88rem; color: var(--gray-700); margin-bottom: 0.35rem; display: block;">Main Description / Mission Statement</label>
+                {{ about_form.description }}
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--gray-200); margin: 1.25rem 0;">
+            <h4 style="margin-bottom: 0.85rem; font-size: 1rem; color: var(--primary);">Highlights & Feature Cards</h4>
+
+            <div style="background: var(--gray-50); padding: 0.85rem; border-radius: var(--radius-md); margin-bottom: 0.85rem; border: 1px solid var(--gray-200);">
+                <div class="form-group" style="margin-bottom: 0.35rem;">
+                    <label style="font-weight: 600; font-size: 0.8rem;">Card 1 Title</label>
+                    {{ about_form.feature_1_title }}
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label style="font-weight: 600; font-size: 0.8rem;">Card 1 Description</label>
+                    {{ about_form.feature_1_desc }}
+                </div>
+            </div>
+
+            <div style="background: var(--gray-50); padding: 0.85rem; border-radius: var(--radius-md); margin-bottom: 0.85rem; border: 1px solid var(--gray-200);">
+                <div class="form-group" style="margin-bottom: 0.35rem;">
+                    <label style="font-weight: 600; font-size: 0.8rem;">Card 2 Title</label>
+                    {{ about_form.feature_2_title }}
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label style="font-weight: 600; font-size: 0.8rem;">Card 2 Description</label>
+                    {{ about_form.feature_2_desc }}
+                </div>
+            </div>
+
+            <div style="background: var(--gray-50); padding: 0.85rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; border: 1px solid var(--gray-200);">
+                <div class="form-group" style="margin-bottom: 0.35rem;">
+                    <label style="font-weight: 600; font-size: 0.8rem;">Card 3 Title</label>
+                    {{ about_form.feature_3_title }}
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label style="font-weight: 600; font-size: 0.8rem;">Card 3 Description</label>
+                    {{ about_form.feature_3_desc }}
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; border-top: 1px solid var(--gray-200); padding-top: 1.25rem;">
+                <button type="button" class="btn btn-outline-dark" onclick="closeEditAboutModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save & Publish Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function openEditAboutModal() {
+    var modal = document.getElementById('editAboutModal');
+    if (modal) modal.style.display = 'flex';
+}
+function closeEditAboutModal() {
+    var modal = document.getElementById('editAboutModal');
+    if (modal) modal.style.display = 'none';
+}
+</script>
 {% endblock %}
