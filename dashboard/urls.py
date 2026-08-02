@@ -18,4 +18,9 @@ urlpatterns = [
     path('inquiries/', views.manage_inquiries, name='manage_inquiries'),
     path('inquiries/<int:pk>/toggle-read/', views.toggle_inquiry_read, name='toggle_inquiry_read'),
     path('inquiries/<int:pk>/delete/', views.delete_inquiry, name='delete_inquiry'),
+    path('offers/', views.manage_offers, name='manage_offers'),
+    path('offers/add/', views.add_offer, name='add_offer'),
+    path('offers/<int:pk>/edit/', views.edit_offer, name='edit_offer'),
+    path('offers/<int:pk>/toggle-status/', views.toggle_offer_status, name='toggle_offer_status'),
+    path('offers/<int:pk>/delete/', views.delete_offer, name='delete_offer'),
 ]

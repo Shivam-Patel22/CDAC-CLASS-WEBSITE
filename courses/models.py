@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Course(models.Model):
     name = models.CharField(max_length=200)
@@ -10,3 +12,57 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class CourseOffer(models.Model):
+    STATUS_CHOICES = [
+        ('active', 'Active'),
+        ('inactive', 'Inactive'),
+        ('draft', 'Draft'),
+    ]
+
+    title = models.CharField(max_length=200, help_text="Short offer title for ticker, e.g., 30% OFF on Python Course")
+    description = models.TextField(blank=True, null=True, help_text="Detailed description of offer")
+    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, blank=True, related_name='offers')
+    discount = models.CharField(max_length=100, blank=True, null=True, help_text="e.g., 30% OFF, ₹999 Only, Free Certificate")
+    badge = models.CharField(max_length=50, default="🎉 SPECIAL OFFER", help_text="Ticker badge icon/text")
+    start_date = models.DateField(blank=True, null=True, help_text="Start date for offer schedule")
+    end_date = models.DateField(blank=True, null=True, help_text="End date for offer expiry")
+    priority = models.IntegerField(default=0, help_text="Higher priority offers appear first in ticker")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active')
+
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_offers')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-priority', '-created_at']
+        verbose_name = 'Course Offer'
+        verbose_name_plural = 'Course Offers'
+
+    def __str__(self):
+        return f"{self.badge} - {self.title}"
+
+    @property
+    def computed_status(self):
+        today = timezone.now().date()
+        if self.status == 'inactive':
+            return 'Inactive'
+        if self.status == 'draft':
+            return 'Draft'
+        if self.start_date and self.start_date > today:
+            return 'Scheduled'
+        if self.end_date and self.end_date < today:
+            return 'Expired'
+        return 'Active'
+
+    @property
+    def is_currently_active(self):
+        today = timezone.now().date()
+        if self.status != 'active':
+            return False
+        if self.start_date and self.start_date > today:
+            return False
+        if self.end_date and self.end_date < today:
+            return False
+        return True

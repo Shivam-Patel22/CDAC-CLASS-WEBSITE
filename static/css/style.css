@@ -750,3 +750,109 @@ textarea.form-control {
         grid-template-columns: 1fr;
     }
 }
+
+/* Running Latest Course Offers Ticker */
+.offers-ticker-container {
+    background: #0B1727;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+    overflow: hidden;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 999;
+}
+
+.offers-ticker-wrapper {
+    max-width: 1320px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+    height: 100%;
+}
+
+.offers-ticker-badge {
+    background: linear-gradient(135deg, #0284C7, #2563EB);
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.5px;
+    padding: 0.35rem 0.85rem;
+    border-radius: 6px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+    z-index: 2;
+    flex-shrink: 0;
+    margin-right: 1rem;
+}
+
+.offers-ticker-content {
+    flex-grow: 1;
+    overflow: hidden;
+    position: relative;
+    mask-image: linear-gradient(to right, transparent, black 15px, black 95%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 15px, black 95%, transparent);
+}
+
+.offers-ticker-track {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    animation: ticker-scroll 30s linear infinite;
+    gap: 2.5rem;
+}
+
+.offers-ticker-container:hover .offers-ticker-track {
+    animation-play-state: paused;
+}
+
+@keyframes ticker-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: #F8FAFC;
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+
+.ticker-item-badge {
+    color: #38BDF8;
+    font-weight: 700;
+}
+
+.ticker-item-title {
+    color: #FFFFFF;
+}
+
+.ticker-item-discount {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38BDF8;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.ticker-item-link {
+    color: #93C5FD;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.ticker-item-link:hover {
+    color: #FFFFFF;
+    text-decoration: underline;
+}

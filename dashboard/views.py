@@ -3,8 +3,8 @@ from django.contrib.auth import login as auth_login, logout as auth_logout, auth
 from django.contrib.auth.models import User
 from django.contrib import messages
 from .decorators import staff_required
-from .forms import AdminLoginForm, AdminCourseForm, AdminCertificateForm
-from courses.models import Course
+from .forms import AdminLoginForm, AdminCourseForm, AdminCertificateForm, AdminOfferForm
+from courses.models import Course, CourseOffer
 from certificates.models import Certificate
 from certificates.utils import generate_certificate_id
 
@@ -209,3 +209,110 @@ def delete_inquiry(request, pk):
     if next_url:
         return redirect(next_url)
     return redirect('dashboard:manage_inquiries')
+
+from django.utils import timezone
+from django.db.models import Q
+
+@staff_required
+def manage_offers(request):
+    search_query = request.GET.get('q', '').strip()
+    status_filter = request.GET.get('status', 'all')
+    course_filter = request.GET.get('course', '')
+
+    queryset = CourseOffer.objects.select_related('course', 'created_by').order_by('-priority', '-created_at')
+
+    if search_query:
+        queryset = queryset.filter(
+            Q(title__icontains=search_query) |
+            Q(discount__icontains=search_query) |
+            Q(badge__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+
+    if course_filter:
+        queryset = queryset.filter(course_id=course_filter)
+
+    today = timezone.now().date()
+    if status_filter == 'active':
+        queryset = [o for o in queryset if o.computed_status == 'Active']
+    elif status_filter == 'scheduled':
+        queryset = [o for o in queryset if o.computed_status == 'Scheduled']
+    elif status_filter == 'expired':
+        queryset = [o for o in queryset if o.computed_status == 'Expired']
+    elif status_filter == 'draft':
+        queryset = [o for o in queryset if o.computed_status == 'Draft']
+    elif status_filter == 'inactive':
+        queryset = [o for o in queryset if o.computed_status == 'Inactive']
+
+    courses = Course.objects.all().order_by('name')
+    total_offers = CourseOffer.objects.count()
+    active_offers_count = sum(1 for o in CourseOffer.objects.all() if o.is_currently_active)
+
+    context = {
+        'offers': queryset,
+        'search_query': search_query,
+        'status_filter': status_filter,
+        'course_filter': course_filter,
+        'courses': courses,
+        'total_offers': total_offers,
+        'active_offers_count': active_offers_count,
+    }
+    return render(request, 'dashboard/manage_offers.html', context)
+
+@staff_required
+def add_offer(request):
+    if request.method == 'POST':
+        form = AdminOfferForm(request.POST)
+        if form.is_valid():
+            offer = form.save(commit=False)
+            offer.created_by = request.user
+            offer.save()
+            messages.success(request, f"Course Offer '{offer.title}' created successfully.")
+            return redirect('dashboard:manage_offers')
+    else:
+        form = AdminOfferForm()
+
+    return render(request, 'dashboard/offer_form.html', {'form': form, 'title': 'Create New Course Offer'})
+
+@staff_required
+def edit_offer(request, pk):
+    offer = get_object_or_404(CourseOffer, pk=pk)
+    if request.method == 'POST':
+        form = AdminOfferForm(request.POST, instance=offer)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Course Offer '{offer.title}' updated successfully.")
+            return redirect('dashboard:manage_offers')
+    else:
+        form = AdminOfferForm(instance=offer)
+
+    return render(request, 'dashboard/offer_form.html', {'form': form, 'title': f'Edit Offer: {offer.title}', 'offer': offer})
+
+@staff_required
+def toggle_offer_status(request, pk):
+    offer = get_object_or_404(CourseOffer, pk=pk)
+    if offer.status == 'active':
+        offer.status = 'inactive'
+        status_msg = "deactivated"
+    else:
+        offer.status = 'active'
+        status_msg = "activated"
+    offer.save()
+    messages.success(request, f"Course Offer '{offer.title}' has been {status_msg}.")
+
+    next_url = request.GET.get('next') or request.META.get('HTTP_REFERER')
+    if next_url:
+        return redirect(next_url)
+    return redirect('dashboard:manage_offers')
+
+@staff_required
+def delete_offer(request, pk):
+    offer = get_object_or_404(CourseOffer, pk=pk)
+    title = offer.title
+    offer.delete()
+    messages.success(request, f"Course Offer '{title}' has been permanently deleted.")
+
+    next_url = request.GET.get('next') or request.META.get('HTTP_REFERER')
+    if next_url:
+        return redirect(next_url)
+    return redirect('dashboard:manage_offers')

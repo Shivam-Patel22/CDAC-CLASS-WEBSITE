@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} | Admin Panel | C-DAC{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px;">
+    <div style="margin-bottom: 2rem;">
+        <a href="{% url 'dashboard:manage_offers' %}" class="btn btn-outline-dark btn-sm">&larr; Back to Offer Management</a>
+        <h1 style="font-size: 1.8rem; color: var(--gray-900); margin-top: 1rem;">{{ title }}</h1>
+    </div>
+
+    <!-- Live Ticker Preview Component -->
+    <div class="card" style="margin-bottom: 2rem; background: #0B1727; border: 1px solid rgba(56, 189, 248, 0.3); color: #FFFFFF; padding: 1.25rem;">
+        <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #38BDF8; font-weight: 700; display: block; margin-bottom: 0.75rem;">
+            ⚡ LIVE RUNNING TICKER PREVIEW
+        </span>
+        <div style="display: flex; align-items: center; gap: 1rem; background: #060D17; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08);">
+            <div style="background: linear-gradient(135deg, #0284C7, #2563EB); color: #FFF; font-weight: 700; font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 4px; flex-shrink: 0;">
+                LATEST OFFERS 🎉
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.6rem; overflow: hidden; white-space: nowrap; font-size: 0.9rem;">
+                <strong id="preview-badge" style="color: #38BDF8; font-weight: 700;">
+                    {% if offer and offer.badge %}{{ offer.badge }}{% else %}🎉 SPECIAL OFFER{% endif %}
+                </strong>
+                <span id="preview-title" style="color: #F8FAFC; font-weight: 500;">
+                    {% if offer and offer.title %}{{ offer.title }}{% else %}Sample Offer Title Will Display Here{% endif %}
+                </span>
+                <span id="preview-discount" class="ticker-item-discount" style="{% if not offer or not offer.discount %}display: none;{% endif %}">
+                    {% if offer and offer.discount %}{{ offer.discount }}{% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offer Form Card -->
+    <div class="card">
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label style="font-weight: 600; margin-bottom: 0.35rem; display: block;">Offer Title *</label>
+                {{ form.title }}
+                <small style="color: var(--gray-500);">Headline text displayed on the running ticker (e.g., 30% OFF on Python Full Stack Course).</small>
+            </div>
+
+            <div class="grid grid-2" style="gap: 1rem; margin-bottom: 1.25rem;">
+                <div class="form-group">
+                    <label style="font-weight: 600; margin-bottom: 0.35rem; display: block;">Offer Badge / Icon</label>
+                    {{ form.badge }}
+                    <small style="color: var(--gray-500);">e.g. 🎉 LIMITED OFFER, 🚀 NEW BATCH</small>
+                </div>
+                <div class="form-group">
+                    <label style="font-weight: 600; margin-bottom: 0.35rem; display: block;">Discount Tag</label>
+                    {{ form.discount }}
+                    <small style="color: var(--gray-500);">e.g. 30% OFF, ₹999 Only, Free Certificate</small>
+                </div>
+            </div>
+
+            <div class="grid grid-2" style="gap: 1rem; margin-bottom: 1.25rem;">
+                <div class="form-group">
+                    <label style="font-weight: 600; margin-bottom: 0.35rem; display: block;">Associated Course (Optional)</label>
+                    {{ form.course }}
+                </div>
+                <div class="form-group">
+                    <label style="font-weight: 600; margin-bottom: 0.35rem; display: block;">Status</label>
+                    {{ form.status }}
+                </div>
+            </div>
+
+            <div class="grid grid-3" style="gap: 1rem; margin-bottom: 1.25rem;">
+                <div class="form-group">
+                    <label style="font-weight: 600; margin-bottom: 0.35rem; display: block;">Start Date (Schedule)</label>
+                    {{ form.start_date }}
+                    <small style="color: var(--gray-500);">Leave blank for immediate activation.</small>
+                </div>
+                <div class="form-group">
+                    <label style="font-weight: 600; margin-bottom: 0.35rem; display: block;">End Date (Expiry)</label>
+                    {{ form.end_date }}
+                    <small style="color: var(--gray-500);">Automatically expires after date.</small>
+                </div>
+                <div class="form-group">
+                    <label style="font-weight: 600; margin-bottom: 0.35rem; display: block;">Display Priority</label>
+                    {{ form.priority }}
+                    <small style="color: var(--gray-500);">Higher number appears first.</small>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label style="font-weight: 600; margin-bottom: 0.35rem; display: block;">Detailed Description (Optional)</label>
+                {{ form.description }}
+            </div>
+
+            {% if offer %}
+            <div style="background: var(--dark-subtle); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; font-size: 0.85rem; color: var(--gray-600);">
+                <strong>Audit Record:</strong><br>
+                Created By: <strong>{% if offer.created_by %}{{ offer.created_by.username }}{% else %}System{% endif %}</strong> |
+                Created Date: <strong>{{ offer.created_at|date:"M j, Y — g:i A" }}</strong> |
+                Last Updated: <strong>{{ offer.updated_at|date:"M j, Y — g:i A" }}</strong>
+            </div>
+            {% endif %}
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <a href="{% url 'dashboard:manage_offers' %}" class="btn btn-outline-dark">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Course Offer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const titleInput = document.getElementById('id_title');
+        const badgeInput = document.getElementById('id_badge');
+        const discountInput = document.getElementById('id_discount');
+
+        const prevTitle = document.getElementById('preview-title');
+        const prevBadge = document.getElementById('preview-badge');
+        const prevDiscount = document.getElementById('preview-discount');
+
+        function updatePreview() {
+            if (titleInput) {
+                prevTitle.textContent = titleInput.value.trim() || 'Sample Offer Title Will Display Here';
+            }
+            if (badgeInput) {
+                prevBadge.textContent = badgeInput.value.trim() || '🎉 SPECIAL OFFER';
+            }
+            if (discountInput) {
+                const discVal = discountInput.value.trim();
+                if (discVal) {
+                    prevDiscount.textContent = discVal;
+                    prevDiscount.style.display = 'inline-block';
+                } else {
+                    prevDiscount.style.display = 'none';
+                }
+            }
+        }
+
+        if (titleInput) titleInput.addEventListener('input', updatePreview);
+        if (badgeInput) badgeInput.addEventListener('input', updatePreview);
+        if (discountInput) discountInput.addEventListener('input', updatePreview);
+    });
+</script>
+{% endblock %}

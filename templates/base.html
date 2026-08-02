@@ -69,6 +69,37 @@
     </header>
     {% endif %}
 
+    <!-- Running Latest Course Offers Ticker Panel -->
+    {% if latest_offers %}
+    <div class="offers-ticker-container">
+        <div class="offers-ticker-wrapper">
+            <div class="offers-ticker-badge">
+                <span>LATEST OFFERS</span> 🎉
+            </div>
+            <div class="offers-ticker-content">
+                <div class="offers-ticker-track">
+                    {% for offer in latest_offers %}
+                        <span class="ticker-item">
+                            {% if offer.badge %}<strong class="ticker-item-badge">{{ offer.badge }}</strong>{% endif %}
+                            <span class="ticker-item-title">{{ offer.title }}</span>
+                            {% if offer.discount %}<span class="ticker-item-discount">{{ offer.discount }}</span>{% endif %}
+                            {% if offer.course %}<a href="{% url 'courses:course_detail' offer.course.id %}" class="ticker-item-link">View Course &rarr;</a>{% endif %}
+                        </span>
+                    {% endfor %}
+                    {% for offer in latest_offers %}
+                        <span class="ticker-item" aria-hidden="true">
+                            {% if offer.badge %}<strong class="ticker-item-badge">{{ offer.badge }}</strong>{% endif %}
+                            <span class="ticker-item-title">{{ offer.title }}</span>
+                            {% if offer.discount %}<span class="ticker-item-discount">{{ offer.discount }}</span>{% endif %}
+                            {% if offer.course %}<a href="{% url 'courses:course_detail' offer.course.id %}" class="ticker-item-link">View Course &rarr;</a>{% endif %}
+                        </span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Flash Messages -->
     {% if messages %}
     <div class="messages-container">

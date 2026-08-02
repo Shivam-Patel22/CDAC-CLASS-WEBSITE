@@ -117,4 +117,55 @@ class Command(BaseCommand):
             status = "Created" if created else "Already exists"
             self.stdout.write(f"Certificate: {cert.certificate_id} for {cert.student_name} ({status})")
 
-        self.stdout.write(self.style.SUCCESS("Successfully seeded courses and certificates!"))
+        from courses.models import CourseOffer
+        offers_data = [
+            {
+                'title': '30% OFF on Python Full Stack Course',
+                'badge': '🎉 LIMITED OFFER',
+                'discount': '30% OFF',
+                'course': created_courses[0],
+                'priority': 10,
+                'status': 'active'
+            },
+            {
+                'title': 'New AI & ML Advanced Batch Starts 15 Aug',
+                'badge': '🚀 NEW BATCH',
+                'discount': 'Enroll Now',
+                'course': created_courses[2],
+                'priority': 8,
+                'status': 'active'
+            },
+            {
+                'title': 'Free Verified Certificate with Web Development Course',
+                'badge': '📜 FREE CERTIFICATE',
+                'discount': 'Free Certification',
+                'course': created_courses[1],
+                'priority': 5,
+                'status': 'active'
+            },
+            {
+                'title': 'Early Bird Special Discount on Financial Accounting',
+                'badge': '⏰ LIMITED TIME',
+                'discount': '20% OFF',
+                'course': created_courses[3],
+                'priority': 3,
+                'status': 'active'
+            }
+        ]
+
+        for offer_item in offers_data:
+            offer, created = CourseOffer.objects.get_or_create(
+                title=offer_item['title'],
+                defaults={
+                    'badge': offer_item['badge'],
+                    'discount': offer_item['discount'],
+                    'course': offer_item['course'],
+                    'priority': offer_item['priority'],
+                    'status': offer_item['status'],
+                    'created_by': admin_user
+                }
+            )
+            status_str = "Created" if created else "Already exists"
+            self.stdout.write(f"Course Offer: {offer.title} ({status_str})")
+
+        self.stdout.write(self.style.SUCCESS("Successfully seeded courses, certificates, and latest offers!"))

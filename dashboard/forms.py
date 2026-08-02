@@ -49,3 +49,21 @@ class AdminCertificateForm(forms.ModelForm):
         # If adding a new certificate, pre-populate certificate_id with generated value
         if not self.instance.pk and not self.initial.get('certificate_id'):
             self.initial['certificate_id'] = generate_certificate_id()
+
+from courses.models import CourseOffer
+
+class AdminOfferForm(forms.ModelForm):
+    class Meta:
+        model = CourseOffer
+        fields = ['title', 'description', 'course', 'discount', 'badge', 'start_date', 'end_date', 'priority', 'status']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 30% OFF on Python Course', 'required': 'required', 'id': 'id_title'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Offer overview & terms', 'rows': 3}),
+            'course': forms.Select(attrs={'class': 'form-control'}),
+            'discount': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 30% OFF / ₹999 Only', 'id': 'id_discount'}),
+            'badge': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 🎉 SPECIAL OFFER', 'id': 'id_badge'}),
+            'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'priority': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '0'}),
+            'status': forms.Select(attrs={'class': 'form-control'}),
+        }

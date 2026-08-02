@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Course Offers | Admin Panel | C-DAC{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1 style="font-size: 1.8rem; color: var(--gray-900);">Manage Course Offers</h1>
+            <p style="color: var(--gray-500); margin-top: 0.25rem;">
+                Control live promotional offers displayed on the website running ticker.
+            </p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+            <a href="{% url 'dashboard:add_offer' %}" class="btn btn-primary">+ Create Offer</a>
+        </div>
+    </div>
+
+    <!-- Filter & Search Bar -->
+    <div class="card" style="margin-bottom: 2rem; padding: 1.25rem;">
+        <form method="GET" action="{% url 'dashboard:manage_offers' %}" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between;">
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; flex-grow: 1;">
+                <input type="text" name="q" value="{{ search_query }}" placeholder="Search offer title, discount, badge..." class="form-control" style="max-width: 280px;">
+                <select name="course" class="form-control" style="max-width: 220px;" onchange="this.form.submit()">
+                    <option value="">— All Courses —</option>
+                    {% for c in courses %}
+                        <option value="{{ c.id }}" {% if course_filter == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn btn-dark-subtle btn-sm">Filter</button>
+                {% if search_query or course_filter or status_filter != 'all' %}
+                    <a href="{% url 'dashboard:manage_offers' %}" class="btn btn-outline-dark btn-sm">Reset Filters</a>
+                {% endif %}
+            </div>
+
+            <!-- Status Tabs -->
+            <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+                <a href="?status=all{% if search_query %}&q={{ search_query }}{% endif %}{% if course_filter %}&course={{ course_filter }}{% endif %}" class="btn {% if status_filter == 'all' %}btn-primary{% else %}btn-outline-dark{% endif %} btn-sm">
+                    All ({{ total_offers }})
+                </a>
+                <a href="?status=active{% if search_query %}&q={{ search_query }}{% endif %}{% if course_filter %}&course={{ course_filter }}{% endif %}" class="btn {% if status_filter == 'active' %}btn-primary{% else %}btn-outline-dark{% endif %} btn-sm">
+                    Active ({{ active_offers_count }})
+                </a>
+                <a href="?status=scheduled{% if search_query %}&q={{ search_query }}{% endif %}{% if course_filter %}&course={{ course_filter }}{% endif %}" class="btn {% if status_filter == 'scheduled' %}btn-primary{% else %}btn-outline-dark{% endif %} btn-sm">
+                    Scheduled
+                </a>
+                <a href="?status=expired{% if search_query %}&q={{ search_query }}{% endif %}{% if course_filter %}&course={{ course_filter }}{% endif %}" class="btn {% if status_filter == 'expired' %}btn-primary{% else %}btn-outline-dark{% endif %} btn-sm">
+                    Expired
+                </a>
+                <a href="?status=draft{% if search_query %}&q={{ search_query }}{% endif %}{% if course_filter %}&course={{ course_filter }}{% endif %}" class="btn {% if status_filter == 'draft' %}btn-primary{% else %}btn-outline-dark{% endif %} btn-sm">
+                    Draft
+                </a>
+            </div>
+        </form>
+    </div>
+
+    {% if offers %}
+    <div class="table-container">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Priority</th>
+                    <th>Badge & Offer Title</th>
+                    <th>Course</th>
+                    <th>Discount</th>
+                    <th>Live Status</th>
+                    <th>Schedule</th>
+                    <th>Audit Info</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for offer in offers %}
+                <tr>
+                    <td>
+                        <span class="badge badge-secondary" style="font-weight: 700;">P-{{ offer.priority }}</span>
+                    </td>
+                    <td>
+                        <div>
+                            {% if offer.badge %}<strong style="color: #0284C7; font-size: 0.85rem;">{{ offer.badge }}</strong>{% endif %}
+                            <div style="font-weight: 600; color: var(--gray-900);">{{ offer.title }}</div>
+                            {% if offer.description %}
+                                <div style="font-size: 0.8rem; color: var(--gray-500); max-width: 250px;">{{ offer.description }}</div>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        {% if offer.course %}
+                            <span class="badge badge-primary">{{ offer.course.name }}</span>
+                        {% else %}
+                            <span style="color: var(--gray-400); font-size: 0.85rem;">All Courses</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if offer.discount %}
+                            <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #0284C7; border: 1px solid rgba(56, 189, 248, 0.3); font-weight: 700;">{{ offer.discount }}</span>
+                        {% else %}
+                            <span style="color: var(--gray-400); font-size: 0.85rem;">—</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% with offer.computed_status as st %}
+                            {% if st == 'Active' %}
+                                <span class="badge badge-success">● ACTIVE</span>
+                            {% elif st == 'Scheduled' %}
+                                <span class="badge badge-primary">⏰ SCHEDULED</span>
+                            {% elif st == 'Expired' %}
+                                <span class="badge badge-danger">⌛ EXPIRED</span>
+                            {% elif st == 'Draft' %}
+                                <span class="badge badge-secondary">📝 DRAFT</span>
+                            {% else %}
+                                <span class="badge badge-secondary">OFFLINE</span>
+                            {% endif %}
+                        {% endwith %}
+                    </td>
+                    <td>
+                        <div style="font-size: 0.8rem; color: var(--gray-600);">
+                            {% if offer.start_date %}<div>From: <strong>{{ offer.start_date|date:"M j, Y" }}</strong></div>{% endif %}
+                            {% if offer.end_date %}<div>Until: <strong>{{ offer.end_date|date:"M j, Y" }}</strong></div>{% endif %}
+                            {% if not offer.start_date and not offer.end_date %}<div>Always Active</div>{% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-size: 0.78rem; color: var(--gray-500);">
+                            <div>By: <strong>{% if offer.created_by %}{{ offer.created_by.username }}{% else %}System{% endif %}</strong></div>
+                            <div>Created: {{ offer.created_at|date:"M j, Y" }}</div>
+                            <div>Updated: {{ offer.updated_at|date:"M j, Y" }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+                            <a href="{% url 'dashboard:toggle_offer_status' offer.id %}" class="btn {% if offer.status == 'active' %}btn-dark-subtle{% else %}btn-outline-dark{% endif %} btn-sm">
+                                {% if offer.status == 'active' %}Deactivate{% else %}Activate{% endif %}
+                            </a>
+                            <a href="{% url 'dashboard:edit_offer' offer.id %}" class="btn btn-outline-dark btn-sm">Edit</a>
+                            <a href="{% url 'dashboard:delete_offer' offer.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this offer?');">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">🏷️</div>
+        <h3>No Offers Found</h3>
+        <p>No course offers match your criteria.</p>
+        <a href="{% url 'dashboard:add_offer' %}" class="btn btn-primary">+ Create New Offer</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
