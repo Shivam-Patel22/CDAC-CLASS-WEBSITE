@@ -3,7 +3,7 @@ from django.contrib.auth import login as auth_login, logout as auth_logout, auth
 from django.contrib.auth.models import User
 from django.contrib import messages
 from .decorators import staff_required
-from .forms import AdminLoginForm, AdminCourseForm, AdminCertificateForm, AdminOfferForm
+from .forms import AdminLoginForm, AdminCourseForm, AdminCertificateForm, AdminOfferForm, AdminStudentForm, AdminAboutForm, AdminContactForm
 from courses.models import Course, CourseOffer
 from certificates.models import Certificate
 from certificates.utils import generate_certificate_id
@@ -445,4 +445,44 @@ def delete_student(request, pk):
     if next_url:
         return redirect(next_url)
     return redirect('dashboard:active_students')
+
+from core.models import AboutContent, ContactContent
+
+@staff_required
+def edit_about(request):
+    about_obj = AboutContent.get_solo()
+    if request.method == 'POST':
+        form = AdminAboutForm(request.POST, instance=about_obj)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "About section content updated successfully. Changes are now live on the public website!")
+            return redirect('dashboard:edit_about')
+    else:
+        form = AdminAboutForm(instance=about_obj)
+
+    context = {
+        'form': form,
+        'about_obj': about_obj,
+        'title': 'Edit About Section Content'
+    }
+    return render(request, 'dashboard/edit_about.html', context)
+
+@staff_required
+def edit_contact(request):
+    contact_obj = ContactContent.get_solo()
+    if request.method == 'POST':
+        form = AdminContactForm(request.POST, instance=contact_obj)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Contact section details updated successfully. Changes are now live on the public website & footer!")
+            return redirect('dashboard:edit_contact')
+    else:
+        form = AdminContactForm(instance=contact_obj)
+
+    context = {
+        'form': form,
+        'contact_obj': contact_obj,
+        'title': 'Edit Contact Details & Location'
+    }
+    return render(request, 'dashboard/edit_contact.html', context)
 

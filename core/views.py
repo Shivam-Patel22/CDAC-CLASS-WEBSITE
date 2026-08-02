@@ -18,12 +18,14 @@ def home(request):
     }
     return render(request, 'core/home.html', context)
 
-from .models import Inquiry
+from .models import Inquiry, AboutContent, ContactContent
 
 def about(request):
-    return render(request, 'core/about.html')
+    about_content = AboutContent.get_solo()
+    return render(request, 'core/about.html', {'about_content': about_content})
 
 def contact(request):
+    contact_content = ContactContent.get_solo()
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
@@ -56,4 +58,4 @@ def contact(request):
             initial_data['course'] = course_id
         form = ContactForm(initial=initial_data)
     
-    return render(request, 'core/contact.html', {'form': form})
+    return render(request, 'core/contact.html', {'form': form, 'contact_content': contact_content})

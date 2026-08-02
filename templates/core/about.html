@@ -5,28 +5,28 @@
 {% block content %}
 <div class="container">
     <div class="page-header">
-        <h1 class="page-title">About C-DAC</h1>
-        <p class="page-subtitle">Dedicated to excellence in practical computer education, advanced computing research, and skills training.</p>
+        <h1 class="page-title">{% if about_content and about_content.heading %}{{ about_content.heading }}{% else %}About C-DAC{% endif %}</h1>
+        <p class="page-subtitle">{% if about_content and about_content.subtitle %}{{ about_content.subtitle }}{% else %}Dedicated to excellence in practical computer education, advanced computing research, and skills training.{% endif %}</p>
     </div>
 
     <div class="card" style="margin-bottom: 2.5rem; padding: 2.5rem;">
-        <h2 style="margin-bottom: 1rem; color: var(--primary);">Our Mission</h2>
+        <h2 style="margin-bottom: 1rem; color: var(--primary);">{% if about_content and about_content.mission_title %}{{ about_content.mission_title }}{% else %}Our Mission{% endif %}</h2>
         <p style="font-size: 1.1rem; color: var(--gray-700); line-height: 1.8; margin-bottom: 1.5rem;">
-            At the Centre for Development of Advanced Computing (C-DAC), our mission is to carry out R&D in IT, Electronics and associated areas, empowering students and professionals with high-end IT education. Whether you are looking to start a career in software development, web engineering, database administration, or advanced computing, our hands-on curriculum is designed to get you industry-ready.
+            {% if about_content and about_content.description %}{{ about_content.description }}{% else %}At the Centre for Development of Advanced Computing (C-DAC), our mission is to carry out R&D in IT, Electronics and associated areas, empowering students and professionals with high-end IT education.{% endif %}
         </p>
 
         <div class="grid grid-3" style="margin-top: 2rem;">
             <div style="background: var(--gray-50); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--gray-200);">
-                <h3 style="font-size: 1.2rem; color: var(--gray-900); margin-bottom: 0.5rem;">🎯 Practical Learning</h3>
-                <p style="color: var(--gray-600); font-size: 0.95rem;">Every course emphasizes real-world projects and coding exercises over passive lecture theory.</p>
+                <h3 style="font-size: 1.2rem; color: var(--gray-900); margin-bottom: 0.5rem;">{% if about_content and about_content.feature_1_title %}{{ about_content.feature_1_title }}{% else %}🎯 Practical Learning{% endif %}</h3>
+                <p style="color: var(--gray-600); font-size: 0.95rem;">{% if about_content and about_content.feature_1_desc %}{{ about_content.feature_1_desc }}{% else %}Every course emphasizes real-world projects and coding exercises over passive lecture theory.{% endif %}</p>
             </div>
             <div style="background: var(--gray-50); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--gray-200);">
-                <h3 style="font-size: 1.2rem; color: var(--gray-900); margin-bottom: 0.5rem;">🏆 Authentic Certification</h3>
-                <p style="color: var(--gray-600); font-size: 0.95rem;">Certificates issued by C-DAC feature unique cryptographic IDs verifiable by employers globally.</p>
+                <h3 style="font-size: 1.2rem; color: var(--gray-900); margin-bottom: 0.5rem;">{% if about_content and about_content.feature_2_title %}{{ about_content.feature_2_title }}{% else %}🏆 Authentic Certification{% endif %}</h3>
+                <p style="color: var(--gray-600); font-size: 0.95rem;">{% if about_content and about_content.feature_2_desc %}{{ about_content.feature_2_desc }}{% else %}Certificates issued by C-DAC feature unique cryptographic IDs verifiable by employers globally.{% endif %}</p>
             </div>
             <div style="background: var(--gray-50); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--gray-200);">
-                <h3 style="font-size: 1.2rem; color: var(--gray-900); margin-bottom: 0.5rem;">👥 Community Support</h3>
-                <p style="color: var(--gray-600); font-size: 0.95rem;">Dedicated lab assistants, mentor hours, and career placement assistance for all active students.</p>
+                <h3 style="font-size: 1.2rem; color: var(--gray-900); margin-bottom: 0.5rem;">{% if about_content and about_content.feature_3_title %}{{ about_content.feature_3_title }}{% else %}👥 Community Support{% endif %}</h3>
+                <p style="color: var(--gray-600); font-size: 0.95rem;">{% if about_content and about_content.feature_3_desc %}{{ about_content.feature_3_desc }}{% else %}Dedicated lab assistants, mentor hours, and career placement assistance for all active students.{% endif %}</p>
             </div>
         </div>
     </div>

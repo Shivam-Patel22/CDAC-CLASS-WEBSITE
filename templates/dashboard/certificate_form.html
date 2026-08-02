@@ -14,10 +14,22 @@
         <form method="post" data-validate="true">
             {% csrf_token %}
 
+            <div class="form-group" style="background: var(--gray-50); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--gray-200); margin-bottom: 1.25rem;">
+                <label style="font-weight: 600; margin-bottom: 0.5rem; display: block; color: var(--gray-800);">Certificate ID Generation Mode</label>
+                <div style="display: flex; gap: 1.5rem;">
+                    <label style="display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer; font-weight: 500; color: var(--gray-800);">
+                        <input type="radio" name="id_gen_mode" value="auto" checked onchange="toggleIdMode(this.value)"> ⚡ Auto Generate
+                    </label>
+                    <label style="display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer; font-weight: 500; color: var(--gray-800);">
+                        <input type="radio" name="id_gen_mode" value="manual" onchange="toggleIdMode(this.value)"> ✏️ Manual Entry (Custom ID)
+                    </label>
+                </div>
+            </div>
+
             <div class="form-group">
-                <label for="{{ form.certificate_id.id_for_label }}">Auto-Generated Certificate ID (Read-only)</label>
+                <label for="{{ form.certificate_id.id_for_label }}">Certificate ID *</label>
                 {{ form.certificate_id }}
-                <small style="color: var(--gray-500); font-size: 0.8rem;">Format: CERT-YYYY-XXXXXX (Server auto-generated)</small>
+                <small id="id-mode-hint" style="color: var(--gray-500); font-size: 0.8rem; display: block; margin-top: 0.3rem;">Format: CERT-YYYY-XXXXXX (Server auto-generated)</small>
                 {% if form.certificate_id.errors %}<div class="form-error">{{ form.certificate_id.errors.0 }}</div>{% endif %}
             </div>
 
@@ -59,4 +71,33 @@
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleIdMode(mode) {
+    var certInput = document.getElementById('id_certificate_id');
+    var hint = document.getElementById('id-mode-hint');
+    if (!certInput) return;
+
+    if (mode === 'manual') {
+        certInput.removeAttribute('readonly');
+        certInput.placeholder = 'e.g. CERT-2026-HARSHAL01, CDAC-ML-2026-1001';
+        if (hint) hint.textContent = '✏️ Manual mode active: Enter custom unique Certificate ID (e.g. CERT-2026-HARSHAL01, CDAC-ML-2026-1001).';
+        certInput.focus();
+    } else {
+        certInput.setAttribute('readonly', 'readonly');
+        if (hint) hint.textContent = '⚡ Auto mode active: Format CERT-YYYY-XXXXXX (Server auto-generated)';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var manualRadio = document.querySelector('input[name="id_gen_mode"][value="manual"]');
+    if (manualRadio && manualRadio.checked) {
+        toggleIdMode('manual');
+    } else {
+        toggleIdMode('auto');
+    }
+});
+</script>
 {% endblock %}

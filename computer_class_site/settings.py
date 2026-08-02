@@ -71,6 +71,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'dashboard.context_processors.inquiry_notifications',
                 'courses.context_processors.latest_offers',
+                'core.context_processors.site_content',
             ],
         },
     },

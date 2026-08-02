@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} | C-DAC Admin{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <!-- Page Header -->
+    <div style="background: var(--dark-surface); color: white; border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1 style="font-size: 1.8rem; color: white;">ℹ️ Edit About Section Content</h1>
+            <p style="color: var(--gray-400); margin-top: 0.25rem;">
+                Update Institute heading, mission statement, and highlight cards shown on the public About page.
+            </p>
+        </div>
+        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <a href="{% url 'core:about' %}" target="_blank" class="btn btn-outline btn-sm">👁️ View Public About Page</a>
+            <a href="{% url 'dashboard:index' %}" class="btn btn-outline btn-sm">&larr; Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div class="grid grid-2" style="gap: 2rem; align-items: start;">
+
+        <!-- Form Column -->
+        <div class="card" style="padding: 2rem;">
+            <h3 style="margin-bottom: 1.5rem; color: var(--gray-900);">📝 Edit Content Fields</h3>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label style="font-weight: 600; color: var(--gray-800); margin-bottom: 0.35rem; display: block;">Page Heading *</label>
+                    {{ form.heading }}
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label style="font-weight: 600; color: var(--gray-800); margin-bottom: 0.35rem; display: block;">Page Subtitle</label>
+                    {{ form.subtitle }}
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label style="font-weight: 600; color: var(--gray-800); margin-bottom: 0.35rem; display: block;">Section Heading</label>
+                    {{ form.mission_title }}
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="font-weight: 600; color: var(--gray-800); margin-bottom: 0.35rem; display: block;">Main Description / Mission Statement</label>
+                    {{ form.description }}
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid var(--gray-200); margin: 1.5rem 0;">
+                <h4 style="margin-bottom: 1rem; color: var(--primary);">Highlights & Feature Cards</h4>
+
+                <div style="background: var(--gray-50); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1rem; border: 1px solid var(--gray-200);">
+                    <div class="form-group" style="margin-bottom: 0.5rem;">
+                        <label style="font-weight: 600; font-size: 0.85rem;">Card 1 Title</label>
+                        {{ form.feature_1_title }}
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-weight: 600; font-size: 0.85rem;">Card 1 Description</label>
+                        {{ form.feature_1_desc }}
+                    </div>
+                </div>
+
+                <div style="background: var(--gray-50); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1rem; border: 1px solid var(--gray-200);">
+                    <div class="form-group" style="margin-bottom: 0.5rem;">
+                        <label style="font-weight: 600; font-size: 0.85rem;">Card 2 Title</label>
+                        {{ form.feature_2_title }}
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-weight: 600; font-size: 0.85rem;">Card 2 Description</label>
+                        {{ form.feature_2_desc }}
+                    </div>
+                </div>
+
+                <div style="background: var(--gray-50); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; border: 1px solid var(--gray-200);">
+                    <div class="form-group" style="margin-bottom: 0.5rem;">
+                        <label style="font-weight: 600; font-size: 0.85rem;">Card 3 Title</label>
+                        {{ form.feature_3_title }}
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-weight: 600; font-size: 0.85rem;">Card 3 Description</label>
+                        {{ form.feature_3_desc }}
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">💾 Save & Publish Changes</button>
+                    <a href="{% url 'dashboard:index' %}" class="btn btn-outline-dark">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Admin Live Preview Column -->
+        <div class="card" style="padding: 2rem; background: var(--white); border: 2px dashed var(--gray-300);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                <h3 style="margin: 0; font-size: 1.1rem; color: var(--gray-700);">🔍 Admin Live Preview</h3>
+                <span class="badge badge-primary">Live Sync</span>
+            </div>
+
+            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--gray-200);">
+                <h2 style="font-size: 1.5rem; color: var(--gray-900); margin-bottom: 0.25rem;">{{ about_obj.heading }}</h2>
+                <p style="color: var(--gray-500); font-size: 0.9rem; margin-bottom: 1.25rem;">{{ about_obj.subtitle }}</p>
+
+                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">{{ about_obj.mission_title }}</h4>
+                <p style="font-size: 0.95rem; color: var(--gray-700); line-height: 1.6; margin-bottom: 1.25rem;">{{ about_obj.description }}</p>
+
+                <div style="display: grid; gap: 0.75rem;">
+                    <div style="background: white; padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--gray-200);">
+                        <strong>{{ about_obj.feature_1_title }}</strong>
+                        <div style="font-size: 0.85rem; color: var(--gray-600); margin-top: 0.2rem;">{{ about_obj.feature_1_desc }}</div>
+                    </div>
+                    <div style="background: white; padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--gray-200);">
+                        <strong>{{ about_obj.feature_2_title }}</strong>
+                        <div style="font-size: 0.85rem; color: var(--gray-600); margin-top: 0.2rem;">{{ about_obj.feature_2_desc }}</div>
+                    </div>
+                    <div style="background: white; padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--gray-200);">
+                        <strong>{{ about_obj.feature_3_title }}</strong>
+                        <div style="font-size: 0.85rem; color: var(--gray-600); margin-top: 0.2rem;">{{ about_obj.feature_3_desc }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

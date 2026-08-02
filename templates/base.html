@@ -150,9 +150,9 @@
             </div>
             <div class="footer-col">
                 <h4>Contact Us</h4>
-                <p>📍 C-DAC Innovation Campus, Education Street</p>
-                <p>📧 info@cdac.in</p>
-                <p>📞 +91 (020) 2570-4100</p>
+                <p>📍 {% if site_contact and site_contact.address %}{{ site_contact.address }}{% else %}Gandhinagar, Gujarat, India{% endif %}</p>
+                <p>📧 {% if site_contact and site_contact.email %}{{ site_contact.email }}{% else %}contact@cdac.in{% endif %}</p>
+                <p>📞 {% if site_contact and site_contact.phone %}{{ site_contact.phone }}{% else %}+91 (020) 2570-4100{% endif %}</p>
             </div>
         </div>
         <div class="footer-bottom">

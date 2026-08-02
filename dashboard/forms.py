@@ -50,6 +50,18 @@ class AdminCertificateForm(forms.ModelForm):
         if not self.instance.pk and not self.initial.get('certificate_id'):
             self.initial['certificate_id'] = generate_certificate_id()
 
+    def clean_certificate_id(self):
+        cert_id = self.cleaned_data.get('certificate_id', '').strip()
+        if not cert_id:
+            cert_id = generate_certificate_id()
+
+        qs = Certificate.objects.filter(certificate_id__iexact=cert_id)
+        if self.instance and self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise forms.ValidationError(f"Certificate ID '{cert_id}' is already in use. Please enter a unique Certificate ID.")
+        return cert_id
+
 from courses.models import CourseOffer
 
 class AdminOfferForm(forms.ModelForm):
@@ -105,3 +117,34 @@ class AdminStudentForm(forms.Form):
         required=False,
         widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Optional internal notes...', 'rows': 2})
     )
+
+from core.models import AboutContent, ContactContent
+
+class AdminAboutForm(forms.ModelForm):
+    class Meta:
+        model = AboutContent
+        fields = ['heading', 'subtitle', 'mission_title', 'description', 'feature_1_title', 'feature_1_desc', 'feature_2_title', 'feature_2_desc', 'feature_3_title', 'feature_3_desc']
+        widgets = {
+            'heading': forms.TextInput(attrs={'class': 'form-control', 'required': 'required'}),
+            'subtitle': forms.TextInput(attrs={'class': 'form-control'}),
+            'mission_title': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
+            'feature_1_title': forms.TextInput(attrs={'class': 'form-control'}),
+            'feature_1_desc': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'feature_2_title': forms.TextInput(attrs={'class': 'form-control'}),
+            'feature_2_desc': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'feature_3_title': forms.TextInput(attrs={'class': 'form-control'}),
+            'feature_3_desc': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+        }
+
+class AdminContactForm(forms.ModelForm):
+    class Meta:
+        model = ContactContent
+        fields = ['phone', 'email', 'address', 'working_hours', 'map_embed_url']
+        widgets = {
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'required': 'required'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'required': 'required'}),
+            'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'required': 'required'}),
+            'working_hours': forms.TextInput(attrs={'class': 'form-control'}),
+            'map_embed_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Google Maps Embed URL'}),
+        }

@@ -26,7 +26,7 @@
         <div style="border-radius: 12px 12px 0 0; overflow: hidden; line-height: 0;">
             <iframe
                 id="cdac-gandhinagar-map"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d471.09!2d72.6320823!3d23.1852315!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395c2b921555555d%3A0x50e94504c763b697!2sCDAC%20Computer%20Class!5e0!3m2!1sen!2sin!4v1722593000000!5m2!1sen!2sin"
+                src="{% if contact_content and contact_content.map_embed_url %}{{ contact_content.map_embed_url }}{% else %}https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d471.09!2d72.6320823!3d23.1852315!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395c2b921555555d%3A0x50e94504c763b697!2sCDAC%20Computer%20Class!5e0!3m2!1sen!2sin!4v1722593000000!5m2!1sen!2sin{% endif %}"
                 width="100%"
                 height="500"
                 style="border: none; display: block; width: 100%;"
@@ -53,23 +53,23 @@
                     <span style="font-size: 1.1rem; flex-shrink: 0;">📍</span>
                     <div>
                         <div style="font-weight: 700; color: var(--gray-900);">CDAC Computer Class</div>
-                        <div>Gandhinagar, Gujarat, India</div>
+                        <div>{% if contact_content and contact_content.address %}{{ contact_content.address }}{% else %}Gandhinagar, Gujarat, India{% endif %}</div>
                     </div>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.92rem; color: var(--gray-700);">
                     <span style="font-size: 1.1rem;">📞</span>
-                    <a href="tel:+912025704100" style="color: var(--gray-700); text-decoration: none; font-weight: 500;">+91 (020) 2570-4100</a>
+                    <a href="tel:{% if contact_content and contact_content.phone %}{{ contact_content.phone }}{% else %}+912025704100{% endif %}" style="color: var(--gray-700); text-decoration: none; font-weight: 500;">{% if contact_content and contact_content.phone %}{{ contact_content.phone }}{% else %}+91 (020) 2570-4100{% endif %}</a>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.92rem; color: var(--gray-700);">
                     <span style="font-size: 1.1rem;">✉️</span>
-                    <a href="mailto:info@cdac.in" style="color: var(--gray-700); text-decoration: none; font-weight: 500;">info@cdac.in</a>
+                    <a href="mailto:{% if contact_content and contact_content.email %}{{ contact_content.email }}{% else %}info@cdac.in{% endif %}" style="color: var(--gray-700); text-decoration: none; font-weight: 500;">{% if contact_content and contact_content.email %}{{ contact_content.email }}{% else %}info@cdac.in{% endif %}</a>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.92rem; color: var(--gray-700);">
                     <span style="font-size: 1.1rem;">🕒</span>
-                    <span><strong>Mon–Fri:</strong> 8 AM – 7 PM &nbsp;|&nbsp; <strong>Sat:</strong> 9 AM – 4 PM &nbsp;|&nbsp; <strong>Sun:</strong> Closed</span>
+                    <span>{% if contact_content and contact_content.working_hours %}{{ contact_content.working_hours }}{% else %}<strong>Mon–Fri:</strong> 8 AM – 7 PM &nbsp;|&nbsp; <strong>Sat:</strong> 9 AM – 4 PM &nbsp;|&nbsp; <strong>Sun:</strong> Closed{% endif %}</span>
                 </div>
             </div>
 

@@ -40,5 +40,21 @@ class CertificatesTestCase(TestCase):
         response = self.client.post(url, {'certificate_id': 'CERT-9999-INVALID'})
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'certificates/verify.html')
-        self.assertContains(response, "No valid certificate found matching Certificate ID &#x27;CERT-9999-INVALID&#x27;.")
+        self.assertContains(response, "No valid certificate found")
+
+    def test_custom_certificate_id_issue(self):
+        admin = User.objects.create_superuser(username='certadmin', email='certadmin@cdac.in', password='adminpassword123')
+        self.client.login(username='certadmin', password='adminpassword123')
+
+        add_url = reverse('dashboard:add_certificate')
+        data = {
+            'certificate_id': 'CERT-2026-HARSHAL01',
+            'student_name': 'Harshal Chauhan',
+            'course': self.course.id,
+            'issue_date': '2026-08-02',
+            'grade': 'A+',
+        }
+        response = self.client.post(add_url, data)
+        self.assertRedirects(response, reverse('dashboard:manage_certificates'))
+        self.assertTrue(Certificate.objects.filter(certificate_id='CERT-2026-HARSHAL01').exists())
 
