@@ -534,6 +534,7 @@ textarea.form-control {
     letter-spacing: 0.05em;
     padding: 1rem 1.25rem;
     border-bottom: 1px solid var(--gray-200);
+    vertical-align: middle;
 }
 
 .custom-table td {
@@ -541,6 +542,7 @@ textarea.form-control {
     border-bottom: 1px solid var(--gray-100);
     font-size: 0.95rem;
     color: var(--gray-700);
+    vertical-align: middle;
 }
 
 .custom-table tr:last-child td {

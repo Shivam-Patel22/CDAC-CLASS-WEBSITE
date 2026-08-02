@@ -101,33 +101,43 @@
                 <tbody>
                     {% for inquiry in recent_inquiries %}
                     <tr style="{% if not inquiry.is_read %}background-color: rgba(56, 189, 248, 0.06); font-weight: 500;{% endif %}">
-                        <td>
+                        <td style="vertical-align: middle;">
                             {% if not inquiry.is_read %}
                                 <span class="badge badge-danger">NEW</span>
                             {% else %}
                                 <span class="badge badge-secondary">READ</span>
                             {% endif %}
                         </td>
-                        <td><strong>{{ inquiry.name }}</strong></td>
-                        <td>
-                            <div>📞 {{ inquiry.phone }}</div>
-                            {% if inquiry.email %}<div style="font-size: 0.8rem; color: var(--gray-500);">📧 {{ inquiry.email }}</div>{% endif %}
+                        <td style="vertical-align: middle;"><strong>{{ inquiry.name }}</strong></td>
+                        <td style="vertical-align: middle;">
+                            <div style="display: flex; align-items: center; gap: 8px; white-space: nowrap;">
+                                <span style="display: inline-flex; align-items: center; color: #D946EF; font-size: 1.1rem; line-height: 1;">📞</span>
+                                <span style="font-weight: 500;">{{ inquiry.phone }}</span>
+                            </div>
+                            {% if inquiry.email %}
+                                <div style="display: flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 0.8rem; color: var(--gray-500); margin-top: 4px;">
+                                    <span style="display: inline-flex; align-items: center; line-height: 1;">✉️</span>
+                                    <span>{{ inquiry.email }}</span>
+                                </div>
+                            {% endif %}
                         </td>
-                        <td>
+                        <td style="vertical-align: middle;">
                             {% if inquiry.course %}
                                 <span class="badge badge-primary">{{ inquiry.course.name }}</span>
                             {% else %}
                                 <span class="badge badge-secondary">{{ inquiry.subject }}</span>
                             {% endif %}
                         </td>
-                        <td style="max-width: 260px;">
+                        <td style="max-width: 260px; vertical-align: middle;">
                             <p style="margin: 0; font-size: 0.85rem; color: var(--gray-800); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ inquiry.message }}</p>
                         </td>
-                        <td><span style="font-size: 0.85rem; color: var(--gray-500);">{{ inquiry.created_at|date:"M j, Y g:i A" }}</span></td>
-                        <td>
-                            <a href="{% url 'dashboard:toggle_inquiry_read' inquiry.id %}" class="btn btn-outline-dark btn-sm">
-                                {% if inquiry.is_read %}Unread{% else %}Mark Read{% endif %}
-                            </a>
+                        <td style="vertical-align: middle;"><span style="font-size: 0.85rem; color: var(--gray-500); white-space: nowrap;">{{ inquiry.created_at|date:"M j, Y g:i A" }}</span></td>
+                        <td style="vertical-align: middle;">
+                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; white-space: nowrap;">
+                                <a href="{% url 'dashboard:toggle_inquiry_read' inquiry.id %}" class="btn btn-outline-dark btn-sm" style="white-space: nowrap;">
+                                    {% if inquiry.is_read %}Mark Unread{% else %}Mark Read{% endif %}
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
