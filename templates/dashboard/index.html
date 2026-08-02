@@ -18,7 +18,7 @@
     </div>
 
     <!-- Quick Stats Grid -->
-    <div class="grid grid-3" style="margin-bottom: 2.5rem;">
+    <div class="grid grid-4" style="margin-bottom: 2.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
         <div class="card" style="border-left: 4px solid var(--primary);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
@@ -51,6 +51,91 @@
             </div>
             <span style="display: inline-block; margin-top: 1rem; font-size: 0.85rem; color: var(--gray-500);">Active Student Accounts</span>
         </div>
+
+        <div class="card" style="border-left: 4px solid #38BDF8; background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), transparent);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <span style="color: var(--gray-500); font-size: 0.9rem; text-transform: uppercase; font-weight: 600;">Customer Inquiries</span>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                        <h2 style="font-size: 2.5rem; color: #0284C7; margin: 0;">{{ total_inquiries }}</h2>
+                        {% if unread_inquiries_count > 0 %}
+                            <span class="badge badge-danger" style="font-size: 0.8rem;">{{ unread_inquiries_count }} NEW</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div style="font-size: 2.5rem; opacity: 0.8;">📥</div>
+            </div>
+            <a href="{% url 'dashboard:manage_inquiries' %}" style="display: inline-block; margin-top: 1rem; font-size: 0.85rem; font-weight: 600; color: #0284C7;">View All Messages &rarr;</a>
+        </div>
+    </div>
+
+    <!-- Recent Customer Inquiries Section -->
+    <div class="card" style="margin-bottom: 2.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+                <h3 style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                    📥 Recent Customer Inquiries
+                    {% if unread_inquiries_count > 0 %}
+                        <span class="badge badge-danger">{{ unread_inquiries_count }} Unread</span>
+                    {% endif %}
+                </h3>
+            </div>
+            <a href="{% url 'dashboard:manage_inquiries' %}" class="btn btn-outline-dark btn-sm">View All Inquiries</a>
+        </div>
+
+        {% if recent_inquiries %}
+        <div class="table-container">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Name</th>
+                        <th>Phone / Email</th>
+                        <th>Course / Subject</th>
+                        <th>Message</th>
+                        <th>Submitted At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inquiry in recent_inquiries %}
+                    <tr style="{% if not inquiry.is_read %}background-color: rgba(56, 189, 248, 0.06); font-weight: 500;{% endif %}">
+                        <td>
+                            {% if not inquiry.is_read %}
+                                <span class="badge badge-danger">NEW</span>
+                            {% else %}
+                                <span class="badge badge-secondary">READ</span>
+                            {% endif %}
+                        </td>
+                        <td><strong>{{ inquiry.name }}</strong></td>
+                        <td>
+                            <div>📞 {{ inquiry.phone }}</div>
+                            {% if inquiry.email %}<div style="font-size: 0.8rem; color: var(--gray-500);">📧 {{ inquiry.email }}</div>{% endif %}
+                        </td>
+                        <td>
+                            {% if inquiry.course %}
+                                <span class="badge badge-primary">{{ inquiry.course.name }}</span>
+                            {% else %}
+                                <span class="badge badge-secondary">{{ inquiry.subject }}</span>
+                            {% endif %}
+                        </td>
+                        <td style="max-width: 260px;">
+                            <p style="margin: 0; font-size: 0.85rem; color: var(--gray-800); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ inquiry.message }}</p>
+                        </td>
+                        <td><span style="font-size: 0.85rem; color: var(--gray-500);">{{ inquiry.created_at|date:"M j, Y g:i A" }}</span></td>
+                        <td>
+                            <a href="{% url 'dashboard:toggle_inquiry_read' inquiry.id %}" class="btn btn-outline-dark btn-sm">
+                                {% if inquiry.is_read %}Unread{% else %}Mark Read{% endif %}
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p style="color: var(--gray-500); text-align: center; padding: 2rem;">No customer inquiries received yet.</p>
+        {% endif %}
     </div>
 
     <!-- Recent Certificates Issued -->

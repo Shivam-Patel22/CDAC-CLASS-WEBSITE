@@ -48,18 +48,26 @@ def admin_logout(request):
     messages.info(request, "Staff administrator logged out.")
     return redirect('dashboard:login')
 
+from core.models import Inquiry
+
 @staff_required
 def index(request):
     total_courses = Course.objects.count()
     total_certificates = Certificate.objects.count()
     total_students = User.objects.filter(is_staff=False).count()
+    total_inquiries = Inquiry.objects.count()
+    unread_inquiries_count = Inquiry.objects.filter(is_read=False).count()
     recent_certificates = Certificate.objects.select_related('course').order_by('-created_at')[:5]
+    recent_inquiries = Inquiry.objects.select_related('course').order_by('-created_at')[:5]
 
     context = {
         'total_courses': total_courses,
         'total_certificates': total_certificates,
         'total_students': total_students,
+        'total_inquiries': total_inquiries,
+        'unread_inquiries_count': unread_inquiries_count,
         'recent_certificates': recent_certificates,
+        'recent_inquiries': recent_inquiries,
     }
     return render(request, 'dashboard/index.html', context)
 
@@ -155,3 +163,49 @@ def revoke_certificate(request, pk):
         return redirect('dashboard:manage_certificates')
 
     return render(request, 'dashboard/certificate_revoke_confirm.html', {'cert': cert})
+
+@staff_required
+def manage_inquiries(request):
+    status_filter = request.GET.get('status', 'all')
+    queryset = Inquiry.objects.select_related('course').order_by('-created_at')
+
+    if status_filter == 'unread':
+        queryset = queryset.filter(is_read=False)
+    elif status_filter == 'read':
+        queryset = queryset.filter(is_read=True)
+
+    unread_count = Inquiry.objects.filter(is_read=False).count()
+    total_count = Inquiry.objects.count()
+
+    context = {
+        'inquiries': queryset,
+        'status_filter': status_filter,
+        'unread_count': unread_count,
+        'total_count': total_count,
+    }
+    return render(request, 'dashboard/manage_inquiries.html', context)
+
+@staff_required
+def toggle_inquiry_read(request, pk):
+    inquiry = get_object_or_404(Inquiry, pk=pk)
+    inquiry.is_read = not inquiry.is_read
+    inquiry.save()
+    status_str = "Read" if inquiry.is_read else "Unread"
+    messages.success(request, f"Inquiry from {inquiry.name} marked as {status_str}.")
+
+    next_url = request.GET.get('next') or request.META.get('HTTP_REFERER')
+    if next_url:
+        return redirect(next_url)
+    return redirect('dashboard:manage_inquiries')
+
+@staff_required
+def delete_inquiry(request, pk):
+    inquiry = get_object_or_404(Inquiry, pk=pk)
+    name = inquiry.name
+    inquiry.delete()
+    messages.success(request, f"Inquiry from {name} has been deleted.")
+
+    next_url = request.GET.get('next') or request.META.get('HTTP_REFERER')
+    if next_url:
+        return redirect(next_url)
+    return redirect('dashboard:manage_inquiries')

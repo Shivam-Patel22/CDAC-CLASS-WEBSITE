@@ -10,6 +10,10 @@ class ContactForm(forms.Form):
         max_length=20,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your Phone Number', 'required': 'required'})
     )
+    email = forms.EmailField(
+        required=False,
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Your Email Address (Optional)'})
+    )
     course = forms.ModelChoiceField(
         queryset=Course.objects.none(),
         empty_label="Select Interested Course",

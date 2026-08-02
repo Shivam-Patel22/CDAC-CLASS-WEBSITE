@@ -18,6 +18,8 @@ def home(request):
     }
     return render(request, 'core/home.html', context)
 
+from .models import Inquiry
+
 def about(request):
     return render(request, 'core/about.html')
 
@@ -27,9 +29,20 @@ def contact(request):
         if form.is_valid():
             name = form.cleaned_data['name']
             phone = form.cleaned_data['phone']
+            email = form.cleaned_data.get('email', '')
             course = form.cleaned_data.get('course')
             course_name = course.name if course else "General Inquiry"
             message_text = form.cleaned_data['message']
+            
+            # Save inquiry in database for Admin Panel notification
+            Inquiry.objects.create(
+                name=name,
+                phone=phone,
+                email=email,
+                course=course,
+                subject=f"Inquiry: {course_name}",
+                message=message_text
+            )
             
             # Print inquiry details to console
             print(f"[COURSE INQUIRY] From: {name} | Phone: {phone} | Course: {course_name}\nMessage: {message_text}")

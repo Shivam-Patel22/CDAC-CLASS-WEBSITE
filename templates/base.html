@@ -45,7 +45,12 @@
                 <div class="nav-auth">
                     {% if user.is_authenticated or request.session.is_guest %}
                         {% if user.is_staff %}
-                            <a href="{% url 'dashboard:index' %}" class="btn btn-outline btn-sm">Admin Panel</a>
+                            <a href="{% url 'dashboard:index' %}" class="btn btn-outline btn-sm">
+                                Admin Panel
+                                {% if unread_inquiries_count > 0 %}
+                                    <span class="badge badge-danger" style="margin-left: 0.25rem; font-size: 0.75rem; padding: 0.15rem 0.4rem; vertical-align: middle;">{{ unread_inquiries_count }}</span>
+                                {% endif %}
+                            </a>
                             <a href="{% url 'accounts:logout' %}" class="btn btn-primary btn-sm">Logout</a>
                         {% else %}
                             {% if request.session.is_guest %}

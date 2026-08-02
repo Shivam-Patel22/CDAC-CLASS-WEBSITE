@@ -23,6 +23,7 @@ class CoreTestCase(TestCase):
         self.assertEqual(form.initial.get('course'), str(self.course1.id))
 
     def test_contact_form_submission(self):
+        from core.models import Inquiry
         data = {
             'name': 'Jane Student',
             'phone': '9876543210',
@@ -31,4 +32,12 @@ class CoreTestCase(TestCase):
         }
         response = self.client.post(reverse('core:contact'), data)
         self.assertRedirects(response, reverse('core:contact'))
+
+        # Verify inquiry saved in database
+        self.assertEqual(Inquiry.objects.count(), 1)
+        inquiry = Inquiry.objects.first()
+        self.assertEqual(inquiry.name, 'Jane Student')
+        self.assertEqual(inquiry.phone, '9876543210')
+        self.assertEqual(inquiry.course, self.course1)
+        self.assertFalse(inquiry.is_read)
 
