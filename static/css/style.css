@@ -96,12 +96,13 @@ img {
 
 /* Navbar Header */
 .navbar-header {
-    background: rgba(15, 23, 42, 0.95);
+    background: #ffffff;
     backdrop-filter: blur(12px);
     position: sticky;
     top: 0;
     z-index: 1000;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--gray-200);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .nav-container {
@@ -121,27 +122,27 @@ img {
     font-family: var(--font-heading);
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--white);
+    color: var(--gray-900);
     text-decoration: none;
     flex-shrink: 0;
 }
 
 .cdac-nav-logo-img {
-    height: 42px;
+    height: 44px;
     width: auto;
     max-width: 100%;
     flex-shrink: 0;
     object-fit: contain;
-    background: #ffffff;
-    padding: 4px 10px;
-    border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    transition: transform 0.2s ease;
 }
 
 .cdac-nav-logo-img:hover {
     transform: scale(1.02);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 .cdac-footer-logo-img {
@@ -168,17 +169,38 @@ img {
 }
 
 .nav-link {
-    color: var(--gray-300);
+    color: var(--gray-700);
     font-size: 0.95rem;
     font-weight: 500;
     padding: 0.4rem 0.6rem;
     border-radius: var(--radius-sm);
-
+    transition: var(--transition);
 }
 
 .nav-link:hover, .nav-link.active {
-    color: var(--white);
-    background: rgba(255, 255, 255, 0.1);
+    color: var(--primary);
+    background: var(--primary-light);
+}
+
+.navbar-header .btn-outline {
+    background: transparent;
+    border-color: var(--gray-300);
+    color: var(--gray-800);
+}
+
+.navbar-header .btn-outline:hover {
+    background: var(--gray-100);
+    border-color: var(--gray-400);
+    color: var(--gray-900);
+}
+
+.navbar-header .btn-ghost {
+    color: var(--gray-700);
+}
+
+.navbar-header .btn-ghost:hover {
+    background: var(--gray-100);
+    color: var(--primary);
 }
 
 .nav-auth {
@@ -200,7 +222,7 @@ img {
 .mobile-toggle span {
     width: 24px;
     height: 2.5px;
-    background: var(--white);
+    background: var(--gray-800);
     border-radius: 2px;
     transition: var(--transition);
 }
