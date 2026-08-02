@@ -1,32 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 64" width="480" height="64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 64" width="450" height="64">
   <defs>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@600;700&amp;family=Outfit:wght@700;800&amp;display=swap');
-      .hi-left { font-family: 'Mukta', 'Noto Sans Devanagari', 'Segoe UI', sans-serif; font-weight: 700; fill: #0B2545; font-size: 20px; }
-      .hi-right { font-family: 'Mukta', 'Noto Sans Devanagari', 'Segoe UI', sans-serif; font-weight: 700; fill: #0B2545; font-size: 18px; }
-      .en-right { font-family: 'Outfit', 'Plus Jakarta Sans', Arial, sans-serif; font-weight: 800; fill: #0B2545; font-size: 11.5px; letter-spacing: 0.15px; }
-      .line-sep { stroke: #0B2545; stroke-width: 2; }
+      .hi-left { font-family: 'Mukta', 'Noto Sans Devanagari', 'Segoe UI', sans-serif; font-weight: 700; fill: #0B2545; font-size: 21px; }
+      .hi-right { font-family: 'Mukta', 'Noto Sans Devanagari', 'Segoe UI', sans-serif; font-weight: 700; fill: #0B2545; font-size: 18.5px; }
+      .en-right { font-family: 'Outfit', 'Plus Jakarta Sans', Arial, sans-serif; font-weight: 800; fill: #0B2545; font-size: 11.8px; letter-spacing: 0.15px; }
+      .line-sep { stroke: #0B2545; stroke-width: 2.2; }
     </style>
   </defs>
 
-  <!-- 1. Vector Computer / Monitor Icon (Fully visible, aligned, uncropped) -->
-  <g transform="translate(4, 12)">
-    <!-- Monitor Outer Frame -->
-    <rect x="0" y="0" width="34" height="24" rx="4" ry="4" fill="none" stroke="#0B2545" stroke-width="2.5"/>
-    <!-- Monitor Inner Screen -->
-    <rect x="3" y="3" width="28" height="15" rx="1.5" ry="1.5" fill="#0B2545" opacity="0.15"/>
-    <!-- Screen Code / Content Graphic Lines -->
-    <line x1="7" y1="8" x2="20" y2="8" stroke="#0B2545" stroke-width="1.8" stroke-linecap="round"/>
-    <line x1="7" y1="12" x2="27" y2="12" stroke="#0B2545" stroke-width="1.8" stroke-linecap="round"/>
-    <!-- Monitor Stand -->
-    <path d="M 14,24 L 12,32 L 22,32 L 20,24 Z" fill="#0B2545"/>
-    <!-- Monitor Base -->
-    <rect x="8" y="32" width="18" height="2.5" rx="1" fill="#0B2545"/>
-  </g>
-
-  <!-- 2. Authentic C-DAC Emblem (सी-डैक & CDAC) -->
-  <g transform="translate(48, 2)">
-    <!-- Top Row: Devanagari सी-डैक -->
+  <!-- Left Side: Official C-DAC Emblem (Exact Reference Image) -->
+  <g transform="translate(2, 2)">
+    <!-- Top Row: Devanagari Seedac -->
     <g transform="translate(0, 0)">
       <!-- 'सी' stylized outlined icon -->
       <path d="M 12,25 L 7,25 C 4,25 2,23 2,20 C 2,16 5,14 10,14 C 14,14 16,11 16,7 C 16,3 12,1 8,1 C 3,1 0,4 0,8 L 3,8 C 3,5 5,3 8,3 C 10,3 13,4 13,7 C 13,9 12,12 8,12 C 2,12 0,16 0,20 C 0,25 4,27 12,27 Z" fill="#0B2545"/>
@@ -40,11 +25,11 @@
       <rect x="22" y="15" width="2.5" height="2.5" fill="#0B2545"/>
       <rect x="22" y="21" width="2.5" height="2.5" fill="#0B2545"/>
 
-      <!-- '-डैक' text with hyphen (सी-डैक) -->
-      <text x="26" y="24" class="hi-left">-डैक</text>
+      <!-- 'डैक' text -->
+      <text x="28" y="24" class="hi-left">डैक</text>
     </g>
 
-    <!-- Bottom Row: Authentic Stylized CDAC letters -->
+    <!-- Bottom Row: Authentic CDAC letters -->
     <g transform="translate(0, 30)">
       <!-- First C (Racetrack double line outline) -->
       <path d="M 23,2 L 13,2 C 6,2 1,7 1,15 C 1,23 6,28 13,28 L 23,28 L 23,23 L 13,23 C 8,23 5,20 5,15 C 5,10 8,7 13,7 L 23,7 Z" fill="#0B2545"/>
@@ -69,11 +54,11 @@
     </g>
   </g>
 
-  <!-- 3. Vertical Separator Line -->
-  <line x1="154" y1="6" x2="154" y2="58" class="line-sep"/>
+  <!-- Vertical Separator Line -->
+  <line x1="106" y1="6" x2="106" y2="58" class="line-sep"/>
 
-  <!-- 4. Right Side Text -->
-  <g transform="translate(166, 0)">
+  <!-- Right Side Text -->
+  <g transform="translate(118, 0)">
     <!-- Top Line Hindi: प्रगत संगणन विकास केंद्र -->
     <text x="0" y="25" class="hi-right">प्रगत संगणन विकास केंद्र</text>
     <!-- Bottom Line English: CENTRE FOR DEVELOPMENT OF ADVANCED COMPUTING -->
