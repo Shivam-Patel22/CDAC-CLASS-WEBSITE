@@ -1,3 +1,4 @@
+{% load static %}
 <div class="auth-wrapper">
     <div class="auth-card {% if active_tab == 'register' %}auth-card-wide{% endif %}" id="authCard">
         
@@ -14,7 +15,7 @@
         <!-- Header & Logo Section -->
         <div class="auth-brand-header">
             <div class="auth-logo-badge" id="logoBadge" style="background: transparent; border: none; width: auto; height: auto;">
-                <img src="{% static 'images/cdac-logo.svg' %}" alt="C-DAC Logo" style="height: 52px; max-width: 100%;">
+                <img src="{% static 'images/logo image.jpeg' %}" alt="C-DAC Logo" style="height: 52px; max-width: 100%; border-radius: 4px;">
             </div>
             <h1 class="auth-portal-title" id="authPortalTitle">
                 {% if active_tab == 'register' %}Create Your Account{% else %}C-DAC Student & Staff Portal{% endif %}

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Certificate Verification Result | Centre for Development of Advanced Computing (C-DAC){% endblock %}
 
@@ -14,7 +15,7 @@
     <!-- Official Certificate Render Box -->
     <div class="certificate-card">
         <div class="certificate-header">
-            <img src="{% static 'images/cdac-logo.svg' %}" alt="C-DAC Logo" style="height: 58px; margin: 0 auto 1rem; display: block;">
+            <img src="{% static 'images/logo image.jpeg' %}" alt="C-DAC Logo" style="height: 58px; max-width: 100%; margin: 0 auto 1rem; display: block; border-radius: 4px;">
             <h2 class="certificate-title">Certificate of Completion</h2>
             <p class="certificate-subtitle">CENTRE FOR DEVELOPMENT OF ADVANCED COMPUTING (C-DAC)</p>
         </div>
