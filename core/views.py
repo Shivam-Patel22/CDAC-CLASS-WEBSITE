@@ -64,9 +64,14 @@ def contact(request):
             return redirect('core:contact')
     else:
         initial_data = {}
-        course_id = request.GET.get('course')
-        if course_id:
-            initial_data['course'] = course_id
+        course_param = request.GET.get('course')
+        if course_param:
+            if str(course_param).isdigit():
+                initial_data['course'] = str(course_param)
+            else:
+                matched_course = Course.objects.filter(name__icontains=course_param).first()
+                if matched_course:
+                    initial_data['course'] = str(matched_course.id)
         form = ContactForm(initial=initial_data)
     
     return render(request, 'core/contact.html', {
