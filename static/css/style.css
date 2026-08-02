@@ -873,13 +873,19 @@ textarea.form-control {
     .messages-container,
     .alert,
     .mobile-toggle,
-    .auth-wrapper {
+    .auth-wrapper,
+    .offers-ticker-container,
+    .offers-ticker-wrapper,
+    .offers-ticker-badge,
+    .offers-ticker-content,
+    .offers-ticker-track,
+    .ticker-item {
         display: none !important;
     }
 
     @page {
         size: A4 portrait;
-        margin: 1.5cm;
+        margin: 0;
     }
 
     html, body {
@@ -894,19 +900,22 @@ textarea.form-control {
     }
 
     .main-content, main, .container {
-        padding: 0 !important;
-        margin: 0 !important;
+        padding: 1cm 0 !important;
+        margin: 0 auto !important;
         width: 100% !important;
         max-width: 100% !important;
         box-shadow: none !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
 
     .certificate-card {
         border: 2px solid #0f172a !important;
         box-shadow: none !important;
-        margin: 2rem auto !important;
+        margin: 1.5cm auto !important;
         padding: 3rem 2.5rem !important;
-        width: 100% !important;
+        width: 90% !important;
         max-width: 800px !important;
         background: #ffffff !important;
         page-break-inside: avoid !important;
