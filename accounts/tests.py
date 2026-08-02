@@ -46,3 +46,24 @@ class AccountsTestCase(TestCase):
         response = self.client.get(url)
         expected_redirect = f"{reverse('accounts:login')}?next={url}"
         self.assertRedirects(response, expected_redirect)
+
+    def test_admin_add_student_success(self):
+        admin = User.objects.create_superuser(username='admin', email='admin@cdac.in', password='adminpassword123')
+        self.client.login(username='admin', password='adminpassword123')
+
+        add_url = reverse('dashboard:add_student')
+        data = {
+            'full_name': 'Rahul Sharma',
+            'email': 'rahul@example.com',
+            'phone': '9876543210',
+            'is_active': '1',
+        }
+        response = self.client.post(add_url, data)
+        self.assertRedirects(response, reverse('dashboard:active_students'))
+
+        user = User.objects.get(email='rahul@example.com')
+        self.assertEqual(user.first_name, 'Rahul')
+        self.assertEqual(user.last_name, 'Sharma')
+        self.assertTrue(user.is_active)
+        self.assertFalse(user.is_staff)
+        self.assertTrue(StudentProfile.objects.filter(user=user).exists())

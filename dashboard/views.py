@@ -319,17 +319,17 @@ def delete_offer(request, pk):
 
 # ── Active Student Accounts ─────────────────────────────────
 from django.core.paginator import Paginator
+from accounts.models import StudentProfile
+from .forms import AdminStudentForm
 
 @staff_required
 def active_students(request):
-    """List all active (non-staff) student accounts with search, sort, pagination."""
+    """List all student accounts with search, sort, pagination, and Add Student modal."""
     search_q  = request.GET.get('q', '').strip()
     sort_by   = request.GET.get('sort', 'name')   # name | email | date
     direction = request.GET.get('dir', 'asc')      # asc  | desc
 
-    qs = User.objects.filter(is_active=True, is_staff=False).only(
-        'first_name', 'last_name', 'username', 'email', 'date_joined'
-    )
+    qs = User.objects.filter(is_staff=False).select_related('student_profile')
 
     if search_q:
         qs = qs.filter(
@@ -352,6 +352,7 @@ def active_students(request):
     paginator   = Paginator(qs, 10)
     page_number = request.GET.get('page', 1)
     page_obj    = paginator.get_page(page_number)
+    courses     = Course.objects.all().order_by('name')
 
     context = {
         'page_obj':   page_obj,
@@ -359,6 +360,89 @@ def active_students(request):
         'sort_by':    sort_by,
         'direction':  direction,
         'total_count': paginator.count,
+        'courses':    courses,
+        'student_form': AdminStudentForm(),
     }
     return render(request, 'dashboard/active_students.html', context)
+
+@staff_required
+def add_student(request):
+    if request.method == 'POST':
+        form = AdminStudentForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email'].strip().lower()
+            if User.objects.filter(email__iexact=email).exists():
+                messages.error(request, f"A student account with email '{email}' already exists.")
+                return redirect('dashboard:active_students')
+
+            full_name = form.cleaned_data['full_name'].strip()
+            name_parts = full_name.split(' ', 1)
+            first_name = name_parts[0]
+            last_name = name_parts[1] if len(name_parts) > 1 else ''
+
+            username = form.cleaned_data.get('username', '').strip()
+            if not username:
+                base_user = email.split('@')[0]
+                username = base_user
+                counter = 1
+                while User.objects.filter(username__iexact=username).exists():
+                    username = f"{base_user}{counter}"
+                    counter += 1
+
+            if User.objects.filter(username__iexact=username).exists():
+                messages.error(request, f"Username '{username}' is already taken.")
+                return redirect('dashboard:active_students')
+
+            is_active_val = form.cleaned_data['is_active'] == '1'
+            user = User.objects.create(
+                username=username,
+                email=email,
+                first_name=first_name,
+                last_name=last_name,
+                is_staff=False,
+                is_active=is_active_val
+            )
+            user.set_password('cdac1234')
+
+            date_joined = form.cleaned_data.get('date_joined')
+            if date_joined:
+                user.date_joined = date_joined
+            user.save()
+
+            profile, _ = StudentProfile.objects.get_or_create(user=user)
+            profile.phone = form.cleaned_data.get('phone', '')
+            profile.enrolled_course = form.cleaned_data.get('course')
+            profile.notes = form.cleaned_data.get('notes', '')
+            profile.save()
+
+            messages.success(request, f"Student '{full_name}' (@{username}) enrolled successfully.")
+            return redirect('dashboard:active_students')
+        else:
+            messages.error(request, "Invalid student details. Please check the required fields.")
+    return redirect('dashboard:active_students')
+
+@staff_required
+def toggle_student_status(request, pk):
+    user_obj = get_object_or_404(User, pk=pk, is_staff=False)
+    user_obj.is_active = not user_obj.is_active
+    user_obj.save()
+    status_str = "Active" if user_obj.is_active else "Inactive"
+    messages.success(request, f"Student '{user_obj.get_full_name() or user_obj.username}' marked as {status_str}.")
+
+    next_url = request.GET.get('next') or request.META.get('HTTP_REFERER')
+    if next_url:
+        return redirect(next_url)
+    return redirect('dashboard:active_students')
+
+@staff_required
+def delete_student(request, pk):
+    user_obj = get_object_or_404(User, pk=pk, is_staff=False)
+    name = user_obj.get_full_name() or user_obj.username
+    user_obj.delete()
+    messages.success(request, f"Student account '{name}' deleted successfully.")
+
+    next_url = request.GET.get('next') or request.META.get('HTTP_REFERER')
+    if next_url:
+        return redirect(next_url)
+    return redirect('dashboard:active_students')
 

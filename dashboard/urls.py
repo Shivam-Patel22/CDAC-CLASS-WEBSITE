@@ -24,4 +24,7 @@ urlpatterns = [
     path('offers/<int:pk>/toggle-status/', views.toggle_offer_status, name='toggle_offer_status'),
     path('offers/<int:pk>/delete/', views.delete_offer, name='delete_offer'),
     path('students/', views.active_students, name='active_students'),
+    path('students/add/', views.add_student, name='add_student'),
+    path('students/<int:pk>/toggle-status/', views.toggle_student_status, name='toggle_student_status'),
+    path('students/<int:pk>/delete/', views.delete_student, name='delete_student'),
 ]

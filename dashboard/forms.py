@@ -67,3 +67,41 @@ class AdminOfferForm(forms.ModelForm):
             'priority': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '0'}),
             'status': forms.Select(attrs={'class': 'form-control'}),
         }
+
+class AdminStudentForm(forms.Form):
+    full_name = forms.CharField(
+        max_length=150,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full Name (e.g. Rahul Sharma)', 'required': 'required'})
+    )
+    username = forms.CharField(
+        max_length=150,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username (Optional, auto-generated if blank)'})
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email Address', 'required': 'required'})
+    )
+    phone = forms.CharField(
+        max_length=20,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number (Optional)'})
+    )
+    course = forms.ModelChoiceField(
+        queryset=Course.objects.all().order_by('name'),
+        required=False,
+        empty_label="— Select Enrolled Course (Optional) —",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    date_joined = forms.DateField(
+        required=False,
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'})
+    )
+    is_active = forms.ChoiceField(
+        choices=[('1', 'Active'), ('0', 'Inactive')],
+        initial='1',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    notes = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Optional internal notes...', 'rows': 2})
+    )
