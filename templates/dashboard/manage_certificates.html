@@ -17,39 +17,39 @@
         <table class="custom-table">
             <thead>
                 <tr>
-                    <th style="white-space: nowrap;">Certificate ID</th>
+                    <th style="white-space: nowrap; padding-left: 0.85rem;">Certificate ID</th>
                     <th style="white-space: nowrap;">Student Name</th>
-                    <th style="white-space: nowrap;">Linked User Account</th>
-                    <th style="min-width: 200px;">Course</th>
+                    <th style="white-space: nowrap;">Linked Account</th>
+                    <th>Course</th>
                     <th style="white-space: nowrap;">Issue Date</th>
                     <th style="white-space: nowrap;">Grade</th>
-                    <th style="white-space: nowrap; text-align: right;">Actions</th>
+                    <th style="white-space: nowrap; text-align: right; padding-right: 0.85rem;">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for cert in certificates %}
                 <tr>
-                    <td style="white-space: nowrap;">
-                        <code style="background: var(--gray-100); padding: 0.35rem 0.65rem; border-radius: var(--radius-sm); font-weight: 600; color: var(--primary); white-space: nowrap; display: inline-block;">{{ cert.certificate_id }}</code>
+                    <td style="white-space: nowrap; padding-left: 0.85rem;">
+                        <code style="background: var(--gray-100); padding: 0.25rem 0.45rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.82rem; color: var(--primary); white-space: nowrap; display: inline-block;">{{ cert.certificate_id }}</code>
                     </td>
-                    <td style="white-space: nowrap;"><strong>{{ cert.student_name }}</strong></td>
-                    <td style="white-space: nowrap;">
+                    <td style="white-space: nowrap; font-size: 0.88rem;"><strong>{{ cert.student_name }}</strong></td>
+                    <td style="white-space: nowrap; font-size: 0.82rem;">
                         {% if cert.student %}
-                            <span class="badge badge-primary" style="white-space: nowrap; display: inline-block;">👤 {{ cert.student.email }}</span>
+                            <span class="badge badge-primary" style="white-space: nowrap; display: inline-block; font-size: 0.78rem;">👤 {{ cert.student.email }}</span>
                         {% else %}
                             <span style="color: var(--gray-400); font-style: italic;">Unlinked</span>
                         {% endif %}
                     </td>
-                    <td style="min-width: 200px; line-height: 1.4;">{{ cert.course.name }}</td>
-                    <td style="white-space: nowrap;">{{ cert.issue_date|date:"Y-m-d" }}</td>
+                    <td style="font-size: 0.88rem; line-height: 1.35;">{{ cert.course.name }}</td>
+                    <td style="white-space: nowrap; font-size: 0.85rem;">{{ cert.issue_date|date:"Y-m-d" }}</td>
                     <td style="white-space: nowrap;">
-                        {% if cert.grade %}<span class="badge badge-success" style="white-space: nowrap; display: inline-block;">{{ cert.grade }}</span>{% else %}—{% endif %}
+                        {% if cert.grade %}<span class="badge badge-success" style="white-space: nowrap; display: inline-block; font-size: 0.78rem;">{{ cert.grade }}</span>{% else %}—{% endif %}
                     </td>
-                    <td style="white-space: nowrap; text-align: right;">
-                        <div style="display: inline-flex; gap: 0.4rem; align-items: center; justify-content: flex-end; white-space: nowrap;">
-                            <a href="{% url 'certificates:verify' %}?certificate_id={{ cert.certificate_id }}" target="_blank" class="btn btn-ghost btn-sm" title="Verify Certificate">🔍</a>
-                            <a href="{% url 'dashboard:edit_certificate' cert.id %}" class="btn btn-outline-dark btn-sm">Edit</a>
-                            <a href="{% url 'dashboard:revoke_certificate' cert.id %}" class="btn btn-danger btn-sm">Revoke</a>
+                    <td style="white-space: nowrap; text-align: right; padding-right: 0.85rem;">
+                        <div style="display: inline-flex; gap: 0.25rem; align-items: center; justify-content: flex-end; white-space: nowrap;">
+                            <a href="{% url 'certificates:verify' %}?certificate_id={{ cert.certificate_id }}" target="_blank" class="btn btn-ghost btn-sm" style="padding: 0.2rem 0.4rem; font-size: 0.8rem;" title="Verify Certificate">🔍</a>
+                            <a href="{% url 'dashboard:edit_certificate' cert.id %}" class="btn btn-outline-dark btn-sm" style="padding: 0.2rem 0.5rem; font-size: 0.78rem;">Edit</a>
+                            <a href="{% url 'dashboard:revoke_certificate' cert.id %}" class="btn btn-danger btn-sm" style="padding: 0.2rem 0.5rem; font-size: 0.78rem;">Revoke</a>
                         </div>
                     </td>
                 </tr>
