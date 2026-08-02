@@ -316,3 +316,49 @@ def delete_offer(request, pk):
     if next_url:
         return redirect(next_url)
     return redirect('dashboard:manage_offers')
+
+# ── Active Student Accounts ─────────────────────────────────
+from django.core.paginator import Paginator
+
+@staff_required
+def active_students(request):
+    """List all active (non-staff) student accounts with search, sort, pagination."""
+    search_q  = request.GET.get('q', '').strip()
+    sort_by   = request.GET.get('sort', 'name')   # name | email | date
+    direction = request.GET.get('dir', 'asc')      # asc  | desc
+
+    qs = User.objects.filter(is_active=True, is_staff=False).only(
+        'first_name', 'last_name', 'username', 'email', 'date_joined'
+    )
+
+    if search_q:
+        qs = qs.filter(
+            Q(first_name__icontains=search_q) |
+            Q(last_name__icontains=search_q)  |
+            Q(username__icontains=search_q)   |
+            Q(email__icontains=search_q)
+        )
+
+    sort_map = {
+        'name':  'first_name',
+        'email': 'email',
+        'date':  'date_joined',
+    }
+    order_field = sort_map.get(sort_by, 'first_name')
+    if direction == 'desc':
+        order_field = f'-{order_field}'
+    qs = qs.order_by(order_field)
+
+    paginator   = Paginator(qs, 10)
+    page_number = request.GET.get('page', 1)
+    page_obj    = paginator.get_page(page_number)
+
+    context = {
+        'page_obj':   page_obj,
+        'search_q':   search_q,
+        'sort_by':    sort_by,
+        'direction':  direction,
+        'total_count': paginator.count,
+    }
+    return render(request, 'dashboard/active_students.html', context)
+

@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+
+{% block title %}Active Student Accounts | C-DAC Admin{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <!-- Page Header — matches existing dashboard header style -->
+    <div style="background: var(--dark-surface); color: white; border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1 style="font-size: 1.8rem; color: white;">👨‍🎓 Active Student Accounts</h1>
+            <p style="color: var(--gray-400); margin-top: 0.25rem;">
+                All verified, active student registrations &mdash;
+                <strong style="color: var(--secondary);">{{ total_count }}</strong> found
+                {% if search_q %}for &ldquo;<em>{{ search_q }}</em>&rdquo;{% endif %}
+            </p>
+        </div>
+        <a href="{% url 'dashboard:index' %}" class="btn btn-outline btn-sm">&larr; Back to Dashboard</a>
+    </div>
+
+    <!-- Search + Sort Controls -->
+    <div class="card" style="margin-bottom: 1.5rem; padding: 1.25rem 1.5rem;">
+        <form method="get" id="student-search-form" style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-end;">
+
+            <!-- Search box -->
+            <div style="flex: 1; min-width: 220px;">
+                <label for="student-search-input" style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--gray-700); margin-bottom: 0.35rem;">Search</label>
+                <input
+                    type="text"
+                    id="student-search-input"
+                    name="q"
+                    value="{{ search_q }}"
+                    placeholder="Search by name or email…"
+                    class="form-control"
+                    autocomplete="off"
+                >
+            </div>
+
+            <!-- Sort by -->
+            <div>
+                <label for="student-sort-select" style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--gray-700); margin-bottom: 0.35rem;">Sort by</label>
+                <select id="student-sort-select" name="sort" class="form-control" style="min-width: 130px;">
+                    <option value="name"  {% if sort_by == 'name'  %}selected{% endif %}>Name</option>
+                    <option value="email" {% if sort_by == 'email' %}selected{% endif %}>Email</option>
+                    <option value="date"  {% if sort_by == 'date'  %}selected{% endif %}>Date Joined</option>
+                </select>
+            </div>
+
+            <!-- Direction -->
+            <div>
+                <label for="student-dir-select" style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--gray-700); margin-bottom: 0.35rem;">Order</label>
+                <select id="student-dir-select" name="dir" class="form-control" style="min-width: 110px;">
+                    <option value="asc"  {% if direction == 'asc'  %}selected{% endif %}>A → Z</option>
+                    <option value="desc" {% if direction == 'desc' %}selected{% endif %}>Z → A</option>
+                </select>
+            </div>
+
+            <!-- Buttons -->
+            <div style="display: flex; gap: 0.5rem; align-items: flex-end;">
+                <button type="submit" id="student-search-btn" class="btn btn-primary btn-sm">Search</button>
+                {% if search_q or sort_by != 'name' or direction != 'asc' %}
+                <a href="{% url 'dashboard:active_students' %}" class="btn btn-outline-dark btn-sm">Clear</a>
+                {% endif %}
+            </div>
+
+            <!-- Preserve page = 1 on new search -->
+            <input type="hidden" name="page" value="1">
+        </form>
+    </div>
+
+    <!-- Student Table -->
+    <div class="card" style="padding: 0; overflow: hidden;">
+
+        {% if page_obj.object_list %}
+
+        <!-- Loading overlay (shown momentarily on form submit) -->
+        <div id="students-loading" style="display: none; text-align: center; padding: 3rem; color: var(--gray-500);">
+            <div style="font-size: 2rem; margin-bottom: 0.75rem;">⏳</div>
+            <p>Loading student accounts…</p>
+        </div>
+
+        <div class="table-container" id="students-table-wrapper">
+            <table class="custom-table" id="students-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+
+                        <!-- Name sortable header -->
+                        <th>
+                            <a href="?q={{ search_q }}&sort=name&dir={% if sort_by == 'name' and direction == 'asc' %}desc{% else %}asc{% endif %}&page=1"
+                               style="color: inherit; display: inline-flex; align-items: center; gap: 0.3rem; text-decoration: none;">
+                                Student Name
+                                {% if sort_by == 'name' %}
+                                    {% if direction == 'asc' %}▲{% else %}▼{% endif %}
+                                {% else %}
+                                    <span style="opacity: 0.3;">⇅</span>
+                                {% endif %}
+                            </a>
+                        </th>
+
+                        <!-- Email sortable header -->
+                        <th>
+                            <a href="?q={{ search_q }}&sort=email&dir={% if sort_by == 'email' and direction == 'asc' %}desc{% else %}asc{% endif %}&page=1"
+                               style="color: inherit; display: inline-flex; align-items: center; gap: 0.3rem; text-decoration: none;">
+                                Email Address
+                                {% if sort_by == 'email' %}
+                                    {% if direction == 'asc' %}▲{% else %}▼{% endif %}
+                                {% else %}
+                                    <span style="opacity: 0.3;">⇅</span>
+                                {% endif %}
+                            </a>
+                        </th>
+
+                        <!-- Date sortable header -->
+                        <th>
+                            <a href="?q={{ search_q }}&sort=date&dir={% if sort_by == 'date' and direction == 'asc' %}desc{% else %}asc{% endif %}&page=1"
+                               style="color: inherit; display: inline-flex; align-items: center; gap: 0.3rem; text-decoration: none;">
+                                Date Joined
+                                {% if sort_by == 'date' %}
+                                    {% if direction == 'asc' %}▲{% else %}▼{% endif %}
+                                {% else %}
+                                    <span style="opacity: 0.3;">⇅</span>
+                                {% endif %}
+                            </a>
+                        </th>
+
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in page_obj %}
+                    <tr>
+                        <td style="color: var(--gray-400); font-size: 0.85rem;">
+                            {{ forloop.counter0|add:page_obj.start_index }}
+                        </td>
+                        <td>
+                            <strong>
+                                {% if student.get_full_name %}
+                                    {{ student.get_full_name }}
+                                {% else %}
+                                    {{ student.username }}
+                                {% endif %}
+                            </strong>
+                            {% if student.get_full_name %}
+                                <div style="font-size: 0.8rem; color: var(--gray-400);">@{{ student.username }}</div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if student.email %}
+                                <a href="mailto:{{ student.email }}" style="color: var(--primary);">{{ student.email }}</a>
+                            {% else %}
+                                <span style="color: var(--gray-400); font-size: 0.85rem;">— not provided —</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span style="font-size: 0.85rem; color: var(--gray-500);">
+                                {{ student.date_joined|date:"M j, Y" }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge badge-success">Active</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.paginator.num_pages > 1 %}
+        <div style="padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; border-top: 1px solid var(--gray-100);">
+
+            <span style="font-size: 0.875rem; color: var(--gray-500);">
+                Showing {{ page_obj.start_index }}–{{ page_obj.end_index }} of {{ total_count }} students
+            </span>
+
+            <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;" id="pagination-controls">
+                {% if page_obj.has_previous %}
+                    <a href="?q={{ search_q }}&sort={{ sort_by }}&dir={{ direction }}&page=1"
+                       class="btn btn-outline-dark btn-sm" id="page-first">&laquo; First</a>
+                    <a href="?q={{ search_q }}&sort={{ sort_by }}&dir={{ direction }}&page={{ page_obj.previous_page_number }}"
+                       class="btn btn-outline-dark btn-sm" id="page-prev">&lsaquo; Prev</a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <span class="btn btn-primary btn-sm" style="cursor: default;">{{ num }}</span>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?q={{ search_q }}&sort={{ sort_by }}&dir={{ direction }}&page={{ num }}"
+                           class="btn btn-outline-dark btn-sm">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?q={{ search_q }}&sort={{ sort_by }}&dir={{ direction }}&page={{ page_obj.next_page_number }}"
+                       class="btn btn-outline-dark btn-sm" id="page-next">Next &rsaquo;</a>
+                    <a href="?q={{ search_q }}&sort={{ sort_by }}&dir={{ direction }}&page={{ page_obj.paginator.num_pages }}"
+                       class="btn btn-outline-dark btn-sm" id="page-last">Last &raquo;</a>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div style="padding: 0.85rem 1.5rem; border-top: 1px solid var(--gray-100);">
+            <span style="font-size: 0.875rem; color: var(--gray-500);">
+                Showing all {{ total_count }} student{{ total_count|pluralize }}
+            </span>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <!-- Empty state -->
+        <div class="empty-state">
+            <div class="empty-state-icon">👨‍🎓</div>
+            <h3>No active student accounts found{% if search_q %} for &ldquo;{{ search_q }}&rdquo;{% endif %}</h3>
+            <p>
+                {% if search_q %}
+                    Try a different search term, or
+                    <a href="{% url 'dashboard:active_students' %}">clear the search</a> to see all students.
+                {% else %}
+                    No students have registered yet.
+                {% endif %}
+            </p>
+        </div>
+        {% endif %}
+
+    </div><!-- /card -->
+
+</div><!-- /container -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    /* Show brief loading overlay when the search form submits */
+    var form    = document.getElementById('student-search-form');
+    var loading = document.getElementById('students-loading');
+    var wrapper = document.getElementById('students-table-wrapper');
+
+    if (form && loading && wrapper) {
+        form.addEventListener('submit', function () {
+            wrapper.style.display = 'none';
+            loading.style.display = 'block';
+        });
+    }
+
+    /* Auto-submit on sort/direction change so the UX feels instant */
+    ['student-sort-select', 'student-dir-select'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('change', function () {
+                if (form) form.submit();
+            });
+        }
+    });
+})();
+</script>
+{% endblock %}

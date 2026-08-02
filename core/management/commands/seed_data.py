@@ -1,5 +1,6 @@
-from datetime import date
+from datetime import date, datetime
 from django.core.management.base import BaseCommand
+from django.utils import timezone as tz
 from courses.models import Course
 from certificates.models import Certificate
 from django.contrib.auth.models import User
@@ -168,4 +169,48 @@ class Command(BaseCommand):
             status_str = "Created" if created else "Already exists"
             self.stdout.write(f"Course Offer: {offer.title} ({status_str})")
 
-        self.stdout.write(self.style.SUCCESS("Successfully seeded courses, certificates, and latest offers!"))
+        # ── Student Accounts ────────────────────────────────────────────
+        from accounts.models import StudentProfile
+
+        students_data = [
+            {'username': 'rahul_sharma',   'first_name': 'Rahul',    'last_name': 'Sharma',    'email': 'rahul.sharma@gmail.com',    'joined': date(2026, 1, 10)},
+            {'username': 'priya_patel',    'first_name': 'Priya',    'last_name': 'Patel',     'email': 'priya.patel@gmail.com',     'joined': date(2026, 1, 15)},
+            {'username': 'amit_verma',     'first_name': 'Amit',     'last_name': 'Verma',     'email': 'amit.verma@yahoo.com',      'joined': date(2026, 1, 20)},
+            {'username': 'sneha_gupta',    'first_name': 'Sneha',    'last_name': 'Gupta',     'email': 'sneha.gupta@outlook.com',   'joined': date(2026, 2, 1)},
+            {'username': 'arjun_singh',    'first_name': 'Arjun',    'last_name': 'Singh',     'email': 'arjun.singh@gmail.com',     'joined': date(2026, 2, 8)},
+            {'username': 'kavya_nair',     'first_name': 'Kavya',    'last_name': 'Nair',      'email': 'kavya.nair@gmail.com',      'joined': date(2026, 2, 14)},
+            {'username': 'rohan_mehta',    'first_name': 'Rohan',    'last_name': 'Mehta',     'email': 'rohan.mehta@hotmail.com',   'joined': date(2026, 2, 20)},
+            {'username': 'ananya_iyer',    'first_name': 'Ananya',   'last_name': 'Iyer',      'email': 'ananya.iyer@gmail.com',     'joined': date(2026, 3, 3)},
+            {'username': 'kiran_joshi',    'first_name': 'Kiran',    'last_name': 'Joshi',     'email': 'kiran.joshi@gmail.com',     'joined': date(2026, 3, 10)},
+            {'username': 'pooja_desai',    'first_name': 'Pooja',    'last_name': 'Desai',     'email': 'pooja.desai@rediffmail.com','joined': date(2026, 3, 18)},
+            {'username': 'varun_kapoor',   'first_name': 'Varun',    'last_name': 'Kapoor',    'email': 'varun.kapoor@gmail.com',    'joined': date(2026, 4, 2)},
+            {'username': 'divya_reddy',    'first_name': 'Divya',    'last_name': 'Reddy',     'email': 'divya.reddy@gmail.com',     'joined': date(2026, 4, 9)},
+            {'username': 'nikhil_kumar',   'first_name': 'Nikhil',   'last_name': 'Kumar',     'email': 'nikhil.kumar@outlook.com',  'joined': date(2026, 4, 20)},
+            {'username': 'meera_pillai',   'first_name': 'Meera',    'last_name': 'Pillai',    'email': 'meera.pillai@gmail.com',    'joined': date(2026, 5, 5)},
+            {'username': 'suresh_bhat',    'first_name': 'Suresh',   'last_name': 'Bhat',      'email': 'suresh.bhat@gmail.com',     'joined': date(2026, 5, 14)},
+        ]
+
+        for sdata in students_data:
+            user, created = User.objects.get_or_create(
+                username=sdata['username'],
+                defaults={
+                    'first_name': sdata['first_name'],
+                    'last_name':  sdata['last_name'],
+                    'email':      sdata['email'],
+                    'is_staff':   False,
+                    'is_active':  True,
+                }
+            )
+            if created:
+                user.set_password('student@123')
+                user.date_joined = tz.make_aware(
+                    datetime(sdata['joined'].year, sdata['joined'].month, sdata['joined'].day)
+                )
+                user.save()
+                StudentProfile.objects.get_or_create(user=user)
+            status = "Created" if created else "Already exists"
+            self.stdout.write(f"  Student: {user.get_full_name()} <{user.email}> ({status})")
+
+        self.stdout.write(self.style.SUCCESS(
+            "Successfully seeded courses, certificates, offers, and student accounts!"
+        ))

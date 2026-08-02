@@ -23,4 +23,5 @@ urlpatterns = [
     path('offers/<int:pk>/edit/', views.edit_offer, name='edit_offer'),
     path('offers/<int:pk>/toggle-status/', views.toggle_offer_status, name='toggle_offer_status'),
     path('offers/<int:pk>/delete/', views.delete_offer, name='delete_offer'),
+    path('students/', views.active_students, name='active_students'),
 ]
