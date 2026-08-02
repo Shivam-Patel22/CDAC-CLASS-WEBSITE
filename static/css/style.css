@@ -858,3 +858,60 @@ textarea.form-control {
     color: #FFFFFF;
     text-decoration: underline;
 }
+
+/* ==========================================================================
+   Print Styles — Clean Certificate PDF Export
+   ========================================================================== */
+@media print {
+    /* Hide non-certificate UI elements */
+    .navbar-header,
+    .footer,
+    .no-print,
+    header,
+    footer,
+    nav,
+    .messages-container,
+    .alert,
+    .mobile-toggle,
+    .auth-wrapper {
+        display: none !important;
+    }
+
+    @page {
+        size: A4 portrait;
+        margin: 1.5cm;
+    }
+
+    html, body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .main-content, main, .container {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-shadow: none !important;
+    }
+
+    .certificate-card {
+        border: 2px solid #0f172a !important;
+        box-shadow: none !important;
+        margin: 2rem auto !important;
+        padding: 3rem 2.5rem !important;
+        width: 100% !important;
+        max-width: 800px !important;
+        background: #ffffff !important;
+        page-break-inside: avoid !important;
+        border-radius: 16px !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
