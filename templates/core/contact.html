@@ -16,6 +16,78 @@
         </div>
     </div>
 
+    <div class="grid grid-2" style="align-items: start; margin-bottom: 2.5rem;">
+        <div class="form-card" style="margin: 0; max-width: 100%;">
+            <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Inquiry Form</h2>
+            <form method="post" action="{% url 'core:contact' %}" data-validate="true">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Full Name *</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="form-error">{{ form.name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.phone.id_for_label }}">Phone Number *</label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                        <div class="form-error">{{ form.phone.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.course.id_for_label }}">Interested in Course</label>
+                    {{ form.course }}
+                    {% if form.course.errors %}
+                        <div class="form-error">{{ form.course.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.message.id_for_label }}">Message *</label>
+                    {{ form.message }}
+                    {% if form.message.errors %}
+                        <div class="form-error">{{ form.message.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">Submit Inquiry &rarr;</button>
+            </form>
+        </div>
+
+        <div>
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3 style="margin-bottom: 1rem;">📍 Location &amp; Address</h3>
+                <p style="color: var(--gray-600); line-height: 1.7;">
+                    <strong>Centre for Development of Advanced Computing (C-DAC)</strong><br>
+                    C-DAC Innovation Campus, Innovation Street<br>
+                    Pune / Technology Hub, India
+                </p>
+            </div>
+
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3 style="margin-bottom: 1rem;">📞 Contact Info</h3>
+                <p style="color: var(--gray-600); line-height: 1.8;">
+                    <strong>Phone:</strong> +91 (020) 2570-4100<br>
+                    <strong>Email:</strong> info@cdac.in<br>
+                    <strong>Admissions:</strong> admissions@cdac.in
+                </p>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">⏰ Office Hours</h3>
+                <p style="color: var(--gray-600); line-height: 1.7;">
+                    <strong>Monday – Friday:</strong> 8:00 AM – 7:00 PM<br>
+                    <strong>Saturday:</strong> 9:00 AM – 4:00 PM<br>
+                    <strong>Sunday:</strong> Closed
+                </p>
+            </div>
+        </div>
+    </div>
+
     <!-- ═══════════════════════════════════════════════
          GOOGLE MAPS EMBED — CDAC Computer Class,
          Gandhinagar, Gujarat
@@ -109,78 +181,6 @@
         </div>
     </div>
     <!-- ═══════════════════════════════════════════════ -->
-
-    <div class="grid grid-2" style="align-items: start;">
-        <div class="form-card" style="margin: 0; max-width: 100%;">
-            <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Inquiry Form</h2>
-            <form method="post" action="{% url 'core:contact' %}" data-validate="true">
-                {% csrf_token %}
-
-                <div class="form-group">
-                    <label for="{{ form.name.id_for_label }}">Full Name *</label>
-                    {{ form.name }}
-                    {% if form.name.errors %}
-                        <div class="form-error">{{ form.name.errors.0 }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.phone.id_for_label }}">Phone Number *</label>
-                    {{ form.phone }}
-                    {% if form.phone.errors %}
-                        <div class="form-error">{{ form.phone.errors.0 }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.course.id_for_label }}">Interested in Course</label>
-                    {{ form.course }}
-                    {% if form.course.errors %}
-                        <div class="form-error">{{ form.course.errors.0 }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.message.id_for_label }}">Message *</label>
-                    {{ form.message }}
-                    {% if form.message.errors %}
-                        <div class="form-error">{{ form.message.errors.0 }}</div>
-                    {% endif %}
-                </div>
-
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">Submit Inquiry &rarr;</button>
-            </form>
-        </div>
-
-        <div>
-            <div class="card" style="margin-bottom: 1.5rem;">
-                <h3 style="margin-bottom: 1rem;">📍 Location &amp; Address</h3>
-                <p style="color: var(--gray-600); line-height: 1.7;">
-                    <strong>Centre for Development of Advanced Computing (C-DAC)</strong><br>
-                    C-DAC Innovation Campus, Innovation Street<br>
-                    Pune / Technology Hub, India
-                </p>
-            </div>
-
-            <div class="card" style="margin-bottom: 1.5rem;">
-                <h3 style="margin-bottom: 1rem;">📞 Contact Info</h3>
-                <p style="color: var(--gray-600); line-height: 1.8;">
-                    <strong>Phone:</strong> +91 (020) 2570-4100<br>
-                    <strong>Email:</strong> info@cdac.in<br>
-                    <strong>Admissions:</strong> admissions@cdac.in
-                </p>
-            </div>
-
-            <div class="card">
-                <h3 style="margin-bottom: 1rem;">⏰ Office Hours</h3>
-                <p style="color: var(--gray-600); line-height: 1.7;">
-                    <strong>Monday – Friday:</strong> 8:00 AM – 7:00 PM<br>
-                    <strong>Saturday:</strong> 9:00 AM – 4:00 PM<br>
-                    <strong>Sunday:</strong> Closed
-                </p>
-            </div>
-        </div>
-    </div>
 </div>
 
 {% if user.is_authenticated and user.is_staff and contact_form %}

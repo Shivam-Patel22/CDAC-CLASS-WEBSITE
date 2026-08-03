@@ -529,18 +529,18 @@ textarea.form-control {
     background: var(--gray-50);
     color: var(--gray-600);
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 1rem 1.25rem;
+    letter-spacing: 0.04em;
+    padding: 0.75rem 0.65rem;
     border-bottom: 1px solid var(--gray-200);
     vertical-align: middle;
 }
 
 .custom-table td {
-    padding: 1rem 1.25rem;
+    padding: 0.75rem 0.65rem;
     border-bottom: 1px solid var(--gray-100);
-    font-size: 0.95rem;
+    font-size: 0.88rem;
     color: var(--gray-700);
     vertical-align: middle;
 }
@@ -860,8 +860,8 @@ textarea.form-control {
 }
 
 /* ==========================================================================
-   Certificate Print Only Styles (@media print)
-   ========================================================================== */
+/* Print Styles — Clean Certificate PDF Export
+   Certificate-only print adjustments */
 @page {
     size: A4 portrait;
     margin: 0mm;
@@ -871,24 +871,46 @@ textarea.form-control {
     /* Reset body and html layout for clean single-page printing */
     html, body {
         background: #ffffff !important;
+        color: #0f172a !important;
         margin: 0 !important;
         padding: 0 !important;
         width: 100% !important;
-        height: auto !important;
+        height: 100% !important;
         overflow: visible !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
 
-    /* Hide all non-essential page elements during print mode */
+    /* Hide non-certificate UI elements */
     .navbar-header,
     .offers-ticker-container,
     .messages-container,
+    .alert,
+    .mobile-toggle,
+    .auth-wrapper,
+    .offers-ticker-wrapper,
+    .offers-ticker-badge,
+    .offers-ticker-content,
+    .offers-ticker-track,
+    .ticker-item,
     .footer,
     .no-print,
     header,
     footer,
     nav,
+    .messages-container,
+    .alert,
+    .mobile-toggle,
+    .auth-wrapper,
+    .offers-ticker-container,
+    .offers-ticker-wrapper,
+    .offers-ticker-badge,
+    .offers-ticker-content,
+    .offers-ticker-track,
+    .ticker-item {
+        display: none !important;
+    }
+
     .footer-container,
     .footer-bottom,
     .offers-ticker-wrapper {
@@ -902,39 +924,37 @@ textarea.form-control {
         overflow: hidden !important;
     }
 
-    /* Reset container wrappers to zero spacing */
-    .main-content {
-        padding: 0 !important;
-        margin: 0 !important;
-        background: transparent !important;
-        box-shadow: none !important;
-    }
-
-    .container {
-        padding: 0 !important;
-        margin: 0 !important;
-        max-width: 100% !important;
+    /* Ensure main layout is centered for print */
+    .main-content, main, .container {
+        padding: 1cm 0 !important;
+        margin: 0 auto !important;
         width: 100% !important;
+        max-width: 100% !important;
         box-shadow: none !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
 
-    /* Print ONLY the certificate card centered at top of the page */
     .certificate-card {
         display: block !important;
         visibility: visible !important;
         position: relative !important;
-        max-width: 720px !important;
+        max-width: 800px !important;
         width: 90% !important;
-        margin: 30px auto !important;
-        padding: 2.5rem !important;
+        margin: 1.5cm auto !important;
+        padding: 3rem 2.5rem !important;
         border: 6px solid #0f172a !important;
-        border-radius: 12px !important;
+        border-radius: 16px !important;
         background: #ffffff !important;
         box-shadow: none !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
         page-break-before: avoid !important;
         page-break-after: avoid !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
@@ -966,5 +986,6 @@ textarea.form-control {
         padding-top: 1.5rem !important;
         border-top: 1px solid var(--gray-200) !important;
         text-align: left !important;
+    }
     }
 }
