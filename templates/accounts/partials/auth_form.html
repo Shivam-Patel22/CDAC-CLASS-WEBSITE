@@ -15,14 +15,8 @@
         <!-- Header & Logo Section -->
         <div class="auth-brand-header">
             <div class="auth-logo-badge" id="logoBadge" style="background: transparent; border: none; width: auto; height: auto;">
-                <img src="{% static 'images/logo image.jpeg' %}" alt="C-DAC Logo" style="height: 52px; max-width: 100%; border-radius: 4px;">
+                <img src="{% static 'images/logo image.jpeg' %}" alt="C-DAC Logo" style="height: 62px; max-width: 100%; border-radius: 4px;">
             </div>
-            <h1 class="auth-portal-title" id="authPortalTitle">
-                {% if active_tab == 'register' %}Create Your Account{% else %}C-DAC Student & Staff Portal{% endif %}
-            </h1>
-            <p class="auth-portal-subtitle" id="authPortalSubtitle">
-                {% if active_tab == 'register' %}Join C-DAC to access interactive courses and earn verified certificates.{% else %}Welcome back! Sign in to access your student or administrative dashboard.{% endif %}
-            </p>
         </div>
 
         <!-- Admin Alert Notice Banner -->
@@ -31,16 +25,25 @@
             <span><strong>Admin Mode Selected:</strong> Log in with staff administrator credentials.</span>
         </div>
 
-        <!-- Django Messages Container -->
+        <!-- Django Messages & Toast Notifications -->
         {% if messages %}
-        <div class="auth-alerts-container">
             {% for message in messages %}
-            <div class="auth-alert auth-alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}" role="alert">
-                <span>{% if message.tags == 'success' %}✓{% elif message.tags == 'error' or message.tags == 'danger' %}✕{% else %}ℹ{% endif %}</span>
-                <span>{{ message }}</span>
-            </div>
+                {% if "logged out" in message|lower %}
+                <!-- Floating Toast Notification -->
+                <div id="logoutToast" class="toast-notification">
+                    <span class="toast-icon">ℹ</span>
+                    <span class="toast-message">{{ message }}</span>
+                    <button type="button" class="toast-close-btn" onclick="closeToast()" aria-label="Close">&times;</button>
+                </div>
+                {% else %}
+                <div class="auth-alerts-container">
+                    <div class="auth-alert auth-alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}" role="alert">
+                        <span>{% if message.tags == 'success' %}✓{% elif message.tags == 'error' or message.tags == 'danger' %}✕{% else %}ℹ{% endif %}</span>
+                        <span>{{ message }}</span>
+                    </div>
+                </div>
+                {% endif %}
             {% endfor %}
-        </div>
         {% endif %}
 
         <!-- ==========================================
@@ -348,16 +351,16 @@
             loginBtn.classList.remove('active');
             regBtn.classList.add('active');
             card.classList.add('auth-card-wide');
-            title.textContent = 'Create Your Account';
-            subtitle.textContent = 'Join C-DAC to access interactive courses and earn verified certificates.';
+            if (title) title.textContent = 'Create Your Account';
+            if (subtitle) subtitle.textContent = 'Join C-DAC to access interactive courses and earn verified certificates.';
         } else {
             regSec.style.display = 'none';
             loginSec.style.display = 'block';
             regBtn.classList.remove('active');
             loginBtn.classList.add('active');
             card.classList.remove('auth-card-wide');
-            title.textContent = 'C-DAC Student & Staff Portal';
-            subtitle.textContent = 'Welcome back! Sign in to access your student or administrative dashboard.';
+            if (title) title.textContent = 'C-DAC Student & Staff Portal';
+            if (subtitle) subtitle.textContent = 'Welcome back! Sign in to access your student or administrative dashboard.';
         }
     }
 
@@ -416,7 +419,28 @@
         }
     }
 
+    // Toast Dismissal Handler
+    function closeToast() {
+        const toast = document.getElementById('logoutToast');
+        if (toast) {
+            toast.classList.add('toast-hiding');
+            setTimeout(function() {
+                if (toast && toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 400);
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
+        // Auto hide toast after 1.5 seconds
+        const toast = document.getElementById('logoutToast');
+        if (toast) {
+            setTimeout(function() {
+                closeToast();
+            }, 1500);
+        }
+
         const pwdInput = document.getElementById('signup_password');
         const confirmInput = document.getElementById('confirm_password');
 
