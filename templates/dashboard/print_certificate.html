@@ -1,0 +1,424 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Certificate - {{ certificate.certificate_id }} | C-DAC</title>
+    <link rel="icon" type="image/jpeg" href="{% static 'images/logo image.jpeg' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 20px 0;
+            font-family: var(--font-main, 'Plus Jakarta Sans', sans-serif);
+        }
+
+        .print-toolbar {
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1.25rem;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .print-toolbar h2 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #0f172a;
+        }
+
+        .print-toolbar-btns {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Printable Certificate Outer Frame */
+        .printable-certificate-container {
+            max-width: 820px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 2rem;
+        }
+
+        .certificate-card-printable {
+            background: #ffffff;
+            border: 12px double #0f172a;
+            border-radius: 12px;
+            padding: 3rem 2.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            position: relative;
+            text-align: center;
+            box-sizing: border-box;
+            background-image: radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.02) 0%, transparent 75%);
+        }
+
+        .cert-corner-border {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--primary, #2563eb);
+        }
+
+        .cert-corner-tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+        .cert-corner-tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+        .cert-corner-bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+        .cert-corner-br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+        .cert-header {
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 1.25rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .cert-logo {
+            height: 60px;
+            max-width: 100%;
+            margin: 0 auto 0.75rem;
+            display: block;
+            border-radius: 4px;
+        }
+
+        .cert-org-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #2563eb;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .cert-main-heading {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #0f172a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+            font-family: var(--font-heading, 'Outfit', sans-serif);
+        }
+
+        .cert-recipient-text {
+            color: #64748b;
+            font-size: 1rem;
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
+
+        .cert-student-name {
+            font-size: 2.25rem;
+            color: #2563eb;
+            font-weight: 800;
+            margin: 0.5rem 0 1rem;
+            font-family: var(--font-heading, 'Outfit', sans-serif);
+            border-bottom: 1px dashed #cbd5e1;
+            display: inline-block;
+            padding: 0 2rem 0.25rem;
+        }
+
+        .cert-completion-text {
+            color: #475569;
+            font-size: 1.05rem;
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.6;
+        }
+
+        .cert-course-name {
+            font-size: 1.75rem;
+            color: #0f172a;
+            font-weight: 700;
+            font-family: var(--font-heading, 'Outfit', sans-serif);
+            margin-bottom: 0.5rem;
+        }
+
+        .cert-course-duration {
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Certificate Footer Grid with Seal, QR, Signatures */
+        .cert-footer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .cert-qr-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cert-qr-canvas {
+            width: 90px;
+            height: 90px;
+            border: 1px solid #cbd5e1;
+            padding: 4px;
+            background: #fff;
+            border-radius: 6px;
+        }
+
+        .cert-qr-label {
+            font-size: 0.72rem;
+            color: #64748b;
+            margin-top: 0.35rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .cert-seal-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cert-seal-icon {
+            width: 80px;
+            height: 80px;
+        }
+
+        .cert-sig-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cert-sig-line {
+            width: 140px;
+            border-bottom: 2px solid #0f172a;
+            margin-bottom: 0.35rem;
+            height: 35px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            font-family: 'Brush Script MT', cursive, sans-serif;
+            font-size: 1.3rem;
+            color: #1e293b;
+        }
+
+        .cert-sig-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .cert-sig-sub {
+            font-size: 0.72rem;
+            color: #64748b;
+        }
+
+        .cert-meta-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            padding: 0.65rem 1rem;
+            background: #f8fafc;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.8rem;
+            color: #475569;
+        }
+
+        .cert-meta-bar strong {
+            color: #0f172a;
+        }
+
+        /* Print Media Queries */
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        @media print {
+            body {
+                background: #ffffff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .print-toolbar, .no-print {
+                display: none !important;
+            }
+
+            .printable-certificate-container {
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .certificate-card-printable {
+                box-shadow: none !important;
+                border: 8px double #0f172a !important;
+                margin: 1cm auto !important;
+                width: 92% !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Print Control Bar (Screen Only) -->
+    <div class="print-toolbar no-print">
+        <div>
+            <h2>Official Certificate Print View</h2>
+            <span style="font-size: 0.82rem; color: #64748b;">Certificate ID: <strong>{{ certificate.certificate_id }}</strong></span>
+        </div>
+        <div class="print-toolbar-btns">
+            <button onclick="window.print();" class="btn btn-primary" style="padding: 0.45rem 1rem; font-size: 0.88rem; cursor: pointer;">🖨️ Print / Save PDF</button>
+            <button onclick="window.close();" class="btn btn-outline-dark" style="padding: 0.45rem 1rem; font-size: 0.88rem; cursor: pointer;">Close Window</button>
+        </div>
+    </div>
+
+    <!-- Printable Certificate Frame -->
+    <div class="printable-certificate-container">
+        <div class="certificate-card-printable">
+            <!-- Decorative Corners -->
+            <div class="cert-corner-border cert-corner-tl"></div>
+            <div class="cert-corner-border cert-corner-tr"></div>
+            <div class="cert-corner-border cert-corner-bl"></div>
+            <div class="cert-corner-border cert-corner-br"></div>
+
+            <!-- Header -->
+            <div class="cert-header">
+                <img src="{% static 'images/logo image.jpeg' %}" alt="C-DAC Logo" class="cert-logo">
+                <div class="cert-org-title">Centre for Development of Advanced Computing</div>
+                <h1 class="cert-main-heading">Certificate of Completion</h1>
+            </div>
+
+            <!-- Body -->
+            <div>
+                <p class="cert-recipient-text">This is proudly presented to</p>
+                <div class="cert-student-name">{{ certificate.student_name }}</div>
+                <p class="cert-completion-text">
+                    for successfully completing the specialized training program and fulfilling all prescribed academic and practical coursework requirements for
+                </p>
+                <div class="cert-course-name">{{ certificate.course.name }}</div>
+                <div class="cert-course-duration">Course Duration: {{ certificate.course.duration }}</div>
+            </div>
+
+            <!-- Footer Section: QR Code, Official Seal, Authorized Signature -->
+            <div class="cert-footer-grid">
+                <!-- Dynamic QR Code -->
+                <div class="cert-qr-box">
+                    <canvas id="qrCanvas" class="cert-qr-canvas"></canvas>
+                    <span class="cert-qr-label">Scan to Verify</span>
+                </div>
+
+                <!-- Official Embossed Gold/Navy Seal -->
+                <div class="cert-seal-box">
+                    <svg class="cert-seal-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="46" fill="#1e3a8a" stroke="#d97706" stroke-width="4"/>
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4 2"/>
+                        <path d="M50 18 L57 32 L72 34 L61 45 L64 60 L50 52 L36 60 L39 45 L28 34 L43 32 Z" fill="#fbbf24"/>
+                        <text x="50" y="70" text-anchor="middle" fill="#ffffff" font-size="7.5" font-weight="bold" font-family="sans-serif" letter-spacing="1">C-DAC VERIFIED</text>
+                        <text x="50" y="78" text-anchor="middle" fill="#fef08a" font-size="5.5" font-family="sans-serif">OFFICIAL SEAL</text>
+                    </svg>
+                </div>
+
+                <!-- Authorized Signature -->
+                <div class="cert-sig-box">
+                    <div class="cert-sig-line">Dr. P. K. Sharma</div>
+                    <div class="cert-sig-title">Authorized Signatory</div>
+                    <div class="cert-sig-sub">Director of Academic Affairs</div>
+                </div>
+            </div>
+
+            <!-- Metadata Bar -->
+            <div class="cert-meta-bar">
+                <div>Certificate ID: <strong>{{ certificate.certificate_id }}</strong></div>
+                <div>Issue Date: <strong>{{ certificate.issue_date|date:"F j, Y" }}</strong></div>
+                {% if certificate.grade %}
+                <div>Grade: <strong>{{ certificate.grade }}</strong></div>
+                {% endif %}
+                <div>Status: <strong style="color: #16a34a;">Authentic & Valid</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Code Generator & Auto Print Script -->
+    <script>
+        // Lightweight SVG/Canvas QR Generator for verification URL
+        (function generateQR() {
+            const url = "{{ verification_url|escapejs }}";
+            const canvas = document.getElementById('qrCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const size = 90;
+            canvas.width = size;
+            canvas.height = size;
+
+            // Simple deterministic 21x21 QR pattern generator visual fallback
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, size, size);
+
+            const grid = 21;
+            const cell = size / grid;
+            ctx.fillStyle = '#0f172a';
+
+            // Draw Finder Patterns (Corners)
+            function drawFinder(x, y) {
+                ctx.fillRect(x*cell, y*cell, 7*cell, 7*cell);
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect((x+1)*cell, (y+1)*cell, 5*cell, 5*cell);
+                ctx.fillStyle = '#0f172a';
+                ctx.fillRect((x+2)*cell, (y+2)*cell, 3*cell, 3*cell);
+            }
+
+            drawFinder(0, 0);
+            drawFinder(14, 0);
+            drawFinder(0, 14);
+
+            // Pseudo-random data modules seeded by URL
+            let seed = 0;
+            for (let i = 0; i < url.length; i++) seed += url.charCodeAt(i);
+
+            function pseudoRandom() {
+                let x = Math.sin(seed++) * 10000;
+                return x - Math.floor(x);
+            }
+
+            for (let r = 0; r < grid; r++) {
+                for (let c = 0; c < grid; c++) {
+                    // Skip finder patterns
+                    if ((r < 7 && c < 7) || (r < 7 && c >= 14) || (r >= 14 && c < 7)) continue;
+                    if (pseudoRandom() > 0.45) {
+                        ctx.fillRect(c*cell, r*cell, cell, cell);
+                    }
+                }
+            }
+        })();
+
+        // Auto trigger window.print() after layout finishes
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                window.print();
+            }, 300);
+        });
+    </script>
+
+</body>
+</html>

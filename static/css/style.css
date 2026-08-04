@@ -955,9 +955,6 @@ textarea.form-control {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
 
     /* Preserve internal layout structure of the certificate */
     .certificate-card * {
@@ -987,5 +984,5 @@ textarea.form-control {
         border-top: 1px solid var(--gray-200) !important;
         text-align: left !important;
     }
-    }
 }
+

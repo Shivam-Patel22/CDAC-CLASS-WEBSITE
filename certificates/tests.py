@@ -26,6 +26,11 @@ class CertificatesTestCase(TestCase):
             issue_date=date(2026, 1, 15),
             grade='A+'
         )
+        self.admin = User.objects.create_superuser(
+            username='certadmin',
+            email='certadmin@cdac.in',
+            password='adminpassword123'
+        )
 
     def test_valid_certificate_id_returns_match(self):
         url = reverse('certificates:verify')
@@ -43,7 +48,6 @@ class CertificatesTestCase(TestCase):
         self.assertContains(response, "No valid certificate found")
 
     def test_custom_certificate_id_issue(self):
-        admin = User.objects.create_superuser(username='certadmin', email='certadmin@cdac.in', password='adminpassword123')
         self.client.login(username='certadmin', password='adminpassword123')
 
         add_url = reverse('dashboard:add_certificate')
@@ -58,3 +62,33 @@ class CertificatesTestCase(TestCase):
         self.assertRedirects(response, reverse('dashboard:manage_certificates'))
         self.assertTrue(Certificate.objects.filter(certificate_id='CERT-2026-HARSHAL01').exists())
 
+    def test_admin_verify_certificate_endpoint(self):
+        self.client.login(username='certadmin', password='adminpassword123')
+        verify_url = reverse('dashboard:verify_certificate', kwargs={'pk': self.valid_cert.pk})
+        
+        response = self.client.get(verify_url, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, 200)
+        json_data = response.json()
+        self.assertTrue(json_data['success'])
+        self.assertEqual(json_data['certificate_id'], 'CERT-2026-TEST01')
+        self.assertEqual(json_data['student_name'], 'Jane Student')
+        self.assertIn('✓ Certificate Verified Successfully', json_data['message'])
+
+        # Verify timestamp was recorded
+        self.valid_cert.refresh_from_db()
+        self.assertIsNotNone(self.valid_cert.last_verified_at)
+
+    def test_admin_print_certificate_endpoint(self):
+        self.client.login(username='certadmin', password='adminpassword123')
+        print_url = reverse('dashboard:print_certificate', kwargs={'pk': self.valid_cert.pk})
+
+        response = self.client.get(print_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'dashboard/print_certificate.html')
+        self.assertContains(response, 'Jane Student')
+        self.assertContains(response, 'CERT-2026-TEST01')
+        self.assertContains(response, 'Python Web Development')
+
+        # Verify printed_at was recorded
+        self.valid_cert.refresh_from_db()
+        self.assertIsNotNone(self.valid_cert.printed_at)

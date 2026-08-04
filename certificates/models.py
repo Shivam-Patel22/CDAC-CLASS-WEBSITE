@@ -1,3 +1,4 @@
+import hashlib
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -9,6 +10,23 @@ class Certificate(models.Model):
     issue_date = models.DateField()
     grade = models.CharField(max_length=20, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    verification_token = models.CharField(max_length=64, blank=True, null=True)
+    verification_hash = models.CharField(max_length=64, blank=True, null=True)
+    printed_at = models.DateTimeField(blank=True, null=True)
+    last_verified_at = models.DateTimeField(blank=True, null=True)
+
+    def generate_verification_hash(self):
+        """Generates a SHA-256 hash for certificate data verification."""
+        data_str = f"{self.certificate_id}|{self.student_name}|{self.course_id}|{self.issue_date}|{self.grade or ''}"
+        return hashlib.sha256(data_str.encode('utf-8')).hexdigest()
+
+    def save(self, *args, **kwargs):
+        if not self.verification_hash:
+            self.verification_hash = self.generate_verification_hash()
+        if not self.verification_token:
+            self.verification_token = self.verification_hash[:16].upper()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.certificate_id} - {self.student_name} ({self.course.name})"
+

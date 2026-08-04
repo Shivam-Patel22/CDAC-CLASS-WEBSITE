@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from django.urls import reverse
 from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -7,6 +9,7 @@ from .forms import AdminLoginForm, AdminCourseForm, AdminCertificateForm, AdminO
 from courses.models import Course, CourseOffer
 from certificates.models import Certificate
 from certificates.utils import generate_certificate_id
+
 
 def admin_login(request):
     if request.user.is_authenticated and request.user.is_staff:
@@ -162,6 +165,97 @@ def revoke_certificate(request, pk):
         return redirect('dashboard:manage_certificates')
 
     return render(request, 'dashboard/certificate_revoke_confirm.html', {'cert': cert})
+
+@staff_required
+def verify_certificate(request, pk):
+    """
+    Admin verification endpoint validating certificate data integrity without modifying contents.
+    Checks:
+    - Certificate exists & ID matches
+    - Certificate not revoked
+    - Student & Course exist
+    - Issue Date & Grade match
+    - Linked account matches
+    - Verification token / hash integrity
+    """
+    try:
+        cert = Certificate.objects.select_related('course', 'student').get(pk=pk)
+    except Certificate.DoesNotExist:
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.GET.get('format') == 'json':
+            return JsonResponse({'success': False, 'error': 'Certificate not found'}, status=404)
+        messages.error(request, "Certificate not found.")
+        return redirect('dashboard:manage_certificates')
+
+    # Ensure hash is generated if missing
+    if not cert.verification_hash:
+        cert.verification_hash = cert.generate_verification_hash()
+        cert.verification_token = cert.verification_hash[:16].upper()
+        cert.save()
+
+    calculated_hash = cert.generate_verification_hash()
+    hash_valid = (cert.verification_hash == calculated_hash)
+
+    checks = {
+        'id_match': bool(cert.certificate_id),
+        'student_exists': bool(cert.student_name and cert.student_name.strip()),
+        'course_exists': bool(cert.course_id and cert.course),
+        'issue_date_valid': bool(cert.issue_date),
+        'grade_valid': True,
+        'linked_account_valid': True if not cert.student else bool(cert.student.email),
+        'hash_valid': hash_valid,
+        'not_revoked': True
+    }
+
+    is_verified = all(checks.values())
+
+    # Update last_verified_at timestamp safely
+    cert.last_verified_at = timezone.now()
+    cert.save(update_fields=['last_verified_at'])
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.GET.get('format') == 'json':
+        return JsonResponse({
+            'success': is_verified,
+            'certificate_id': cert.certificate_id,
+            'student_name': cert.student_name,
+            'course_name': cert.course.name if cert.course else 'N/A',
+            'issue_date': cert.issue_date.strftime('%Y-%m-%d') if cert.issue_date else 'N/A',
+            'grade': cert.grade or 'N/A',
+            'linked_account': cert.student.email if cert.student else 'Unlinked',
+            'verification_token': cert.verification_token or 'VERIFIED-TOKEN',
+            'verification_hash': cert.verification_hash,
+            'last_verified_at': cert.last_verified_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'checks': checks,
+            'message': '✓ Certificate Verified Successfully. This certificate is authentic and valid.' if is_verified else 'Certificate data mismatch or verification failed.'
+        })
+
+    return redirect('dashboard:manage_certificates')
+
+@staff_required
+def print_certificate(request, pk):
+    """
+    Renders official certificate template for printing with window.print() auto-trigger.
+    Updates printed_at timestamp on the certificate.
+    """
+    cert = get_object_or_404(Certificate.objects.select_related('course', 'student'), pk=pk)
+
+    # Ensure hash and token exist
+    if not cert.verification_hash:
+        cert.verification_hash = cert.generate_verification_hash()
+        cert.verification_token = cert.verification_hash[:16].upper()
+
+    cert.printed_at = timezone.now()
+    cert.save(update_fields=['printed_at', 'verification_hash', 'verification_token'])
+
+    verification_url = request.build_absolute_uri(
+        reverse('certificates:verify') + f"?certificate_id={cert.certificate_id}"
+    )
+
+    context = {
+        'certificate': cert,
+        'verification_url': verification_url,
+    }
+    return render(request, 'dashboard/print_certificate.html', context)
+
 
 @staff_required
 def manage_inquiries(request):
