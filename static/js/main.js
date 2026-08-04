@@ -30,7 +30,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Client-side Form Validation Helper
+    // 3. Date Input Year Constraint (Ensure max 4 digits for YEAR: 1000–9999)
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+    dateInputs.forEach(input => {
+        if (!input.hasAttribute('min')) input.setAttribute('min', '1000-01-01');
+        if (!input.hasAttribute('max')) input.setAttribute('max', '9999-12-31');
+
+        input.addEventListener('input', () => {
+            if (input.value) {
+                const parts = input.value.split('-');
+                if (parts[0] && parts[0].length > 4) {
+                    parts[0] = parts[0].slice(0, 4);
+                    input.value = parts.join('-');
+                }
+            }
+        });
+    });
+
+    // 4. Client-side Form Validation Helper
     const forms = document.querySelectorAll('form[data-validate="true"]');
     forms.forEach(form => {
         form.addEventListener('submit', (e) => {
@@ -43,6 +60,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     input.classList.add('is-invalid');
                 } else {
                     input.classList.remove('is-invalid');
+                }
+            });
+
+            // Ensure date inputs have valid 4-digit years
+            const formDateInputs = form.querySelectorAll('input[type="date"]');
+            formDateInputs.forEach(input => {
+                if (input.value) {
+                    const yearStr = input.value.split('-')[0];
+                    const year = parseInt(yearStr, 10);
+                    if (isNaN(year) || yearStr.length !== 4 || year < 1000 || year > 9999) {
+                        valid = false;
+                        input.classList.add('is-invalid');
+                    }
                 }
             });
 

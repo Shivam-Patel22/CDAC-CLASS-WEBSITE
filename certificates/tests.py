@@ -108,3 +108,26 @@ class CertificatesTestCase(TestCase):
         self.assertContains(response, 'Jane Student')
         self.assertContains(response, 'VERIFIED AUTHENTIC CERTIFICATE RECORD')
 
+    def test_issue_date_year_validation(self):
+        from dashboard.forms import AdminCertificateForm
+        # Valid 4-digit years (1999, 2007, 2025, 2026, 2038, 2099)
+        for valid_date in ['1999-05-12', '2007-11-20', '2025-01-01', '2026-08-04', '2038-12-31', '2099-09-09']:
+            form = AdminCertificateForm(data={
+                'certificate_id': f'CERT-{valid_date[:4]}-TEST',
+                'student_name': 'Test Student',
+                'course': self.course.id,
+                'issue_date': valid_date,
+            })
+            self.assertTrue(form.is_valid(), f"Expected year in {valid_date} to be valid, errors: {form.errors}")
+
+        # Invalid years (year < 1000 or year > 9999)
+        form_invalid = AdminCertificateForm(data={
+            'certificate_id': 'CERT-999-TEST',
+            'student_name': 'Test Student',
+            'course': self.course.id,
+            'issue_date': '0999-01-01',
+        })
+        self.assertFalse(form_invalid.is_valid())
+        self.assertIn('issue_date', form_invalid.errors)
+
+

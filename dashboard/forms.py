@@ -40,7 +40,7 @@ class AdminCertificateForm(forms.ModelForm):
             'certificate_id': forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
             'student_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Student Full Name', 'required': 'required'}),
             'course': forms.Select(attrs={'class': 'form-control', 'required': 'required'}),
-            'issue_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'required': 'required'}),
+            'issue_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'min': '1000-01-01', 'max': '9999-12-31', 'required': 'required'}),
             'grade': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Grade A / Pass'}),
         }
 
@@ -49,6 +49,13 @@ class AdminCertificateForm(forms.ModelForm):
         # If adding a new certificate, pre-populate certificate_id with generated value
         if not self.instance.pk and not self.initial.get('certificate_id'):
             self.initial['certificate_id'] = generate_certificate_id()
+
+    def clean_issue_date(self):
+        issue_date = self.cleaned_data.get('issue_date')
+        if issue_date:
+            if issue_date.year < 1000 or issue_date.year > 9999:
+                raise forms.ValidationError("Please enter a valid 4-digit year (1000–9999).")
+        return issue_date
 
     def clean_certificate_id(self):
         cert_id = self.cleaned_data.get('certificate_id', '').strip()
@@ -74,8 +81,8 @@ class AdminOfferForm(forms.ModelForm):
             'course': forms.Select(attrs={'class': 'form-control'}),
             'discount': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 30% OFF / ₹999 Only', 'id': 'id_discount'}),
             'badge': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 🎉 SPECIAL OFFER', 'id': 'id_badge'}),
-            'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'min': '1000-01-01', 'max': '9999-12-31'}),
+            'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'min': '1000-01-01', 'max': '9999-12-31'}),
             'priority': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '0'}),
             'status': forms.Select(attrs={'class': 'form-control'}),
         }
@@ -106,7 +113,7 @@ class AdminStudentForm(forms.Form):
     )
     date_joined = forms.DateField(
         required=False,
-        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'})
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'min': '1000-01-01', 'max': '9999-12-31'})
     )
     is_active = forms.ChoiceField(
         choices=[('1', 'Active'), ('0', 'Inactive')],
