@@ -21,7 +21,8 @@ class ContactForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
     message = forms.CharField(
-        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write your message or inquiry here...', 'rows': 5, 'required': 'required'})
+        required=False,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write your message or inquiry here...', 'rows': 5})
     )
 
     def __init__(self, *args, **kwargs):

@@ -41,3 +41,19 @@ class CoreTestCase(TestCase):
         self.assertEqual(inquiry.course, self.course1)
         self.assertFalse(inquiry.is_read)
 
+    def test_contact_form_submission_without_message(self):
+        from core.models import Inquiry
+        data = {
+            'name': 'Bob Student',
+            'phone': '9876543211',
+            'course': self.course1.id,
+            'message': '',
+        }
+        response = self.client.post(reverse('core:contact'), data)
+        self.assertRedirects(response, reverse('core:contact'))
+
+        self.assertEqual(Inquiry.objects.count(), 1)
+        inquiry = Inquiry.objects.first()
+        self.assertEqual(inquiry.name, 'Bob Student')
+        self.assertEqual(inquiry.message, '')
+

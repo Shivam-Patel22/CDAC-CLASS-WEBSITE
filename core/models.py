@@ -7,7 +7,7 @@ class Inquiry(models.Model):
     email = models.EmailField(max_length=254, blank=True, null=True)
     course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True, blank=True, related_name='inquiries')
     subject = models.CharField(max_length=200, default="General Inquiry")
-    message = models.TextField()
+    message = models.TextField(blank=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
 

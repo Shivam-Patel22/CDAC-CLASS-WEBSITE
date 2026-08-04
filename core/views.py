@@ -41,7 +41,7 @@ def contact(request):
             email = form.cleaned_data.get('email', '')
             course = form.cleaned_data.get('course')
             course_name = course.name if course else "General Inquiry"
-            message_text = form.cleaned_data['message']
+            message_text = form.cleaned_data.get('message', '')
             
             # Save inquiry in database for Admin Panel notification
             Inquiry.objects.create(
