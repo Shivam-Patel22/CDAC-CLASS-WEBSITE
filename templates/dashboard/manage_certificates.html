@@ -48,7 +48,7 @@
                     <td style="white-space: nowrap; text-align: right; padding-right: 0.85rem;">
                         <div style="display: inline-flex; gap: 0.25rem; align-items: center; justify-content: flex-end; white-space: nowrap;">
                             <a href="{% url 'certificates:verify' %}?certificate_id={{ cert.certificate_id }}" target="_blank" class="btn btn-ghost btn-sm" style="padding: 0.2rem 0.4rem; font-size: 0.78rem;" title="View Public Certificate">🔍 View</a>
-                            <button onclick="verifyCertificate({{ cert.id }})" class="btn btn-ghost btn-sm" style="padding: 0.2rem 0.45rem; font-size: 0.78rem; color: var(--primary); border: 1px solid var(--gray-200); background: #ffffff;" title="Admin Verify Certificate">✓ Verify</button>
+                            <button onclick="verifyCertificate('{% url 'dashboard:verify_certificate' cert.id %}')" class="btn btn-ghost btn-sm" style="padding: 0.2rem 0.45rem; font-size: 0.78rem; color: var(--primary); border: 1px solid var(--gray-200); background: #ffffff;" title="Admin Verify Certificate">✓ Verify</button>
                             <a href="{% url 'dashboard:print_certificate' cert.id %}" target="_blank" class="btn btn-ghost btn-sm" style="padding: 0.2rem 0.45rem; font-size: 0.78rem; color: var(--gray-800); border: 1px solid var(--gray-200); background: #ffffff;" title="Print Certificate">🖨️ Print</a>
                             <a href="{% url 'dashboard:edit_certificate' cert.id %}" class="btn btn-outline-dark btn-sm" style="padding: 0.2rem 0.5rem; font-size: 0.78rem;">Edit</a>
                             <a href="{% url 'dashboard:revoke_certificate' cert.id %}" class="btn btn-danger btn-sm" style="padding: 0.2rem 0.5rem; font-size: 0.78rem;">Revoke</a>
@@ -88,7 +88,7 @@
 
 {% block extra_js %}
 <script>
-function verifyCertificate(certPk) {
+function verifyCertificate(verifyUrl) {
     const modal = document.getElementById('verifyModal');
     const modalBody = document.getElementById('verifyModalBody');
     const modalIcon = document.getElementById('verifyModalIcon');
@@ -97,7 +97,9 @@ function verifyCertificate(certPk) {
     modal.style.display = 'flex';
     modalBody.innerHTML = '<div style="text-align: center; padding: 1.5rem 0; color: var(--gray-500);">Validating certificate data integrity with database...</div>';
 
-    fetch(`/dashboard/certificates/${certPk}/verify/?format=json`, {
+    const url = verifyUrl + (verifyUrl.includes('?') ? '&' : '?') + 'format=json';
+
+    fetch(url, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
         }
