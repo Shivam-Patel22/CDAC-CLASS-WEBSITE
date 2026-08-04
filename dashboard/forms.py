@@ -25,17 +25,9 @@ class AdminCourseForm(forms.ModelForm):
         }
 
 class AdminCertificateForm(forms.ModelForm):
-    # Optional link to registered student user
-    student = forms.ModelChoiceField(
-        queryset=User.objects.filter(is_staff=False).order_by('first_name', 'username'),
-        required=False,
-        widget=forms.Select(attrs={'class': 'form-control'}),
-        empty_label="— Select Registered Student (Optional) —"
-    )
-
     class Meta:
         model = Certificate
-        fields = ['certificate_id', 'student_name', 'student', 'course', 'issue_date', 'grade']
+        fields = ['certificate_id', 'student_name', 'course', 'issue_date', 'grade']
         widgets = {
             'certificate_id': forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
             'student_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Student Full Name', 'required': 'required'}),
