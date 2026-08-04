@@ -5,9 +5,8 @@ class CertificateVerificationForm(forms.Form):
         max_length=30,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Enter Certificate ID (e.g. CERT-2026-A1B2C3)',
-            'required': 'required',
-            'style': 'text-transform: uppercase;'
+            'placeholder': 'Enter Certificate ID (e.g. cert-2026-a1b2c3)',
+            'required': 'required'
         })
     )
 
