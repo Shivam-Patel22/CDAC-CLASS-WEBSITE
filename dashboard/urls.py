@@ -17,6 +17,8 @@ urlpatterns = [
     path('certificates/<int:pk>/revoke/', views.revoke_certificate, name='revoke_certificate'),
     path('certificates/<int:pk>/verify/', views.verify_certificate, name='verify_certificate'),
     path('certificates/<int:pk>/print/', views.print_certificate, name='print_certificate'),
+    path('verify-certificate/', views.admin_verify_search, name='admin_verify_search'),
+
 
     path('inquiries/', views.manage_inquiries, name='manage_inquiries'),
     path('inquiries/<int:pk>/toggle-read/', views.toggle_inquiry_read, name='toggle_inquiry_read'),

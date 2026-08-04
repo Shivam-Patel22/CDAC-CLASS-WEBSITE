@@ -92,3 +92,19 @@ class CertificatesTestCase(TestCase):
         # Verify printed_at was recorded
         self.valid_cert.refresh_from_db()
         self.assertIsNotNone(self.valid_cert.printed_at)
+
+    def test_admin_verify_search_page(self):
+        self.client.login(username='certadmin', password='adminpassword123')
+        admin_verify_url = reverse('dashboard:admin_verify_search')
+
+        # GET request to load input form
+        response = self.client.get(admin_verify_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'dashboard/admin_verify_certificate.html')
+
+        # POST lookup for valid Certificate ID
+        response = self.client.post(admin_verify_url, {'certificate_id': 'CERT-2026-TEST01'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Jane Student')
+        self.assertContains(response, 'VERIFIED AUTHENTIC CERTIFICATE RECORD')
+

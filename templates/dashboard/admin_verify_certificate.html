@@ -1,0 +1,107 @@
+{% extends 'dashboard/admin_base.html' %}
+{% load static %}
+
+{% block title %}Verify Certificate | Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1 class="page-title" style="text-align: left; margin-bottom: 0.25rem;">Admin Certificate Verification</h1>
+            <p class="page-subtitle" style="text-align: left;">Verify student certificate authenticity directly within the admin panel.</p>
+        </div>
+        <a href="{% url 'dashboard:manage_certificates' %}" class="btn btn-outline-dark">&larr; Back to Manage Certificates</a>
+    </div>
+
+    <!-- Verification Input Form Box -->
+    <div class="form-card" style="max-width: 600px; margin: 0 auto 2.5rem;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+            <div style="font-size: 2.5rem; margin-bottom: 0.25rem;">🔍</div>
+            <h2 style="font-size: 1.35rem; color: var(--gray-900);">Lookup Certificate by ID</h2>
+            <p style="color: var(--gray-500); font-size: 0.88rem;">Enter the official Certificate ID (e.g. CERT-2026-A1B2C3) to verify record integrity.</p>
+        </div>
+
+        {% if error_message %}
+        <div class="alert alert-error" style="margin-bottom: 1.5rem;">
+            <span class="alert-icon">✕</span>
+            <span class="alert-text">{{ error_message }}</span>
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'dashboard:admin_verify_search' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.certificate_id.id_for_label }}">Certificate ID *</label>
+                {{ form.certificate_id }}
+                {% if form.certificate_id.errors %}
+                    <div class="form-error">{{ form.certificate_id.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.85rem; font-size: 0.95rem;">
+                Verify Certificate &rarr;
+            </button>
+        </form>
+
+        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--gray-200); text-align: center; font-size: 0.82rem; color: var(--gray-500);">
+            💡 Note: Certificate IDs are case-insensitive and match database records directly.
+        </div>
+    </div>
+
+    <!-- Verification Result Record (If Match Found) -->
+    {% if certificate %}
+    <div style="text-align: center; margin-bottom: 1.5rem;">
+        <span class="badge badge-success" style="font-size: 1rem; padding: 0.5rem 1.25rem; display: inline-block;">
+            ✓ VERIFIED AUTHENTIC CERTIFICATE RECORD
+        </span>
+    </div>
+
+    <div class="certificate-card" style="background: #ffffff; border: 6px double var(--gray-900); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 750px; margin: 0 auto; box-shadow: var(--shadow-lg); text-align: center;">
+        <div class="certificate-header" style="border-bottom: 2px solid var(--primary); padding-bottom: 1.25rem; margin-bottom: 1.75rem;">
+            <img src="{% static 'images/logo image.jpeg' %}" alt="C-DAC Logo" style="height: 55px; max-width: 100%; margin: 0 auto 0.75rem; display: block; border-radius: 4px;">
+            <h2 class="certificate-title" style="font-size: 2rem; color: var(--dark); letter-spacing: 1.5px; text-transform: uppercase;">Certificate of Completion</h2>
+            <p class="certificate-subtitle" style="color: var(--primary); font-weight: 600; letter-spacing: 1px; margin-top: 0.25rem;">CENTRE FOR DEVELOPMENT OF ADVANCED COMPUTING (C-DAC)</p>
+        </div>
+
+        <div class="certificate-body" style="margin: 1.5rem 0;">
+            <p style="color: var(--gray-600); font-size: 1rem;">This certifies that</p>
+            <h3 class="certificate-student" style="font-size: 2rem; color: var(--primary); font-weight: 700; margin: 0.75rem 0; font-family: var(--font-heading);">{{ certificate.student_name }}</h3>
+            <p style="color: var(--gray-600); font-size: 1rem; max-width: 500px; margin: 0 auto 1.25rem;">
+                has successfully completed the comprehensive training program and fulfilled all curriculum requirements for
+            </p>
+
+            <h4 style="font-size: 1.5rem; color: var(--gray-900); font-family: var(--font-heading); margin-bottom: 0.35rem;">
+                {{ certificate.course.name }}
+            </h4>
+            <p style="color: var(--primary); font-weight: 600; font-size: 0.95rem;">Duration: {{ certificate.course.duration }}</p>
+        </div>
+
+        <div class="certificate-meta-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--gray-200); text-align: left;">
+            <div>
+                <span style="font-size: 0.78rem; color: var(--gray-500); display: block; text-transform: uppercase;">Certificate ID</span>
+                <strong style="font-family: monospace; font-size: 1.05rem; color: var(--gray-900);">{{ certificate.certificate_id }}</strong>
+            </div>
+            <div>
+                <span style="font-size: 0.78rem; color: var(--gray-500); display: block; text-transform: uppercase;">Issue Date</span>
+                <strong style="font-size: 1rem; color: var(--gray-900);">{{ certificate.issue_date|date:"F j, Y" }}</strong>
+            </div>
+            <div>
+                <span style="font-size: 0.78rem; color: var(--gray-500); display: block; text-transform: uppercase;">Grade Awarded</span>
+                <strong style="font-size: 1rem; color: var(--success);">{% if certificate.grade %}{{ certificate.grade }}{% else %}Passed{% endif %}</strong>
+            </div>
+            <div>
+                <span style="font-size: 0.78rem; color: var(--gray-500); display: block; text-transform: uppercase;">Linked Student Account</span>
+                <strong style="font-size: 0.95rem; color: var(--primary);">{% if certificate.student %}👤 {{ certificate.student.email }}{% else %}Unlinked{% endif %}</strong>
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem; padding-top: 1.25rem; border-top: 1px dashed var(--gray-200); display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="{% url 'dashboard:admin_verify_search' %}" class="btn btn-outline-dark">&larr; Verify Another Certificate</a>
+            <a href="{% url 'dashboard:print_certificate' certificate.id %}" target="_blank" class="btn btn-primary">🖨️ Print / Save Certificate</a>
+            <a href="{% url 'dashboard:edit_certificate' certificate.id %}" class="btn btn-ghost">Edit Details</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

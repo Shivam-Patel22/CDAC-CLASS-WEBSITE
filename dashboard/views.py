@@ -9,6 +9,8 @@ from .forms import AdminLoginForm, AdminCourseForm, AdminCertificateForm, AdminO
 from courses.models import Course, CourseOffer
 from certificates.models import Certificate
 from certificates.utils import generate_certificate_id
+from certificates.forms import CertificateVerificationForm
+
 
 
 def admin_login(request):
@@ -255,6 +257,49 @@ def print_certificate(request, pk):
         'verification_url': verification_url,
     }
     return render(request, 'dashboard/print_certificate.html', context)
+
+@staff_required
+def admin_verify_search(request):
+    """
+    Admin panel certificate verification lookup page.
+    Allows staff to enter any Certificate ID directly within the admin panel
+    without navigating to the public user panel.
+    """
+    cert_id = None
+    certificate = None
+    error_message = None
+
+    if request.method == 'POST':
+        form = CertificateVerificationForm(request.POST)
+        if form.is_valid():
+            cert_id = form.cleaned_data['certificate_id']
+            try:
+                certificate = Certificate.objects.select_related('course', 'student').get(certificate_id__iexact=cert_id)
+                certificate.last_verified_at = timezone.now()
+                certificate.save(update_fields=['last_verified_at'])
+            except Certificate.DoesNotExist:
+                error_message = f"No valid certificate found matching Certificate ID '{cert_id}'."
+    else:
+        cert_id = request.GET.get('certificate_id', '').strip().upper()
+        if cert_id:
+            form = CertificateVerificationForm(initial={'certificate_id': cert_id})
+            try:
+                certificate = Certificate.objects.select_related('course', 'student').get(certificate_id__iexact=cert_id)
+                certificate.last_verified_at = timezone.now()
+                certificate.save(update_fields=['last_verified_at'])
+            except Certificate.DoesNotExist:
+                error_message = f"No valid certificate found matching Certificate ID '{cert_id}'."
+        else:
+            form = CertificateVerificationForm()
+
+    context = {
+        'form': form,
+        'certificate': certificate,
+        'cert_id': cert_id,
+        'error_message': error_message,
+    }
+    return render(request, 'dashboard/admin_verify_certificate.html', context)
+
 
 
 @staff_required
