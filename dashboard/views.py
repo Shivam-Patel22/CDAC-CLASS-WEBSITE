@@ -283,7 +283,7 @@ def admin_verify_search(request):
             except Certificate.DoesNotExist:
                 error_message = f"No valid certificate found matching Certificate ID '{cert_id}'."
     else:
-        cert_id = request.GET.get('certificate_id', '').strip().upper()
+        cert_id = request.GET.get('certificate_id', '').strip().lower()
         if cert_id:
             form = CertificateVerificationForm(initial={'certificate_id': cert_id})
             try:

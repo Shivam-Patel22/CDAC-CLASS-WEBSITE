@@ -11,4 +11,4 @@ class CertificateVerificationForm(forms.Form):
     )
 
     def clean_certificate_id(self):
-        return self.cleaned_data.get('certificate_id', '').strip().upper()
+        return self.cleaned_data.get('certificate_id', '').strip().lower()

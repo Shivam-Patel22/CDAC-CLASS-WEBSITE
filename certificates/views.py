@@ -13,16 +13,16 @@ def verify(request):
             cert_id = form.cleaned_data['certificate_id']
             # Rule 9: Exact match lookup ONLY (no icontains/wildcard)
             try:
-                certificate = Certificate.objects.select_related('course', 'student').get(certificate_id=cert_id)
+                certificate = Certificate.objects.select_related('course', 'student').get(certificate_id__iexact=cert_id)
             except Certificate.DoesNotExist:
                 error_message = f"No valid certificate found matching Certificate ID '{cert_id}'."
     else:
         # Check GET parameter if passed from dashboard link
-        initial_id = request.GET.get('certificate_id', '').strip().upper()
+        initial_id = request.GET.get('certificate_id', '').strip().lower()
         if initial_id:
             form = CertificateVerificationForm(initial={'certificate_id': initial_id})
             try:
-                certificate = Certificate.objects.select_related('course', 'student').get(certificate_id=initial_id)
+                certificate = Certificate.objects.select_related('course', 'student').get(certificate_id__iexact=initial_id)
             except Certificate.DoesNotExist:
                 error_message = f"No valid certificate found matching Certificate ID '{initial_id}'."
         else:
