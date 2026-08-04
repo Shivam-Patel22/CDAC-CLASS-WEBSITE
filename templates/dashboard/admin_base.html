@@ -61,6 +61,16 @@
         </div>
         {% endfor %}
     </div>
+    <script>
+        setTimeout(function() {
+            var successAlerts = document.querySelectorAll('.messages-container .alert-success');
+            successAlerts.forEach(function(alert) {
+                alert.style.transition = "opacity 0.5s ease-out";
+                alert.style.opacity = "0";
+                setTimeout(function() { alert.style.display = 'none'; }, 500);
+            });
+        }, 5000);
+    </script>
     {% endif %}
 
     <!-- Main Content Area -->
