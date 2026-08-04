@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel | C-DAC{% endblock %}</title>
+    <link rel="icon" type="image/jpeg" href="{% static 'images/logo image.jpeg' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {% block extra_head %}{% endblock %}
+    <style>
+        /* Admin specific overrides */
+        body {
+            background-color: var(--gray-50);
+            padding-top: 2rem; /* Give some space at the top since there is no fixed navbar */
+        }
+        .main-content {
+            min-height: 100vh;
+        }
+        .admin-back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.8rem;
+            background-color: #fff;
+            color: var(--gray-700);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .admin-back-btn:hover {
+            background-color: var(--gray-50);
+            color: var(--primary);
+            border-color: var(--gray-300);
+        }
+        .admin-nav-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% if messages %}
+    <div class="messages-container" style="top: 1rem;">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            <span class="alert-icon">
+                {% if message.tags == 'success' %}✓{% elif message.tags == 'error' or message.tags == 'danger' %}✕{% else %}ℹ{% endif %}
+            </span>
+            <span class="alert-text">{{ message }}</span>
+            <button class="alert-close" onclick="this.parentElement.style.display='none';">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        {% if request.resolver_match.url_name != 'index' and request.resolver_match.url_name != 'login' %}
+        <div class="container" style="padding-bottom: 0;">
+            <div class="admin-nav-actions">
+                <a href="{% url 'dashboard:index' %}" class="admin-back-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Back to Dashboard
+                </a>
+                {% block secondary_back_btn %}{% endblock %}
+            </div>
+        </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

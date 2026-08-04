@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin_base.html' %}
 
 {% block title %}Active Student Accounts | C-DAC Admin{% endblock %}
 
@@ -17,7 +17,7 @@
         </div>
         <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
             <button type="button" class="btn btn-primary btn-sm" onclick="openAddStudentModal()">+ Add Student</button>
-            <a href="{% url 'dashboard:index' %}" class="btn btn-outline btn-sm">&larr; Back to Dashboard</a>
+            
         </div>
     </div>
 

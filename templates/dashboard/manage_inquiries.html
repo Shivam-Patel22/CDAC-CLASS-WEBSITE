@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'dashboard/admin_base.html' %}
 
 {% block title %}Customer Inquiries | Admin Panel | C-DAC{% endblock %}
 
@@ -94,7 +94,7 @@
         <div class="empty-state-icon">📥</div>
         <h3>No Inquiries Found</h3>
         <p>No customer inquiry messages matching the selected filter.</p>
-        <a href="{% url 'dashboard:index' %}" class="btn btn-outline-dark">&larr; Back to Admin Overview</a>
+        
     </div>
     {% endif %}
 </div>
