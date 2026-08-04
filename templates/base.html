@@ -20,7 +20,6 @@
 </head>
 <body>
     <!-- Navbar Header -->
-    {% if user.is_authenticated or request.session.is_guest %}
     <header class="navbar-header">
         <div class="nav-container">
             <a href="{% url 'core:home' %}" class="nav-logo" title="Centre for Development of Advanced Computing (C-DAC)">
@@ -41,33 +40,9 @@
                     <li><a href="{% url 'certificates:verify' %}" class="nav-link {% if request.resolver_match.url_name == 'verify' %}active{% endif %}">Verify Certificate</a></li>
                     <li><a href="{% url 'core:contact' %}" class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a></li>
                 </ul>
-
-                <div class="nav-auth">
-                    {% if user.is_authenticated or request.session.is_guest %}
-                        {% if user.is_staff %}
-                            <a href="{% url 'dashboard:index' %}" class="btn btn-outline btn-sm">
-                                Admin Panel
-                                {% if unread_inquiries_count > 0 %}
-                                    <span class="badge badge-danger" style="margin-left: 0.25rem; font-size: 0.75rem; padding: 0.15rem 0.4rem; vertical-align: middle;">{{ unread_inquiries_count }}</span>
-                                {% endif %}
-                            </a>
-                            <a href="{% url 'accounts:logout' %}" class="btn btn-primary btn-sm">Logout</a>
-                        {% else %}
-                            {% if request.session.is_guest %}
-                                <span class="nav-link" style="color: var(--gray-800); margin-right: 0.5rem; font-weight: 600;">Guest</span>
-                            {% endif %}
-                            <a href="{% url 'accounts:dashboard' %}" class="btn btn-outline btn-sm">Dashboard</a>
-                            <a href="{% url 'accounts:logout' %}" class="btn btn-primary btn-sm">Logout</a>
-                        {% endif %}
-                    {% else %}
-                        <a href="{% url 'accounts:login' %}" class="btn btn-ghost btn-sm">Login</a>
-                        <a href="{% url 'dashboard:login' %}" class="btn btn-dark-subtle btn-sm" title="Staff Only">Staff Portal</a>
-                    {% endif %}
-                </div>
             </nav>
         </div>
     </header>
-    {% endif %}
 
     <!-- Running Latest Course Offers Ticker Panel -->
     {% if latest_offers %}
@@ -121,7 +96,6 @@
     </main>
 
     <!-- Footer -->
-    {% if user.is_authenticated or request.session.is_guest %}
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-col brand-col">
@@ -140,15 +114,6 @@
                 </ul>
             </div>
             <div class="footer-col">
-                <h4>Student Portal</h4>
-                <ul>
-                    <li><a href="{% url 'accounts:register' %}">Student Registration</a></li>
-                    <li><a href="{% url 'accounts:login' %}">Student Login</a></li>
-                    <li><a href="{% url 'accounts:dashboard' %}">My Certificates</a></li>
-                    <li><a href="{% url 'dashboard:login' %}">Staff Admin Portal</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
                 <h4>Contact Us</h4>
                 <p>📍 {% if site_contact and site_contact.address %}{{ site_contact.address }}{% else %}Gandhinagar, Gujarat, India{% endif %}</p>
                 <p>📧 {% if site_contact and site_contact.email %}{{ site_contact.email }}{% else %}contact@cdac.in{% endif %}</p>
@@ -159,7 +124,6 @@
             <p>&copy; 2026 Centre for Development of Advanced Computing (C-DAC). All rights reserved.</p>
         </div>
     </footer>
-    {% endif %}
 
     <script src="{% static 'js/main.js' %}"></script>
     {% block extra_js %}{% endblock %}

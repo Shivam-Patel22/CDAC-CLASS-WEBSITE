@@ -5,11 +5,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('django-admin/', admin.site.urls),
-    path('', include('accounts.urls')),
     path('', include('core.urls')),
     path('courses/', include('courses.urls')),
     path('', include('certificates.urls')),
-    path('admin-panel/', include('dashboard.urls')),
+    path('cdac-admin/', include('dashboard.urls')),
 ]
 
 if settings.DEBUG:

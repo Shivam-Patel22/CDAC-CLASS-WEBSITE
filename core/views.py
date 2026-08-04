@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import ContactForm
 from courses.models import Course
-from accounts.forms import StudentLoginForm, StudentRegistrationForm
 
 def home(request):
     try:
@@ -12,9 +11,6 @@ def home(request):
         
     context = {
         'featured_courses': featured_courses,
-        'login_form': StudentLoginForm(),
-        'signup_form': StudentRegistrationForm(),
-        'active_tab': 'login'
     }
     return render(request, 'core/home.html', context)
 
