@@ -79,9 +79,10 @@
                             <a href="{% url 'dashboard:toggle_inquiry_read' item.id %}" class="btn btn-outline-dark btn-sm" style="white-space: nowrap;">
                                 {% if item.is_read %}Mark Unread{% else %}Mark Read{% endif %}
                             </a>
-                            <a href="{% url 'dashboard:delete_inquiry' item.id %}" class="btn btn-danger btn-sm" style="white-space: nowrap;" onclick="return confirm('Are you sure you want to delete this inquiry?');">
+                            <a href="{% url 'dashboard:delete_inquiry' item.id %}" class="btn btn-danger btn-sm" style="white-space: nowrap;" onclick="return confirmAction(event, 'Are you sure you want to delete this inquiry?');">
                                 Delete
                             </a>
+
                         </div>
                     </td>
                 </tr>
