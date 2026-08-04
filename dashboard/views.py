@@ -1,3 +1,4 @@
+import time
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.urls import reverse
@@ -10,6 +11,7 @@ from courses.models import Course, CourseOffer
 from certificates.models import Certificate
 from certificates.utils import generate_certificate_id
 from certificates.forms import CertificateVerificationForm
+from django.utils import timezone
 
 
 
@@ -38,6 +40,8 @@ def admin_login(request):
                     return redirect('dashboard:login')
                 
                 auth_login(request, user)
+                request.session['admin_last_activity'] = time.time()
+                messages.success(request, f"Logged in as staff administrator ({user.username}).")
                 return redirect('dashboard:index')
             else:
                 messages.error(request, "Invalid staff credentials.")

@@ -41,7 +41,8 @@
 
 <script>
     document.querySelector('form').addEventListener('submit', function() {
-        sessionStorage.setItem('admin_session_active', 'true');
+        sessionStorage.setItem('admin_login_timestamp', Date.now().toString());
     });
 </script>
 {% endblock %}
+

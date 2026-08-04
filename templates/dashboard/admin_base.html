@@ -82,51 +82,32 @@
     <script src="{% static 'js/main.js' %}"></script>
     {% if request.user.is_authenticated and request.user.is_staff and request.resolver_match.url_name != 'login' %}
     <script>
-        // Tab-session strictly enforced
-        if (sessionStorage.getItem('admin_session_active') !== 'true') {
-            // New tab or fresh window without session storage - redirect to logout
-            window.location.replace("{% url 'dashboard:logout' %}");
-        }
+        (function() {
+            const ONE_HOUR_MS = 3600000; // 1 hour (3600 seconds)
 
-        // Track internal navigation to prevent logging out when simply clicking links
-        let isInternalNavigation = false;
-        
-        document.addEventListener('click', (e) => {
-            let link = e.target.closest('a');
-            if (link && (link.href.startsWith(window.location.origin) || link.href.startsWith('/') || link.href.startsWith('#'))) {
-                isInternalNavigation = true;
+            // Track session timestamp in sessionStorage (cleared when browser/tab is closed)
+            if (!sessionStorage.getItem('admin_login_timestamp')) {
+                sessionStorage.setItem('admin_login_timestamp', Date.now().toString());
             }
-        });
-        
-        document.addEventListener('submit', () => {
-            isInternalNavigation = true;
-        });
 
-        // Destroy session on the server when the tab/browser is closed
-        window.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'hidden' && !isInternalNavigation) {
-                // User is closing tab or navigating away to an external site
-                sessionStorage.removeItem('admin_session_active');
-                fetch("{% url 'dashboard:logout' %}", {
-                    method: 'POST',
-                    headers: { 'X-CSRFToken': '{{ csrf_token }}' },
-                    keepalive: true
-                }).catch(() => {});
+            const loginTimestamp = parseInt(sessionStorage.getItem('admin_login_timestamp') || '0', 10);
+            const elapsed = Date.now() - loginTimestamp;
+
+            // If 1 hour has elapsed, log out and redirect to login page
+            if (elapsed >= ONE_HOUR_MS) {
+                sessionStorage.removeItem('admin_login_timestamp');
+                window.location.replace("{% url 'dashboard:logout' %}");
+            } else {
+                // Auto-logout after remaining time of 1 hour
+                setTimeout(() => {
+                    sessionStorage.removeItem('admin_login_timestamp');
+                    window.location.replace("{% url 'dashboard:logout' %}");
+                }, ONE_HOUR_MS - elapsed);
             }
-        });
-        
-        window.addEventListener('pagehide', (e) => {
-            if (!isInternalNavigation) {
-                sessionStorage.removeItem('admin_session_active');
-                fetch("{% url 'dashboard:logout' %}", {
-                    method: 'POST',
-                    headers: { 'X-CSRFToken': '{{ csrf_token }}' },
-                    keepalive: true
-                }).catch(() => {});
-            }
-        });
+        })();
     </script>
     {% endif %}
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>
