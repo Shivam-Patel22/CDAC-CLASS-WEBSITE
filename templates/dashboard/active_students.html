@@ -16,7 +16,7 @@
             </p>
         </div>
         <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-            <button type="button" class="btn btn-primary btn-sm" onclick="openAddStudentModal()">+ Add Student</button>
+            <a class="btn btn-primary btn-sm" href="{% url 'dashboard:add_student' %}">+ Add Student</a>
             
         </div>
     </div>
@@ -241,93 +241,16 @@
                     No students enrolled yet. Click "+ Add Student" above to manually enroll a student.
                 {% endif %}
             </p>
-            <button type="button" class="btn btn-primary" onclick="openAddStudentModal()" style="margin-top: 1rem;">+ Add Student</button>
+            <a class="btn btn-primary" href="{% url 'dashboard:add_student' %}" style="margin-top: 1rem;">+ Add Student</a>
         </div>
         {% endif %}
 
     </div><!-- /card -->
-
 </div><!-- /container -->
-
-<!-- Add Student Modal -->
-<div id="addStudentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); z-index: 9999; justify-content: center; align-items: center; padding: 1rem;">
-    <div class="card" style="width: 100%; max-width: 580px; max-height: 90vh; overflow-y: auto; background: var(--white); border-radius: var(--radius-lg); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); border: 1px solid var(--gray-200); padding: 2rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--gray-200); padding-bottom: 1rem;">
-            <h3 style="margin: 0; font-size: 1.35rem; color: var(--gray-900);">👨‍🎓 Enroll New Student</h3>
-            <button type="button" onclick="closeAddStudentModal()" style="background: none; border: none; font-size: 1.6rem; color: var(--gray-400); cursor: pointer; line-height: 1;">&times;</button>
-        </div>
-
-        <form method="POST" action="{% url 'dashboard:add_student' %}">
-            {% csrf_token %}
-
-            <div class="form-group" style="margin-bottom: 1.25rem;">
-                <label style="font-weight: 600; font-size: 0.88rem; color: var(--gray-700); margin-bottom: 0.35rem; display: block;">Student Full Name *</label>
-                {{ student_form.full_name }}
-            </div>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label style="font-weight: 600; font-size: 0.88rem; color: var(--gray-700); margin-bottom: 0.35rem; display: block;">Email Address *</label>
-                    {{ student_form.email }}
-                </div>
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label style="font-weight: 600; font-size: 0.88rem; color: var(--gray-700); margin-bottom: 0.35rem; display: block;">Username (Optional)</label>
-                    {{ student_form.username }}
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label style="font-weight: 600; font-size: 0.88rem; color: var(--gray-700); margin-bottom: 0.35rem; display: block;">Phone Number</label>
-                    {{ student_form.phone }}
-                </div>
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label style="font-weight: 600; font-size: 0.88rem; color: var(--gray-700); margin-bottom: 0.35rem; display: block;">Select Course</label>
-                    {{ student_form.course }}
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label style="font-weight: 600; font-size: 0.88rem; color: var(--gray-700); margin-bottom: 0.35rem; display: block;">Enrollment Date</label>
-                    {{ student_form.date_joined }}
-                </div>
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label style="font-weight: 600; font-size: 0.88rem; color: var(--gray-700); margin-bottom: 0.35rem; display: block;">Student Status</label>
-                    {{ student_form.is_active }}
-                </div>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 1.75rem;">
-                <label style="font-weight: 600; font-size: 0.88rem; color: var(--gray-700); margin-bottom: 0.35rem; display: block;">Notes (Optional)</label>
-                {{ student_form.notes }}
-            </div>
-
-            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; border-top: 1px solid var(--gray-200); padding-top: 1.25rem;">
-                <button type="button" class="btn btn-outline-dark" onclick="closeAddStudentModal()">Cancel</button>
-                <button type="submit" class="btn btn-primary">Save Student</button>
-            </div>
-        </form>
-    </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-function openAddStudentModal() {
-    var modal = document.getElementById('addStudentModal');
-    if (modal) {
-        modal.style.display = 'flex';
-    }
-}
-
-function closeAddStudentModal() {
-    var modal = document.getElementById('addStudentModal');
-    if (modal) {
-        modal.style.display = 'none';
-    }
-}
-
 (function () {
     /* Show brief loading overlay when the search form submits */
     var form    = document.getElementById('student-search-form');

@@ -84,7 +84,6 @@
                 {% if message.tags == 'success' %}✓{% elif message.tags == 'error' or message.tags == 'danger' %}✕{% else %}ℹ{% endif %}
             </span>
             <span class="alert-text">{{ message }}</span>
-            <button class="alert-close" onclick="this.parentElement.style.display='none';">&times;</button>
         </div>
         {% endfor %}
     </div>

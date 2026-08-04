@@ -51,7 +51,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (password && confirmPassword && password.value !== confirmPassword.value) {
                 valid = false;
                 confirmPassword.classList.add('is-invalid');
-                alert('Passwords do not match.');
+                let errDiv = confirmPassword.parentElement.querySelector('.form-error');
+                if (!errDiv) {
+                    errDiv = document.createElement('div');
+                    errDiv.className = 'form-error';
+                    errDiv.style.color = 'var(--danger, #ef4444)';
+                    errDiv.style.fontSize = '0.85rem';
+                    errDiv.style.marginTop = '0.4rem';
+                    confirmPassword.parentElement.appendChild(errDiv);
+                }
+                errDiv.textContent = 'Passwords do not match.';
             }
 
             if (!valid) {

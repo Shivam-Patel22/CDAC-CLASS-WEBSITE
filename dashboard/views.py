@@ -557,7 +557,11 @@ def add_student(request):
             return redirect('dashboard:active_students')
         else:
             messages.error(request, "Invalid student details. Please check the required fields.")
-    return redirect('dashboard:active_students')
+            return render(request, 'dashboard/add_student.html', {'form': form, 'title': 'Add New Student'})
+    else:
+        form = AdminStudentForm()
+
+    return render(request, 'dashboard/add_student.html', {'form': form, 'title': 'Add New Student'})
 
 @staff_required
 def toggle_student_status(request, pk):

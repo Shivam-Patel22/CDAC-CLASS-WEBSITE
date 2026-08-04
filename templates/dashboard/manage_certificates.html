@@ -16,6 +16,18 @@
 
     </div>
 
+    <!-- Admin Certificate Verification Result (Inline) -->
+    <div id="verifyResultContainer" class="card" style="display: none; margin-bottom: 1.5rem; padding: 1.5rem; position: relative;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; border-bottom: 1px solid var(--gray-200); padding-bottom: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div id="verifyModalIcon" style="font-size: 1.5rem; line-height: 1;">🔍</div>
+                <h3 id="verifyModalTitle" style="margin: 0; font-size: 1.15rem; color: var(--gray-900);">Certificate Verification</h3>
+            </div>
+            <button onclick="closeVerifyResult()" class="btn btn-outline-dark btn-sm" style="padding: 0.2rem 0.5rem; font-size: 0.8rem;">Dismiss</button>
+        </div>
+        <div id="verifyModalBody"></div>
+    </div>
+
     {% if certificates %}
     <div class="table-container">
         <table class="custom-table">
@@ -73,33 +85,17 @@
     {% endif %}
 </div>
 
-<!-- Admin Certificate Verification Modal -->
-<div id="verifyModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); z-index: 9999; justify-content: center; align-items: center; padding: 1rem;">
-    <div style="background: #ffffff; width: 100%; max-width: 520px; border-radius: 12px; padding: 1.75rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.25); position: relative; border: 1px solid var(--gray-200); box-sizing: border-box;">
-        <button onclick="closeVerifyModal()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--gray-400); line-height: 1;">&times;</button>
-        <div style="text-align: center; margin-bottom: 1.25rem;">
-            <div id="verifyModalIcon" style="font-size: 2.75rem; margin-bottom: 0.5rem;">🔍</div>
-            <h3 id="verifyModalTitle" style="margin: 0; font-size: 1.25rem; color: var(--gray-900);">Certificate Verification</h3>
-        </div>
-        <div id="verifyModalBody">
-            <div style="text-align: center; padding: 1.5rem 0; color: var(--gray-500);">Validating certificate record...</div>
-        </div>
-        <div style="margin-top: 1.5rem; text-align: right; border-top: 1px solid var(--gray-200); padding-top: 1rem;">
-            <button onclick="closeVerifyModal()" class="btn btn-outline-dark btn-sm" style="padding: 0.4rem 1.2rem;">Close</button>
-        </div>
-    </div>
-</div>
-
 {% block extra_js %}
 <script>
 function verifyCertificate(verifyUrl) {
-    const modal = document.getElementById('verifyModal');
+    const container = document.getElementById('verifyResultContainer');
     const modalBody = document.getElementById('verifyModalBody');
     const modalIcon = document.getElementById('verifyModalIcon');
     const modalTitle = document.getElementById('verifyModalTitle');
 
-    modal.style.display = 'flex';
-    modalBody.innerHTML = '<div style="text-align: center; padding: 1.5rem 0; color: var(--gray-500);">Validating certificate data integrity with database...</div>';
+    container.style.display = 'block';
+    container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    modalBody.innerHTML = '<div style="padding: 1rem 0; color: var(--gray-500);">Validating certificate data integrity with database...</div>';
 
     const url = verifyUrl + (verifyUrl.includes('?') ? '&' : '?') + 'format=json';
 
@@ -119,10 +115,10 @@ function verifyCertificate(verifyUrl) {
             modalTitle.innerText = 'Certificate Verified Successfully';
 
             modalBody.innerHTML = `
-                <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); color: #15803d; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1.25rem; font-weight: 600; font-size: 0.9rem; text-align: center;">
+                <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); color: #15803d; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-weight: 600; font-size: 0.9rem;">
                     ✓ Certificate is authentic and valid
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.85rem; background: var(--gray-50, #f8fafc); padding: 1rem; border-radius: 8px; border: 1px solid var(--gray-200, #e2e8f0);">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; font-size: 0.85rem; background: var(--gray-50, #f8fafc); padding: 1rem; border-radius: 8px; border: 1px solid var(--gray-200, #e2e8f0);">
                     <div><span style="color: var(--gray-500, #64748b); display: block; font-size: 0.75rem; text-transform: uppercase;">Certificate ID</span><strong>${data.certificate_id}</strong></div>
                     <div><span style="color: var(--gray-500, #64748b); display: block; font-size: 0.75rem; text-transform: uppercase;">Student Name</span><strong>${data.student_name}</strong></div>
                     <div><span style="color: var(--gray-500, #64748b); display: block; font-size: 0.75rem; text-transform: uppercase;">Course</span><strong>${data.course_name}</strong></div>
@@ -141,7 +137,7 @@ function verifyCertificate(verifyUrl) {
             modalTitle.innerText = 'Verification Failed';
 
             modalBody.innerHTML = `
-                <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #b91c1c; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-weight: 600; font-size: 0.9rem; text-align: center;">
+                <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #b91c1c; padding: 0.75rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem;">
                     ✕ ${data.error || data.message || 'Certificate verification failed.'}
                 </div>
             `;
@@ -151,12 +147,12 @@ function verifyCertificate(verifyUrl) {
         modalIcon.innerHTML = '⚠️';
         modalIcon.style.color = 'var(--warning, #f59e0b)';
         modalTitle.innerText = 'Verification Error';
-        modalBody.innerHTML = `<div style="color: var(--danger, #ef4444); text-align: center; padding: 1rem;">Failed to verify certificate: ${err.message}</div>`;
+        modalBody.innerHTML = `<div style="color: var(--danger, #ef4444); padding: 1rem;">Failed to verify certificate: ${err.message}</div>`;
     });
 }
 
-function closeVerifyModal() {
-    document.getElementById('verifyModal').style.display = 'none';
+function closeVerifyResult() {
+    document.getElementById('verifyResultContainer').style.display = 'none';
 }
 </script>
 {% endblock %}

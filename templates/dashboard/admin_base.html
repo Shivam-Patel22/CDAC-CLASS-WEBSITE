@@ -51,14 +51,13 @@
 <body>
     <!-- Flash Messages -->
     {% if messages %}
-    <div class="messages-container" style="top: 1rem;">
+    <div class="messages-container" style="padding-top: 1rem;">
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }}">
             <span class="alert-icon">
                 {% if message.tags == 'success' %}✓{% elif message.tags == 'error' or message.tags == 'danger' %}✕{% else %}ℹ{% endif %}
             </span>
             <span class="alert-text">{{ message }}</span>
-            <button class="alert-close" onclick="this.parentElement.style.display='none';">&times;</button>
         </div>
         {% endfor %}
     </div>
