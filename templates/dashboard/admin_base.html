@@ -81,6 +81,53 @@
     </main>
 
     <script src="{% static 'js/main.js' %}"></script>
+    {% if request.user.is_authenticated and request.user.is_staff and request.resolver_match.url_name != 'login' %}
+    <script>
+        // Tab-session strictly enforced
+        if (sessionStorage.getItem('admin_session_active') !== 'true') {
+            // New tab or fresh window without session storage - redirect to logout
+            window.location.replace("{% url 'dashboard:logout' %}");
+        }
+
+        // Track internal navigation to prevent logging out when simply clicking links
+        let isInternalNavigation = false;
+        
+        document.addEventListener('click', (e) => {
+            let link = e.target.closest('a');
+            if (link && (link.href.startsWith(window.location.origin) || link.href.startsWith('/') || link.href.startsWith('#'))) {
+                isInternalNavigation = true;
+            }
+        });
+        
+        document.addEventListener('submit', () => {
+            isInternalNavigation = true;
+        });
+
+        // Destroy session on the server when the tab/browser is closed
+        window.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden' && !isInternalNavigation) {
+                // User is closing tab or navigating away to an external site
+                sessionStorage.removeItem('admin_session_active');
+                fetch("{% url 'dashboard:logout' %}", {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                    keepalive: true
+                }).catch(() => {});
+            }
+        });
+        
+        window.addEventListener('pagehide', (e) => {
+            if (!isInternalNavigation) {
+                sessionStorage.removeItem('admin_session_active');
+                fetch("{% url 'dashboard:logout' %}", {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                    keepalive: true
+                }).catch(() => {});
+            }
+        });
+    </script>
+    {% endif %}
     {% block extra_js %}{% endblock %}
 </body>
 </html>
