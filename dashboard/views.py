@@ -38,7 +38,6 @@ def admin_login(request):
                     return redirect('dashboard:login')
                 
                 auth_login(request, user)
-                messages.success(request, f"Logged in as staff administrator ({user.username}).")
                 return redirect('dashboard:index')
             else:
                 messages.error(request, "Invalid staff credentials.")
