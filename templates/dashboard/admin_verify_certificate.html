@@ -3,14 +3,18 @@
 
 {% block title %}Verify Certificate | Admin Panel{% endblock %}
 
+{% block secondary_back_btn %}
+<a href="{% url 'dashboard:manage_certificates' %}" class="admin-back-btn">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to Manage Certificates
+</a>
+{% endblock %}
+
 {% block content %}
 <div class="container">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
-        <div>
-            <h1 class="page-title" style="text-align: left; margin-bottom: 0.25rem;">Admin Certificate Verification</h1>
-            <p class="page-subtitle" style="text-align: left;">Verify student certificate authenticity directly within the admin panel.</p>
-        </div>
-        <a href="{% url 'dashboard:manage_certificates' %}" class="btn btn-outline-dark">&larr; Back to Manage Certificates</a>
+    <div style="margin-bottom: 2rem;">
+        <h1 class="page-title" style="text-align: left; margin-bottom: 0.25rem;">Admin Certificate Verification</h1>
+        <p class="page-subtitle" style="text-align: left;">Verify student certificate authenticity directly within the admin panel.</p>
     </div>
 
     <!-- Verification Input Form Box -->

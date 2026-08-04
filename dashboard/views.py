@@ -279,7 +279,12 @@ def admin_verify_search(request):
             try:
                 certificate = Certificate.objects.select_related('course', 'student').get(certificate_id__iexact=cert_id)
                 certificate.last_verified_at = timezone.now()
-                certificate.save(update_fields=['last_verified_at'])
+                if not certificate.verification_hash:
+                    certificate.verification_hash = certificate.generate_verification_hash()
+                    certificate.verification_token = certificate.verification_hash[:16].upper()
+                    certificate.save(update_fields=['last_verified_at', 'verification_hash', 'verification_token'])
+                else:
+                    certificate.save(update_fields=['last_verified_at'])
             except Certificate.DoesNotExist:
                 error_message = f"No valid certificate found matching Certificate ID '{cert_id}'."
     else:
@@ -289,7 +294,12 @@ def admin_verify_search(request):
             try:
                 certificate = Certificate.objects.select_related('course', 'student').get(certificate_id__iexact=cert_id)
                 certificate.last_verified_at = timezone.now()
-                certificate.save(update_fields=['last_verified_at'])
+                if not certificate.verification_hash:
+                    certificate.verification_hash = certificate.generate_verification_hash()
+                    certificate.verification_token = certificate.verification_hash[:16].upper()
+                    certificate.save(update_fields=['last_verified_at', 'verification_hash', 'verification_token'])
+                else:
+                    certificate.save(update_fields=['last_verified_at'])
             except Certificate.DoesNotExist:
                 error_message = f"No valid certificate found matching Certificate ID '{cert_id}'."
         else:
