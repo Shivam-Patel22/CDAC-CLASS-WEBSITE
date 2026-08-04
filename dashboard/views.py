@@ -45,7 +45,6 @@ def admin_login(request):
 @staff_required
 def admin_logout(request):
     auth_logout(request)
-    messages.info(request, "Staff administrator logged out.")
     return redirect('dashboard:login')
 
 from core.models import Inquiry

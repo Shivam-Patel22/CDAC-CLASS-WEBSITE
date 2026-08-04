@@ -10,7 +10,6 @@ def staff_required(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.warning(request, "Staff login required to access the admin panel.")
             return redirect('dashboard:login')
         if not request.user.is_staff:
             messages.error(request, "Access denied. Only staff administrators can access the admin panel.")
