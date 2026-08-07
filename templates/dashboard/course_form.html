@@ -66,13 +66,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         featuredCheckbox.addEventListener('change', function() {
             if (this.checked && !isInitiallyFeatured && totalFeaturedCount >= 3) {
+                this.checked = false;
                 showConfirmModal(
-                    'Warning: You currently have ' + totalFeaturedCount + ' courses selected as Featured. Only the 3 most recently featured courses will be displayed on the home page.',
+                    'You already have 3 featured courses selected. You must deselect at least one course to add this course in Featured Courses.',
                     function() {},
                     {
-                        title: '⭐ Featured Courses Limit Warning',
+                        title: '⭐ Featured Courses Limit Reached',
                         icon: '⚠️',
-                        confirmText: 'Understood',
+                        confirmText: 'OK, I Will Deselect',
                         confirmClass: 'btn btn-primary btn-sm'
                     }
                 );

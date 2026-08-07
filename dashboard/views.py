@@ -98,10 +98,12 @@ def add_course(request):
     if request.method == 'POST':
         form = AdminCourseForm(request.POST, request.FILES)
         if form.is_valid():
-            course = form.save()
+            course = form.save(commit=False)
+            if course.is_featured and featured_count >= 3:
+                course.is_featured = False
+                messages.warning(request, "Cannot set course as featured: You already have 3 featured courses selected. You must deselect at least one course to add this course in Featured Courses.")
+            course.save()
             messages.success(request, f"Course '{course.name}' created successfully.")
-            if Course.objects.filter(is_featured=True).count() > 3:
-                messages.warning(request, "Warning: You have selected more than 3 courses as Featured. Only the 3 most recently featured courses will be displayed on the home page.")
             return redirect('dashboard:manage_courses')
     else:
         form = AdminCourseForm()
@@ -119,10 +121,12 @@ def edit_course(request, pk):
     if request.method == 'POST':
         form = AdminCourseForm(request.POST, request.FILES, instance=course)
         if form.is_valid():
-            form.save()
-            messages.success(request, f"Course '{course.name}' updated successfully.")
-            if Course.objects.filter(is_featured=True).count() > 3:
-                messages.warning(request, "Warning: You have selected more than 3 courses as Featured. Only the 3 most recently featured courses will be displayed on the home page.")
+            updated_course = form.save(commit=False)
+            if updated_course.is_featured and not course.is_featured and featured_count >= 3:
+                updated_course.is_featured = False
+                messages.warning(request, "Cannot set course as featured: You already have 3 featured courses selected. You must deselect at least one course to add this course in Featured Courses.")
+            updated_course.save()
+            messages.success(request, f"Course '{updated_course.name}' updated successfully.")
             return redirect('dashboard:manage_courses')
     else:
         form = AdminCourseForm(instance=course)
@@ -151,12 +155,19 @@ def delete_course(request, pk):
 @staff_required
 def toggle_course_featured(request, pk):
     course = get_object_or_404(Course, pk=pk)
-    course.is_featured = not course.is_featured
-    course.save()
-    status_str = "featured on homepage" if course.is_featured else "removed from homepage featured list"
-    messages.success(request, f"Course '{course.name}' is now {status_str}.")
-    if Course.objects.filter(is_featured=True).count() > 3:
-        messages.warning(request, "Warning: You have selected more than 3 courses as Featured. Only the 3 most recently featured courses will be displayed on the home page.")
+    if not course.is_featured:
+        featured_count = Course.objects.filter(is_featured=True).count()
+        if featured_count >= 3:
+            messages.warning(request, "You already have 3 featured courses selected. You must deselect at least one course to add this course in Featured Courses.")
+            return redirect('dashboard:manage_courses')
+        course.is_featured = True
+        course.save()
+        messages.success(request, f"Course '{course.name}' is now featured on homepage.")
+    else:
+        course.is_featured = False
+        course.save()
+        messages.success(request, f"Course '{course.name}' removed from homepage featured list.")
+
     return redirect('dashboard:manage_courses')
 
 @staff_required

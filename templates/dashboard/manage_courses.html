@@ -39,7 +39,7 @@
                                class="btn btn-outline-dark btn-sm" 
                                style="font-size: 0.8rem; padding: 4px 10px; color: var(--gray-600); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;" 
                                title="Click to feature on home page"
-                               {% if featured_count >= 3 %}onclick="return confirmAction(event, 'Warning: You already have {{ featured_count }} courses selected as Featured. Only the 3 most recently featured courses will be displayed on the home page. Are you sure you want to proceed?', {title: '⭐ Featured Courses Limit Warning', icon: '⚠️', confirmText: 'Proceed & Feature', confirmClass: 'btn btn-primary btn-sm'});"{% endif %}>
+                               {% if featured_count >= 3 %}onclick="event.preventDefault(); showConfirmModal('You already have 3 featured courses selected. You must deselect at least one course to add this course in Featured Courses.', function(){}, {title: '⭐ Featured Courses Limit Reached', icon: '⚠️', confirmText: 'OK, I Will Deselect', confirmClass: 'btn btn-primary btn-sm'}); return false;"{% endif %}>
                                 + Feature on Home
                             </a>
                         {% endif %}
