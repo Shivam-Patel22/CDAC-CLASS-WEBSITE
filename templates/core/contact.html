@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <div class="grid grid-2" style="align-items: start; margin-bottom: 2.5rem;">
+    <div class="grid grid-2" style="align-items: stretch; margin-bottom: 2.5rem;">
         <div class="form-card" style="margin: 0; max-width: 100%;">
             <h2 style="margin-bottom: 1.5rem; font-size: 1.5rem;">Inquiry Form</h2>
             <form method="post" action="{% url 'core:contact' %}" data-validate="true">
@@ -58,8 +58,8 @@
             </form>
         </div>
 
-        <div>
-            <div class="card" style="margin-bottom: 1.5rem;">
+        <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; gap: 1.5rem;">
+            <div class="card">
                 <h3 style="margin-bottom: 1rem;">📍 Location &amp; Address</h3>
                 <p style="color: var(--gray-600); line-height: 1.7;">
                     <strong>Centre for Development of Advanced Computing (C-DAC)</strong><br>
@@ -68,7 +68,7 @@
                 </p>
             </div>
 
-            <div class="card" style="margin-bottom: 1.5rem;">
+            <div class="card">
                 <h3 style="margin-bottom: 1rem;">📞 Contact Info</h3>
                 <p style="color: var(--gray-600); line-height: 1.8;">
                     <strong>Phone:</strong> +91 (020) 2570-4100<br>
