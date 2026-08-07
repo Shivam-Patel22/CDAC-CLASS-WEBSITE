@@ -15,10 +15,14 @@
         /* Admin specific overrides */
         body {
             background-color: var(--gray-50);
-            padding-top: 2rem; /* Give some space at the top since there is no fixed navbar */
+            padding-top: 0.75rem;
         }
         .main-content {
             min-height: 100vh;
+        }
+        .main-content > .container {
+            padding-top: 0.75rem;
+            padding-bottom: 1.5rem;
         }
         .admin-back-btn {
             display: inline-flex;
@@ -43,7 +47,7 @@
         .admin-nav-actions {
             display: flex;
             gap: 1rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.25rem;
             flex-wrap: wrap;
         }
     </style>
@@ -51,7 +55,7 @@
 <body>
     <!-- Flash Messages -->
     {% if messages %}
-    <div class="messages-container" style="padding-top: 1rem;">
+    <div class="messages-container" style="padding-top: 0.5rem;">
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }}">
             <span class="alert-icon">
@@ -76,7 +80,7 @@
     <!-- Main Content Area -->
     <main class="main-content">
         {% if request.resolver_match.url_name != 'index' and request.resolver_match.url_name != 'login' %}
-        <div class="container" style="padding-bottom: 0;">
+        <div class="container" style="padding-top: 0.75rem; padding-bottom: 0;">
             <div class="admin-nav-actions">
                 <a href="{% url 'dashboard:index' %}" class="admin-back-btn">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
