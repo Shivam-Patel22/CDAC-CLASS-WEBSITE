@@ -57,6 +57,7 @@ def admin_login(request):
 @staff_required
 def admin_logout(request):
     auth_logout(request)
+    messages.success(request, "Logged out successfully.")
     return redirect('dashboard:login')
 
 from core.models import Inquiry

@@ -11,11 +11,12 @@
                 Logged in as <strong>{{ request.user.username }}</strong> (Staff Administrator)
             </p>
         </div>
-        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
             <a href="{% url 'dashboard:add_certificate' %}" class="btn btn-outline btn-sm">+ Issue Certificate</a>
             <a href="{% url 'dashboard:manage_offers' %}" class="btn btn-outline btn-sm" style="border-color: #38BDF8; color: #38BDF8;">🏷️ Offers</a>
             <a href="{% url 'dashboard:edit_about' %}" class="btn btn-outline btn-sm">About Update</a>
             <a href="{% url 'dashboard:edit_contact' %}" class="btn btn-outline btn-sm">Contact Update</a>
+            <a href="{% url 'dashboard:logout' %}" class="btn btn-danger btn-sm" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem;">🚪 Logout</a>
         </div>
     </div>
 
