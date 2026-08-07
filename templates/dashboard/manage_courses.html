@@ -17,7 +17,6 @@
         <table class="custom-table">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Course Name</th>
                     <th>Duration</th>
                     <th>Created At</th>
@@ -27,7 +26,6 @@
             <tbody>
                 {% for course in courses %}
                 <tr>
-                    <td>#{{ course.id }}</td>
                     <td><strong>{{ course.name }}</strong></td>
                     <td><span class="badge badge-primary">{{ course.duration }}</span></td>
                     <td>{{ course.created_at|date:"Y-m-d" }}</td>
