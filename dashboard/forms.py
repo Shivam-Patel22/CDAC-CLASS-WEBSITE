@@ -25,22 +25,73 @@ class AdminCourseForm(forms.ModelForm):
         }
 
 class AdminCertificateForm(forms.ModelForm):
+    first_name = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name *', 'required': 'required'})
+    )
+    middle_name = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Middle Name *', 'required': 'required'})
+    )
+    last_name = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name *', 'required': 'required'})
+    )
+
     class Meta:
         model = Certificate
-        fields = ['certificate_id', 'student_name', 'course', 'issue_date', 'grade']
+        fields = ['certificate_id', 'first_name', 'middle_name', 'last_name', 'course', 'course_start_date', 'course_end_date', 'issue_date', 'grade']
         widgets = {
             'certificate_id': forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly'}),
-            'student_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Student Full Name', 'required': 'required'}),
             'course': forms.Select(attrs={'class': 'form-control', 'required': 'required'}),
+            'course_start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'min': '1000-01-01', 'max': '9999-12-31', 'required': 'required'}),
+            'course_end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'min': '1000-01-01', 'max': '9999-12-31', 'required': 'required'}),
             'issue_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'min': '1000-01-01', 'max': '9999-12-31', 'required': 'required'}),
             'grade': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. Grade A / Pass'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # If adding a new certificate, pre-populate certificate_id with generated value
-        if not self.instance.pk and not self.initial.get('certificate_id'):
-            self.initial['certificate_id'] = generate_certificate_id()
+        if self.instance and self.instance.pk:
+            if not self.initial.get('first_name'):
+                if self.instance.first_name:
+                    self.initial['first_name'] = self.instance.first_name
+                    self.initial['middle_name'] = self.instance.middle_name
+                    self.initial['last_name'] = self.instance.last_name
+                elif self.instance.student_name:
+                    parts = self.instance.student_name.strip().split()
+                    if len(parts) >= 3:
+                        self.initial['first_name'] = parts[0]
+                        self.initial['middle_name'] = " ".join(parts[1:-1])
+                        self.initial['last_name'] = parts[-1]
+                    elif len(parts) == 2:
+                        self.initial['first_name'] = parts[0]
+                        self.initial['middle_name'] = ""
+                        self.initial['last_name'] = parts[1]
+                    elif len(parts) == 1:
+                        self.initial['first_name'] = parts[0]
+                        self.initial['middle_name'] = ""
+                        self.initial['last_name'] = ""
+        else:
+            if not self.initial.get('certificate_id'):
+                fn = self.initial.get('first_name', '')
+                ln = self.initial.get('last_name', '')
+                self.initial['certificate_id'] = generate_certificate_id(fn, ln)
+
+    def clean_course_start_date(self):
+        start_date = self.cleaned_data.get('course_start_date')
+        if start_date:
+            if start_date.year < 1000 or start_date.year > 9999:
+                raise forms.ValidationError("Please enter a valid 4-digit year (1000–9999).")
+        return start_date
+
+    def clean_course_end_date(self):
+        end_date = self.cleaned_data.get('course_end_date')
+        if end_date:
+            if end_date.year < 1000 or end_date.year > 9999:
+                raise forms.ValidationError("Please enter a valid 4-digit year (1000–9999).")
+        return end_date
 
     def clean_issue_date(self):
         issue_date = self.cleaned_data.get('issue_date')
@@ -49,10 +100,21 @@ class AdminCertificateForm(forms.ModelForm):
                 raise forms.ValidationError("Please enter a valid 4-digit year (1000–9999).")
         return issue_date
 
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('course_start_date')
+        end_date = cleaned_data.get('course_end_date')
+        if start_date and end_date:
+            if end_date < start_date:
+                self.add_error('course_end_date', "Course End Date cannot be earlier than Course Start Date.")
+        return cleaned_data
+
     def clean_certificate_id(self):
         cert_id = self.cleaned_data.get('certificate_id', '').strip()
+        first_name = self.cleaned_data.get('first_name', '')
+        last_name = self.cleaned_data.get('last_name', '')
         if not cert_id:
-            cert_id = generate_certificate_id()
+            cert_id = generate_certificate_id(first_name, last_name)
 
         qs = Certificate.objects.filter(certificate_id__iexact=cert_id)
         if self.instance and self.instance.pk:
@@ -60,6 +122,22 @@ class AdminCertificateForm(forms.ModelForm):
         if qs.exists():
             raise forms.ValidationError(f"Certificate ID '{cert_id}' is already in use. Please enter a unique Certificate ID.")
         return cert_id
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        fn = self.cleaned_data.get('first_name', '').strip()
+        mn = self.cleaned_data.get('middle_name', '').strip()
+        ln = self.cleaned_data.get('last_name', '').strip()
+        instance.first_name = fn
+        instance.middle_name = mn
+        instance.last_name = ln
+        if mn:
+            instance.student_name = f"{fn} {mn} {ln}"
+        else:
+            instance.student_name = f"{fn} {ln}"
+        if commit:
+            instance.save()
+        return instance
 
 from courses.models import CourseOffer
 

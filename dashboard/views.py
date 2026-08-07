@@ -137,7 +137,7 @@ def add_certificate(request):
             cert = form.save(commit=False)
             # Ensure certificate_id is server-generated if blank
             if not cert.certificate_id:
-                cert.certificate_id = generate_certificate_id()
+                cert.certificate_id = generate_certificate_id(cert.first_name, cert.last_name)
             cert.save()
             messages.success(request, f"Certificate '{cert.certificate_id}' issued to {cert.student_name}.")
             return redirect('dashboard:manage_certificates')

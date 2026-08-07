@@ -4,9 +4,14 @@ from django.contrib.auth.models import User
 
 class Certificate(models.Model):
     certificate_id = models.CharField(max_length=30, unique=True, db_index=True)
+    first_name = models.CharField(max_length=100, blank=True, default='')
+    middle_name = models.CharField(max_length=100, blank=True, default='')
+    last_name = models.CharField(max_length=100, blank=True, default='')
     student_name = models.CharField(max_length=200)
     student = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='certificates')
     course = models.ForeignKey('courses.Course', on_delete=models.PROTECT)
+    course_start_date = models.DateField(null=True, blank=True)
+    course_end_date = models.DateField(null=True, blank=True)
     issue_date = models.DateField()
     grade = models.CharField(max_length=20, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -21,6 +26,16 @@ class Certificate(models.Model):
         return hashlib.sha256(data_str.encode('utf-8')).hexdigest()
 
     def save(self, *args, **kwargs):
+        fn = self.first_name.strip() if self.first_name else ""
+        mn = self.middle_name.strip() if self.middle_name else ""
+        ln = self.last_name.strip() if self.last_name else ""
+        
+        if fn or ln:
+            if mn:
+                self.student_name = f"{fn} {mn} {ln}"
+            else:
+                self.student_name = f"{fn} {ln}"
+                
         if not self.verification_hash:
             self.verification_hash = self.generate_verification_hash()
         if not self.verification_token:

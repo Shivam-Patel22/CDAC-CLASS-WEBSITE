@@ -33,20 +33,46 @@
             <div class="form-group">
                 <label for="{{ form.certificate_id.id_for_label }}">Certificate ID *</label>
                 {{ form.certificate_id }}
-                <small id="id-mode-hint" style="color: var(--gray-500); font-size: 0.8rem; display: block; margin-top: 0.3rem;">Format: CERT-YYYY-XXXXXX (Server auto-generated)</small>
+                <small id="id-mode-hint" style="color: var(--gray-500); font-size: 0.8rem; display: block; margin-top: 0.3rem;">Format: CERT-YYYY-FL-RANDOM-SEQ (Server auto-generated)</small>
                 {% if form.certificate_id.errors %}<div class="form-error">{{ form.certificate_id.errors.0 }}</div>{% endif %}
             </div>
 
-            <div class="form-group">
-                <label for="{{ form.student_name.id_for_label }}">Student Full Name (Printed on Certificate) *</label>
-                {{ form.student_name }}
-                {% if form.student_name.errors %}<div class="form-error">{{ form.student_name.errors.0 }}</div>{% endif %}
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="{{ form.first_name.id_for_label }}">First Name *</label>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}<div class="form-error">{{ form.first_name.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="{{ form.middle_name.id_for_label }}">Middle Name *</label>
+                    {{ form.middle_name }}
+                    {% if form.middle_name.errors %}<div class="form-error">{{ form.middle_name.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="{{ form.last_name.id_for_label }}">Last Name *</label>
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}<div class="form-error">{{ form.last_name.errors.0 }}</div>{% endif %}
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="{{ form.course.id_for_label }}">Completed Course *</label>
                 {{ form.course }}
                 {% if form.course.errors %}<div class="form-error">{{ form.course.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.course_start_date.id_for_label }}">Course Start Date *</label>
+                {{ form.course_start_date }}
+                {% if form.course_start_date.errors %}<div class="form-error">{{ form.course_start_date.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.course_end_date.id_for_label }}">Course End Date *</label>
+                {{ form.course_end_date }}
+                {% if form.course_end_date.errors %}<div class="form-error">{{ form.course_end_date.errors.0 }}</div>{% endif %}
             </div>
 
             <div class="form-group">
@@ -72,6 +98,33 @@
 
 {% block extra_js %}
 <script>
+function getInitials() {
+    var fnInput = document.getElementById('id_first_name');
+    var lnInput = document.getElementById('id_last_name');
+
+    var fnVal = (fnInput && fnInput.value) ? fnInput.value.trim() : '';
+    var lnVal = (lnInput && lnInput.value) ? lnInput.value.trim() : '';
+
+    var fChar = fnVal ? fnVal.charAt(0).toUpperCase() : 'X';
+    var lChar = lnVal ? lnVal.charAt(0).toUpperCase() : 'X';
+
+    return fChar + lChar;
+}
+
+function updateAutoCertId() {
+    var certInput = document.getElementById('id_certificate_id');
+    var manualRadio = document.querySelector('input[name="id_gen_mode"][value="manual"]');
+    if (!certInput || (manualRadio && manualRadio.checked)) return;
+
+    var currentVal = certInput.value || '';
+    var fl = getInitials();
+    var parts = currentVal.split('-');
+    if (parts.length === 5 && parts[0] === 'CERT') {
+        parts[2] = fl;
+        certInput.value = parts.join('-');
+    }
+}
+
 function toggleIdMode(mode) {
     var certInput = document.getElementById('id_certificate_id');
     var hint = document.getElementById('id-mode-hint');
@@ -84,7 +137,8 @@ function toggleIdMode(mode) {
         certInput.focus();
     } else {
         certInput.setAttribute('readonly', 'readonly');
-        if (hint) hint.textContent = '⚡ Auto mode active: Format CERT-YYYY-XXXXXX (Server auto-generated)';
+        if (hint) hint.textContent = '⚡ Auto mode active: Format CERT-YYYY-FL-RANDOM-SEQ (Server auto-generated)';
+        updateAutoCertId();
     }
 }
 
@@ -94,6 +148,16 @@ document.addEventListener('DOMContentLoaded', function() {
         toggleIdMode('manual');
     } else {
         toggleIdMode('auto');
+    }
+
+    var fnInput = document.getElementById('id_first_name');
+    var lnInput = document.getElementById('id_last_name');
+
+    if (fnInput) {
+        fnInput.addEventListener('input', updateAutoCertId);
+    }
+    if (lnInput) {
+        lnInput.addEventListener('input', updateAutoCertId);
     }
 });
 </script>

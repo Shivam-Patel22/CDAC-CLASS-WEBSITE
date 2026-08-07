@@ -53,14 +53,64 @@ class CertificatesTestCase(TestCase):
         add_url = reverse('dashboard:add_certificate')
         data = {
             'certificate_id': 'CERT-2026-HARSHAL01',
-            'student_name': 'Harshal Chauhan',
+            'first_name': 'Harshal',
+            'middle_name': 'Narendrasinh',
+            'last_name': 'Chauhan',
             'course': self.course.id,
+            'course_start_date': '2026-01-10',
+            'course_end_date': '2026-07-10',
             'issue_date': '2026-08-02',
             'grade': 'A+',
         }
         response = self.client.post(add_url, data)
         self.assertRedirects(response, reverse('dashboard:manage_certificates'))
-        self.assertTrue(Certificate.objects.filter(certificate_id='CERT-2026-HARSHAL01').exists())
+        cert = Certificate.objects.get(certificate_id='CERT-2026-HARSHAL01')
+        self.assertEqual(cert.student_name, 'Harshal Narendrasinh Chauhan')
+        self.assertEqual(str(cert.course_start_date), '2026-01-10')
+        self.assertEqual(str(cert.course_end_date), '2026-07-10')
+
+    def test_middle_name_compulsory_validation(self):
+        from dashboard.forms import AdminCertificateForm
+        form = AdminCertificateForm(data={
+            'certificate_id': 'CERT-2026-TEST02',
+            'first_name': 'Harshal',
+            'middle_name': '',  # Empty compulsory middle name
+            'last_name': 'Chauhan',
+            'course': self.course.id,
+            'course_start_date': '2026-01-10',
+            'course_end_date': '2026-07-10',
+            'issue_date': '2026-08-02',
+        })
+        self.assertFalse(form.is_valid())
+        self.assertIn('middle_name', form.errors)
+
+    def test_course_dates_validation(self):
+        from dashboard.forms import AdminCertificateForm
+        # End date earlier than start date
+        form = AdminCertificateForm(data={
+            'certificate_id': 'CERT-2026-TEST03',
+            'first_name': 'Harshal',
+            'middle_name': 'Narendrasinh',
+            'last_name': 'Chauhan',
+            'course': self.course.id,
+            'course_start_date': '2026-07-10',
+            'course_end_date': '2026-01-10', # Invalid: earlier than start date
+            'issue_date': '2026-08-02',
+        })
+        self.assertFalse(form.is_valid())
+        self.assertIn('course_end_date', form.errors)
+        self.assertIn('Course End Date cannot be earlier than Course Start Date.', form.errors['course_end_date'])
+
+    def test_auto_generate_certificate_id_format(self):
+        from certificates.utils import generate_certificate_id
+        cert_id = generate_certificate_id('Harshal', 'Chauhan')
+        # Format: CERT-2026-HC-XXXX-XX
+        parts = cert_id.split('-')
+        self.assertEqual(len(parts), 5)
+        self.assertEqual(parts[0], 'CERT')
+        self.assertEqual(parts[2], 'HC')
+        self.assertEqual(len(parts[3]), 4)
+        self.assertEqual(len(parts[4]), 2)
 
     def test_admin_verify_certificate_endpoint(self):
         self.client.login(username='certadmin', password='adminpassword123')
@@ -114,8 +164,12 @@ class CertificatesTestCase(TestCase):
         for valid_date in ['1999-05-12', '2007-11-20', '2025-01-01', '2026-08-04', '2038-12-31', '2099-09-09']:
             form = AdminCertificateForm(data={
                 'certificate_id': f'CERT-{valid_date[:4]}-TEST',
-                'student_name': 'Test Student',
+                'first_name': 'Test',
+                'middle_name': 'User',
+                'last_name': 'Student',
                 'course': self.course.id,
+                'course_start_date': '2025-01-01',
+                'course_end_date': '2025-06-01',
                 'issue_date': valid_date,
             })
             self.assertTrue(form.is_valid(), f"Expected year in {valid_date} to be valid, errors: {form.errors}")
@@ -123,8 +177,12 @@ class CertificatesTestCase(TestCase):
         # Invalid years (year < 1000 or year > 9999)
         form_invalid = AdminCertificateForm(data={
             'certificate_id': 'CERT-999-TEST',
-            'student_name': 'Test Student',
+            'first_name': 'Test',
+            'middle_name': 'User',
+            'last_name': 'Student',
             'course': self.course.id,
+            'course_start_date': '2025-01-01',
+            'course_end_date': '2025-06-01',
             'issue_date': '0999-01-01',
         })
         self.assertFalse(form_invalid.is_valid())

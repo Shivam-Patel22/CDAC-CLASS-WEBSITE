@@ -317,7 +317,12 @@
                     for successfully completing the specialized training program and fulfilling all prescribed academic and practical coursework requirements for
                 </p>
                 <div class="cert-course-name">{{ certificate.course.name }}</div>
-                <div class="cert-course-duration">Course Duration: {{ certificate.course.duration }}</div>
+                <div class="cert-course-duration">
+                    Course Duration: {{ certificate.course.duration }}
+                    {% if certificate.course_start_date and certificate.course_end_date %}
+                    <br><span style="font-size: 0.9rem; color: #475569; font-weight: 500;">Course Period: {{ certificate.course_start_date|date:"F j, Y" }} – {{ certificate.course_end_date|date:"F j, Y" }}</span>
+                    {% endif %}
+                </div>
             </div>
 
             <!-- Footer Section: QR Code, Official Seal, Authorized Signature -->
@@ -350,6 +355,9 @@
             <!-- Metadata Bar -->
             <div class="cert-meta-bar">
                 <div>Certificate ID: <strong>{{ certificate.certificate_id }}</strong></div>
+                {% if certificate.course_start_date and certificate.course_end_date %}
+                <div>Course Dates: <strong>{{ certificate.course_start_date|date:"M j, Y" }} - {{ certificate.course_end_date|date:"M j, Y" }}</strong></div>
+                {% endif %}
                 <div>Issue Date: <strong>{{ certificate.issue_date|date:"F j, Y" }}</strong></div>
                 {% if certificate.grade %}
                 <div>Grade: <strong>{{ certificate.grade }}</strong></div>
