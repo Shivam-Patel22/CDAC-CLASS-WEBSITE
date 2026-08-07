@@ -5,7 +5,7 @@ from courses.models import Course
 
 def home(request):
     try:
-        featured_courses = Course.objects.filter(is_featured=True).order_by('-created_at')
+        featured_courses = Course.objects.filter(is_featured=True).order_by('-created_at')[:3]
         if not featured_courses.exists():
             featured_courses = Course.objects.all().order_by('-created_at')[:3]
     except Exception:

@@ -42,7 +42,6 @@
                     </td>
                     <td>{{ course.created_at|date:"Y-m-d" }}</td>
                     <td style="display: flex; gap: 0.5rem; align-items: center;">
-                        <a href="{% url 'courses:course_detail' course.id %}" target="_blank" class="btn btn-ghost btn-sm" title="View Public Page">👁️</a>
                         <a href="{% url 'dashboard:edit_course' course.id %}" class="btn btn-outline-dark btn-sm">Edit</a>
                         <a href="{% url 'dashboard:delete_course' course.id %}" class="btn btn-danger btn-sm">Delete</a>
                     </td>
