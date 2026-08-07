@@ -16,6 +16,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
     {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -48,8 +54,13 @@
                 </ul>
             </nav>
 
-            <div class="header-right-logo">
-                <img src="{% static 'images/Citi logo .png' %}" alt="Citi" class="citi-header-logo-img">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle dark/light theme" title="Switch Theme">
+                    <span class="theme-toggle-icon">🌙</span>
+                </button>
+                <div class="header-right-logo">
+                    <img src="{% static 'images/Citi logo .png' %}" alt="Citi" class="citi-header-logo-img">
+                </div>
             </div>
         </div>
     </header>

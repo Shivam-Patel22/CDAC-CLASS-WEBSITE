@@ -16,6 +16,10 @@
             <a href="{% url 'dashboard:manage_offers' %}" class="btn btn-outline btn-sm" style="border-color: #38BDF8; color: #38BDF8;">🏷️ Offers</a>
             <a href="{% url 'dashboard:edit_about' %}" class="btn btn-outline btn-sm">About Update</a>
             <a href="{% url 'dashboard:edit_contact' %}" class="btn btn-outline btn-sm">Contact Update</a>
+            <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle dark/light theme" title="Switch Theme">
+                <span class="theme-toggle-icon">🌙</span>
+                <span class="theme-toggle-text">Dark Mode</span>
+            </button>
             <a href="{% url 'dashboard:logout' %}" class="btn btn-danger btn-sm" style="white-space: nowrap; display: inline-flex; align-items: center; gap: 0.3rem;">🚪 Logout</a>
         </div>
     </div>

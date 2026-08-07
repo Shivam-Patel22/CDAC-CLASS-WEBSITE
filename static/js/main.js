@@ -1,6 +1,35 @@
-/* Centre for Development of Advanced Computing (C-DAC) — Global JavaScript */
+// Theme Toggle Functions
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeToggleIcons();
+}
+
+function updateThemeToggleIcons() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const toggleBtns = document.querySelectorAll('.theme-toggle-btn');
+    toggleBtns.forEach(btn => {
+        const iconEl = btn.querySelector('.theme-toggle-icon');
+        const textEl = btn.querySelector('.theme-toggle-text');
+        if (isDark) {
+            if (iconEl) iconEl.textContent = '☀️';
+            if (textEl) textEl.textContent = 'Light Mode';
+            btn.setAttribute('title', 'Switch to Light Mode');
+            btn.classList.add('is-dark');
+        } else {
+            if (iconEl) iconEl.textContent = '🌙';
+            if (textEl) textEl.textContent = 'Dark Mode';
+            btn.setAttribute('title', 'Switch to Dark Mode');
+            btn.classList.remove('is-dark');
+        }
+    });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
+    updateThemeToggleIcons();
+
     // 1. Mobile Menu Toggle
     const mobileToggle = document.getElementById('mobile-toggle');
     const navMenu = document.getElementById('nav-menu');
