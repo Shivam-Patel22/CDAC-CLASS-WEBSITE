@@ -56,4 +56,29 @@
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const featuredCheckbox = document.getElementById('{{ form.is_featured.id_for_label }}');
+    if (featuredCheckbox) {
+        const isInitiallyFeatured = {% if course and course.is_featured %}true{% else %}false{% endif %};
+        const totalFeaturedCount = {{ featured_count|default:0 }};
+
+        featuredCheckbox.addEventListener('change', function() {
+            if (this.checked && !isInitiallyFeatured && totalFeaturedCount >= 3) {
+                showConfirmModal(
+                    'Warning: You currently have ' + totalFeaturedCount + ' courses selected as Featured. Only the 3 most recently featured courses will be displayed on the home page.',
+                    function() {},
+                    {
+                        title: '⭐ Featured Courses Limit Warning',
+                        icon: '⚠️',
+                        confirmText: 'Understood',
+                        confirmClass: 'btn btn-primary btn-sm'
+                    }
+                );
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

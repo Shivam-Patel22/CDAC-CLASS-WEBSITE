@@ -35,7 +35,11 @@
                                 ⭐ Featured
                             </a>
                         {% else %}
-                            <a href="{% url 'dashboard:toggle_course_featured' course.id %}" class="btn btn-outline-dark btn-sm" style="font-size: 0.8rem; padding: 4px 10px; color: var(--gray-600); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;" title="Click to feature on home page">
+                            <a href="{% url 'dashboard:toggle_course_featured' course.id %}" 
+                               class="btn btn-outline-dark btn-sm" 
+                               style="font-size: 0.8rem; padding: 4px 10px; color: var(--gray-600); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;" 
+                               title="Click to feature on home page"
+                               {% if featured_count >= 3 %}onclick="return confirmAction(event, 'Warning: You already have {{ featured_count }} courses selected as Featured. Only the 3 most recently featured courses will be displayed on the home page. Are you sure you want to proceed?', {title: '⭐ Featured Courses Limit Warning', icon: '⚠️', confirmText: 'Proceed & Feature', confirmClass: 'btn btn-primary btn-sm'});"{% endif %}>
                                 + Feature on Home
                             </a>
                         {% endif %}
