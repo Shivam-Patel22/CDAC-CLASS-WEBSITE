@@ -47,6 +47,15 @@
                         {% else %}
                             <span class="badge badge-secondary">READ</span>
                         {% endif %}
+                        <div style="margin-top: 6px;">
+                            {% if item.followup_count == 0 %}
+                                <span style="font-size: 0.75rem; color: var(--gray-500); background: var(--gray-100); padding: 2px 6px; border-radius: 4px; display: inline-block;">No Follow-up</span>
+                            {% elif item.followup_count == 1 %}
+                                <span style="font-size: 0.75rem; color: #0284c7; background: #e0f2fe; padding: 2px 6px; border-radius: 4px; display: inline-block; font-weight: 600;">1 Follow-up</span>
+                            {% else %}
+                                <span style="font-size: 0.75rem; color: #0284c7; background: #e0f2fe; padding: 2px 6px; border-radius: 4px; display: inline-block; font-weight: 600;">{{ item.followup_count }} Follow-ups</span>
+                            {% endif %}
+                        </div>
                     </td>
                     <td style="vertical-align: middle;"><strong>{{ item.name }}</strong></td>
                     <td style="vertical-align: middle;">
@@ -76,13 +85,21 @@
                     </td>
                     <td style="vertical-align: middle;">
                         <div style="display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; white-space: nowrap;">
+                            <button type="button" class="btn btn-outline-dark btn-sm open-followup-btn" 
+                                    data-inquiry-id="{{ item.id }}"
+                                    data-name="{{ item.name }}"
+                                    data-contact="{{ item.phone }}{% if item.email %} | {{ item.email }}{% endif %}"
+                                    data-subject="{% if item.course %}{{ item.course.name }}{% else %}{{ item.subject }}{% endif %}"
+                                    data-message="{{ item.message }}"
+                                    style="white-space: nowrap;">
+                                💬 Follow Up
+                            </button>
                             <a href="{% url 'dashboard:toggle_inquiry_read' item.id %}" class="btn btn-outline-dark btn-sm" style="white-space: nowrap;">
                                 {% if item.is_read %}Mark Unread{% else %}Mark Read{% endif %}
                             </a>
                             <a href="{% url 'dashboard:delete_inquiry' item.id %}" class="btn btn-danger btn-sm" style="white-space: nowrap;" onclick="return confirmAction(event, 'Are you sure you want to delete this inquiry?');">
                                 Delete
                             </a>
-
                         </div>
                     </td>
                 </tr>
@@ -95,8 +112,162 @@
         <div class="empty-state-icon">📥</div>
         <h3>No Inquiries Found</h3>
         <p>No customer inquiry messages matching the selected filter.</p>
-        
     </div>
     {% endif %}
 </div>
+
+<!-- Follow-Up Modal Overlay -->
+<div id="followup-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 9999; backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1rem;">
+    <div style="background: #ffffff; border-radius: var(--radius-lg, 12px); max-width: 650px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); padding: 1.75rem; border: 1px solid var(--gray-200, #e2e8f0); position: relative;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--gray-200, #e2e8f0); padding-bottom: 1rem;">
+            <h3 style="font-size: 1.35rem; margin: 0; color: var(--gray-900, #0f172a); display: flex; align-items: center; gap: 0.5rem;">
+                💬 Inquiry Follow-Up
+            </h3>
+            <button type="button" class="close-followup-modal" style="background: none; border: none; font-size: 1.5rem; color: var(--gray-500); cursor: pointer; line-height: 1;">&times;</button>
+        </div>
+
+        <!-- Read-Only Customer Info -->
+        <div style="background: var(--gray-50, #f8fafc); border: 1px solid var(--gray-200, #e2e8f0); border-radius: var(--radius-md, 8px); padding: 1rem; margin-bottom: 1.5rem; font-size: 0.9rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 0.75rem;">
+                <div><span style="color: var(--gray-500);">Customer:</span> <strong id="modal-customer-name" style="color: var(--gray-900);"></strong></div>
+                <div><span style="color: var(--gray-500);">Contact:</span> <strong id="modal-customer-contact" style="color: var(--gray-900);"></strong></div>
+            </div>
+            <div style="margin-bottom: 0.5rem;"><span style="color: var(--gray-500);">Subject / Course:</span> <span id="modal-customer-subject" class="badge badge-primary"></span></div>
+            <div>
+                <span style="color: var(--gray-500); display: block; margin-bottom: 0.25rem;">Original Inquiry Message:</span>
+                <div id="modal-original-message" style="background: #ffffff; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--gray-200, #e2e8f0); color: var(--gray-800, #334155); font-size: 0.88rem; white-space: pre-wrap;"></div>
+            </div>
+        </div>
+
+        <!-- Follow-Up Form -->
+        <form id="followup-form" method="post" action="">
+            {% csrf_token %}
+            
+            <div style="margin-bottom: 1.25rem;">
+                <label for="followup-status" style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; color: var(--gray-800);">Follow-up Status *</label>
+                <select id="followup-status" name="status" class="form-control" required style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid var(--gray-300); font-size: 0.9rem;">
+                    <option value="pending">Pending</option>
+                    <option value="contacted" selected>Contacted</option>
+                    <option value="interested">Interested</option>
+                    <option value="not_interested">Not Interested</option>
+                    <option value="callback_later">Callback Later</option>
+                    <option value="converted">Converted</option>
+                </select>
+            </div>
+
+            <div id="callback-reminder-box" style="display: none; margin-bottom: 1.25rem; background: #EFF6FF; border: 1px solid #BFDBFE; padding: 0.85rem; border-radius: 6px;">
+                <label for="callback-at" style="display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 0.35rem; color: #1E40AF;">📅 Callback Reminder Date & Time (Optional)</label>
+                <input type="datetime-local" id="callback-at" name="callback_at" class="form-control" style="width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #93C5FD; font-size: 0.88rem;">
+            </div>
+
+            <div style="margin-bottom: 1.25rem;">
+                <label for="followup-message" style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; color: var(--gray-800);">Follow-up Notes / Message *</label>
+                <textarea id="followup-message" name="message" rows="3" class="form-control" required placeholder="Enter notes from call/email conversation..." style="width: 100%; padding: 0.65rem; border-radius: 6px; border: 1px solid var(--gray-300); font-size: 0.9rem;"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-bottom: 1.5rem;">
+                <button type="button" class="btn btn-outline-dark close-followup-modal">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Follow Up</button>
+            </div>
+        </form>
+
+        <!-- Follow-up History Section -->
+        <div style="border-top: 1px solid var(--gray-200); padding-top: 1.25rem; margin-top: 1.25rem;">
+            <h4 style="font-size: 1.05rem; margin-bottom: 0.85rem; color: var(--gray-900); display: flex; align-items: center; gap: 0.4rem;">
+                <span>📜</span> Previous Follow-Up History
+            </h4>
+            <div id="followup-history-list" style="max-height: 200px; overflow-y: auto;">
+                <p style="color: var(--gray-500); font-size: 0.88rem;">Loading history...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var modal = document.getElementById('followup-modal');
+    var statusSelect = document.getElementById('followup-status');
+    var callbackBox = document.getElementById('callback-reminder-box');
+
+    statusSelect.addEventListener('change', function() {
+        if (this.value === 'callback_later') {
+            callbackBox.style.display = 'block';
+        } else {
+            callbackBox.style.display = 'none';
+        }
+    });
+
+    document.querySelectorAll('.open-followup-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var inquiryId = this.getAttribute('data-inquiry-id');
+            var name = this.getAttribute('data-name');
+            var contact = this.getAttribute('data-contact');
+            var subject = this.getAttribute('data-subject');
+            var message = this.getAttribute('data-message');
+
+            document.getElementById('modal-customer-name').textContent = name;
+            document.getElementById('modal-customer-contact').textContent = contact;
+            document.getElementById('modal-customer-subject').textContent = subject;
+            document.getElementById('modal-original-message').textContent = message;
+
+            var form = document.getElementById('followup-form');
+            form.action = '/cdac-admin/inquiries/' + inquiryId + '/followup/';
+            document.getElementById('followup-message').value = '';
+            statusSelect.value = 'contacted';
+            callbackBox.style.display = 'none';
+            document.getElementById('callback-at').value = '';
+
+            var historyList = document.getElementById('followup-history-list');
+            historyList.innerHTML = '<p style="color: var(--gray-500); font-size: 0.88rem;">Loading history...</p>';
+
+            fetch('/cdac-admin/inquiries/' + inquiryId + '/followups/')
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (!data.followups || data.followups.length === 0) {
+                        historyList.innerHTML = '<p style="color: var(--gray-500); font-size: 0.85rem; font-style: italic;">No previous follow-ups recorded.</p>';
+                        return;
+                    }
+                    var html = '';
+                    data.followups.forEach(function(item) {
+                        var statusBadgeClass = 'badge-primary';
+                        if (item.status === 'converted') statusBadgeClass = 'badge-success';
+                        else if (item.status === 'not_interested') statusBadgeClass = 'badge-danger';
+                        else if (item.status === 'callback_later') statusBadgeClass = 'badge-warning';
+
+                        html += '<div style="background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 6px; padding: 0.75rem; margin-bottom: 0.6rem; font-size: 0.85rem;">';
+                        html += '  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">';
+                        html += '    <strong style="color: var(--gray-900);">' + item.admin_name + '</strong>';
+                        html += '    <span class="badge ' + statusBadgeClass + '" style="font-size: 0.75rem;">' + item.status_display + '</span>';
+                        html += '  </div>';
+                        html += '  <div style="color: var(--gray-800); margin-bottom: 0.35rem; white-space: pre-wrap;">' + item.message + '</div>';
+                        if (item.callback_at) {
+                            html += '  <div style="font-size: 0.8rem; color: #1E40AF; font-weight: 500;">📅 Callback set for: ' + item.callback_at + '</div>';
+                        }
+                        html += '  <div style="font-size: 0.78rem; color: var(--gray-500); text-align: right; margin-top: 0.25rem;">' + item.created_at + '</div>';
+                        html += '</div>';
+                    });
+                    historyList.innerHTML = html;
+                })
+                .catch(function() {
+                    historyList.innerHTML = '<p style="color: var(--danger); font-size: 0.85rem;">Failed to load follow-up history.</p>';
+                });
+
+            modal.style.display = 'flex';
+        });
+    });
+
+    document.querySelectorAll('.close-followup-modal').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+    });
+
+    window.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+});
+</script>
 {% endblock %}

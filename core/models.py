@@ -19,6 +19,41 @@ class Inquiry(models.Model):
     def __str__(self):
         return f"Inquiry from {self.name} ({self.created_at.strftime('%Y-%m-%d %H:%M')})"
 
+    @property
+    def followup_count(self):
+        return self.followups.count()
+
+    @property
+    def latest_followup(self):
+        return self.followups.first()
+
+
+class InquiryFollowUp(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('contacted', 'Contacted'),
+        ('interested', 'Interested'),
+        ('not_interested', 'Not Interested'),
+        ('callback_later', 'Callback Later'),
+        ('converted', 'Converted'),
+    ]
+
+    inquiry = models.ForeignKey(Inquiry, on_delete=models.CASCADE, related_name='followups')
+    admin_user = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True, blank=True)
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='contacted')
+    message = models.TextField()
+    callback_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Inquiry Follow-Up'
+        verbose_name_plural = 'Inquiry Follow-Ups'
+
+    def __str__(self):
+        admin_name = self.admin_user.get_full_name() or self.admin_user.username if self.admin_user else 'Admin'
+        return f"Follow-up for {self.inquiry.name} by {admin_name} ({self.get_status_display()})"
+
 
 class AboutContent(models.Model):
     heading = models.CharField(max_length=200, default="About C-DAC")

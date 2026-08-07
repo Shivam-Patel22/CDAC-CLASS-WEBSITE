@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Inquiry
+from .models import Inquiry, InquiryFollowUp
 
 @admin.register(Inquiry)
 class InquiryAdmin(admin.ModelAdmin):
@@ -7,4 +7,11 @@ class InquiryAdmin(admin.ModelAdmin):
     list_filter = ('is_read', 'created_at', 'course')
     search_fields = ('name', 'phone', 'email', 'message', 'subject')
     list_editable = ('is_read',)
+    readonly_fields = ('created_at',)
+
+@admin.register(InquiryFollowUp)
+class InquiryFollowUpAdmin(admin.ModelAdmin):
+    list_display = ('inquiry', 'admin_user', 'status', 'callback_at', 'created_at')
+    list_filter = ('status', 'created_at')
+    search_fields = ('inquiry__name', 'message', 'admin_user__username')
     readonly_fields = ('created_at',)

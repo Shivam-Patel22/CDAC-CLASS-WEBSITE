@@ -11,6 +11,7 @@ from courses.models import Course, CourseOffer
 from certificates.models import Certificate
 from certificates.utils import generate_certificate_id
 from certificates.forms import CertificateVerificationForm
+from core.models import Inquiry, InquiryFollowUp
 from django.utils import timezone
 
 
@@ -360,6 +361,60 @@ def delete_inquiry(request, pk):
     if next_url:
         return redirect(next_url)
     return redirect('dashboard:manage_inquiries')
+
+@staff_required
+def add_inquiry_followup(request, pk):
+    inquiry = get_object_or_404(Inquiry, pk=pk)
+    if request.method == 'POST':
+        status = request.POST.get('status', 'contacted')
+        message = request.POST.get('message', '').strip()
+        callback_at_str = request.POST.get('callback_at', '').strip()
+        callback_at = None
+
+        if callback_at_str:
+            try:
+                callback_at = timezone.datetime.fromisoformat(callback_at_str)
+            except Exception:
+                callback_at = None
+
+        if message:
+            InquiryFollowUp.objects.create(
+                inquiry=inquiry,
+                admin_user=request.user if request.user.is_authenticated else None,
+                status=status,
+                message=message,
+                callback_at=callback_at,
+            )
+            if not inquiry.is_read:
+                inquiry.is_read = True
+                inquiry.save()
+
+            messages.success(request, f"Follow-up recorded successfully for {inquiry.name}.")
+        else:
+            messages.error(request, "Follow-up message cannot be empty.")
+
+    next_url = request.GET.get('next') or request.META.get('HTTP_REFERER')
+    if next_url:
+        return redirect(next_url)
+    return redirect('dashboard:manage_inquiries')
+
+@staff_required
+def get_inquiry_followups(request, pk):
+    inquiry = get_object_or_404(Inquiry, pk=pk)
+    followups = inquiry.followups.select_related('admin_user').all()
+    data = []
+    for f in followups:
+        admin_name = f.admin_user.get_full_name() or f.admin_user.username if f.admin_user else 'Admin'
+        data.append({
+            'id': f.id,
+            'admin_name': admin_name,
+            'status': f.status,
+            'status_display': f.get_status_display(),
+            'message': f.message,
+            'callback_at': f.callback_at.strftime('%b %d, %Y — %I:%M %p') if f.callback_at else None,
+            'created_at': f.created_at.strftime('%b %d, %Y — %I:%M %p'),
+        })
+    return JsonResponse({'success': True, 'followups': data})
 
 from django.utils import timezone
 from django.db.models import Q
