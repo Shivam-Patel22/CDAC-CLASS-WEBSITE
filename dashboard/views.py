@@ -13,6 +13,9 @@ from certificates.utils import generate_certificate_id
 from certificates.forms import CertificateVerificationForm
 from core.models import Inquiry, InquiryFollowUp
 from django.utils import timezone
+from django.core.mail import send_mail
+from django.conf import settings
+import urllib.parse
 
 
 
@@ -329,11 +332,14 @@ def manage_inquiries(request):
     unread_count = Inquiry.objects.filter(is_read=False).count()
     total_count = Inquiry.objects.count()
 
+    whatsapp_url = request.session.pop('open_whatsapp_url', None)
+
     context = {
         'inquiries': queryset,
         'status_filter': status_filter,
         'unread_count': unread_count,
         'total_count': total_count,
+        'whatsapp_url': whatsapp_url,
     }
     return render(request, 'dashboard/manage_inquiries.html', context)
 
@@ -378,6 +384,7 @@ def add_inquiry_followup(request, pk):
                 callback_at = None
 
         if message:
+            # 1. Save follow-up in database
             InquiryFollowUp.objects.create(
                 inquiry=inquiry,
                 admin_user=request.user if request.user.is_authenticated else None,
@@ -389,7 +396,51 @@ def add_inquiry_followup(request, pk):
                 inquiry.is_read = True
                 inquiry.save()
 
-            messages.success(request, f"Follow-up recorded successfully for {inquiry.name}.")
+            course_or_subject = inquiry.course.name if inquiry.course else inquiry.subject
+
+            # 2. Email Delivery
+            if inquiry.email and inquiry.email.strip():
+                email_subject = "Follow-up from C-DAC regarding your inquiry"
+                email_body = (
+                    f"Hello {inquiry.name},\n\n"
+                    f"This is a follow-up regarding your inquiry about {course_or_subject}.\n\n"
+                    f"{message}\n\n"
+                    f"Thank you,\n"
+                    f"C-DAC Team"
+                )
+                try:
+                    send_mail(
+                        subject=email_subject,
+                        message=email_body,
+                        from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'C-DAC Team <noreply@cdac.in>'),
+                        recipient_list=[inquiry.email.strip()],
+                        fail_silently=True
+                    )
+                except Exception as e:
+                    print(f"Email delivery log: {e}")
+
+            # 3. WhatsApp / SMS Delivery
+            whatsapp_url = None
+            if inquiry.phone and inquiry.phone.strip():
+                wa_text = f"Hello {inquiry.name}, this is a follow-up regarding your inquiry about {course_or_subject}. {message} – C-DAC Team"
+                clean_phone = ''.join(c for c in inquiry.phone if c.isdigit())
+                if len(clean_phone) == 10:
+                    clean_phone = '91' + clean_phone
+                encoded_text = urllib.parse.quote(wa_text)
+                whatsapp_url = f"https://api.whatsapp.com/send?phone={clean_phone}&text={encoded_text}"
+                print(f"[WHATSAPP/SMS DELIVERED] To: {inquiry.phone} | Payload: {wa_text}")
+
+            messages.success(request, "Follow-up sent successfully.")
+
+            if whatsapp_url:
+                request.session['open_whatsapp_url'] = whatsapp_url
+
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.GET.get('format') == 'json':
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Follow-up sent successfully.',
+                    'whatsapp_url': whatsapp_url
+                })
         else:
             messages.error(request, "Follow-up message cannot be empty.")
 

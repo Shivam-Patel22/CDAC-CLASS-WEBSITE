@@ -270,4 +270,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+{% if whatsapp_url %}
+<script>
+    setTimeout(function() {
+        window.open("{{ whatsapp_url|safe }}", "_blank");
+    }, 400);
+</script>
+{% endif %}
 {% endblock %}
