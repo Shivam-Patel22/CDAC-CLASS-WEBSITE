@@ -130,6 +130,15 @@ def delete_course(request, pk):
     return render(request, 'dashboard/course_delete_confirm.html', {'course': course})
 
 @staff_required
+def toggle_course_featured(request, pk):
+    course = get_object_or_404(Course, pk=pk)
+    course.is_featured = not course.is_featured
+    course.save()
+    status_str = "featured on homepage" if course.is_featured else "removed from homepage featured list"
+    messages.success(request, f"Course '{course.name}' is now {status_str}.")
+    return redirect('dashboard:manage_courses')
+
+@staff_required
 def manage_certificates(request):
     certificates = Certificate.objects.select_related('course', 'student').order_by('-created_at')
     return render(request, 'dashboard/manage_certificates.html', {'certificates': certificates})

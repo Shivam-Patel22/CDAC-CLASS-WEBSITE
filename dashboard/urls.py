@@ -11,6 +11,7 @@ urlpatterns = [
     path('courses/add/', views.add_course, name='add_course'),
     path('courses/<int:pk>/edit/', views.edit_course, name='edit_course'),
     path('courses/<int:pk>/delete/', views.delete_course, name='delete_course'),
+    path('courses/<int:pk>/toggle-featured/', views.toggle_course_featured, name='toggle_course_featured'),
     path('certificates/', views.manage_certificates, name='manage_certificates'),
     path('certificates/add/', views.add_certificate, name='add_certificate'),
     path('certificates/<int:pk>/edit/', views.edit_certificate, name='edit_certificate'),

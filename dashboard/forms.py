@@ -15,12 +15,16 @@ class AdminLoginForm(forms.Form):
 class AdminCourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['name', 'description', 'duration', 'image']
+        fields = ['name', 'description', 'duration', 'image', 'is_featured']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Course Name', 'required': 'required'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Detailed syllabus and overview', 'rows': 5, 'required': 'required'}),
             'duration': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 8 Weeks / 3 Months', 'required': 'required'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'is_featured': forms.CheckboxInput(attrs={'style': 'width: 20px; height: 20px; cursor: pointer;'}),
+        }
+        labels = {
+            'is_featured': '⭐ Feature this course on homepage',
         }
 
 class AdminCertificateForm(forms.ModelForm):

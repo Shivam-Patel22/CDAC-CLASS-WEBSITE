@@ -8,6 +8,7 @@ class Course(models.Model):
     duration = models.CharField(max_length=50)
     fee = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     image = models.ImageField(upload_to='courses/', blank=True, null=True)
+    is_featured = models.BooleanField(default=False, help_text="Display as featured course on homepage")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

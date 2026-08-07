@@ -53,49 +53,57 @@ class Command(BaseCommand):
                 'name': 'Python Web Development (Django & FastAPI)',
                 'description': 'Master backend web development using Python, Django, REST APIs, and PostgreSQL. Build scalable real-world applications with modern deployment patterns.',
                 'duration': '3 Months',
-                'fee': 15000.00
+                'fee': 15000.00,
+                'is_featured': True
             },
             {
                 'name': 'Full Stack Web Development (MERN Stack)',
                 'description': 'Comprehensive training in React.js, Node.js, Express, and MongoDB with modern frontend design, JWT authentication, and full-stack API integration.',
                 'duration': '6 Months',
-                'fee': 25000.00
+                'fee': 25000.00,
+                'is_featured': True
             },
             {
                 'name': 'Data Science & Machine Learning',
                 'description': 'Hands-on course covering Python for Data Analysis, Pandas, NumPy, Scikit-Learn, TensorFlow, and statistical machine learning models.',
                 'duration': '4 Months',
-                'fee': 20000.00
+                'fee': 20000.00,
+                'is_featured': True
             },
             {
                 'name': 'Certificate Course in Financial Accounting (Tally Prime & GST)',
                 'description': 'Practical accounting training on Tally Prime, GST filing, inventory management, taxation compliance, and computerized bookkeeping.',
                 'duration': '2 Months',
-                'fee': 8000.00
+                'fee': 8000.00,
+                'is_featured': False
             },
             {
                 'name': 'Cyber Security & Ethical Hacking',
                 'description': 'Learn network security, vulnerability assessment, penetration testing fundamentals, web application security, and ethical hacking protocols.',
                 'duration': '3 Months',
-                'fee': 18000.00
+                'fee': 18000.00,
+                'is_featured': False
             },
             {
                 'name': 'Java Full Stack Software Engineering',
                 'description': 'Enterprise application development with Java 17+, Spring Boot, Hibernate, microservices architecture, and Angular frontend integration.',
                 'duration': '6 Months',
-                'fee': 24000.00
+                'fee': 24000.00,
+                'is_featured': False
             },
             {
                 'name': 'Cloud Computing & DevOps (AWS & Docker)',
                 'description': 'Hands-on containerization with Docker, Kubernetes orchestration, CI/CD pipelines, and cloud architecture deployment on Amazon Web Services.',
                 'duration': '3 Months',
-                'fee': 22000.00
+                'fee': 22000.00,
+                'is_featured': False
             },
             {
                 'name': 'C/C++ Programming & Data Structures',
                 'description': 'Foundational programming in C and C++, object-oriented programming, memory management, pointers, and fundamental algorithms & data structures.',
                 'duration': '2 Months',
-                'fee': 7500.00
+                'fee': 7500.00,
+                'is_featured': False
             }
         ]
 
@@ -106,13 +114,15 @@ class Command(BaseCommand):
                 defaults={
                     'description': cdata['description'],
                     'duration': cdata['duration'],
-                    'fee': cdata['fee']
+                    'fee': cdata['fee'],
+                    'is_featured': cdata['is_featured']
                 }
             )
             if not created:
                 course.description = cdata['description']
                 course.duration = cdata['duration']
                 course.fee = cdata['fee']
+                course.is_featured = cdata['is_featured']
                 course.save()
             created_courses.append(course)
             status = "Created" if created else "Updated"

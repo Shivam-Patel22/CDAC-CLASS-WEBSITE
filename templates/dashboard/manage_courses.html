@@ -19,6 +19,7 @@
                 <tr>
                     <th>Course Name</th>
                     <th>Duration</th>
+                    <th>Home Featured</th>
                     <th>Created At</th>
                     <th>Actions</th>
                 </tr>
@@ -28,8 +29,19 @@
                 <tr>
                     <td><strong>{{ course.name }}</strong></td>
                     <td><span class="badge badge-primary">{{ course.duration }}</span></td>
+                    <td style="vertical-align: middle;">
+                        {% if course.is_featured %}
+                            <a href="{% url 'dashboard:toggle_course_featured' course.id %}" class="btn btn-sm" style="background: #FEF3C7; color: #D97706; border: 1px solid #FCD34D; font-weight: 600; padding: 4px 10px; text-decoration: none; border-radius: 6px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.3rem;" title="Click to remove from home featured list">
+                                ⭐ Featured
+                            </a>
+                        {% else %}
+                            <a href="{% url 'dashboard:toggle_course_featured' course.id %}" class="btn btn-outline-dark btn-sm" style="font-size: 0.8rem; padding: 4px 10px; color: var(--gray-600); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;" title="Click to feature on home page">
+                                + Feature on Home
+                            </a>
+                        {% endif %}
+                    </td>
                     <td>{{ course.created_at|date:"Y-m-d" }}</td>
-                    <td style="display: flex; gap: 0.5rem;">
+                    <td style="display: flex; gap: 0.5rem; align-items: center;">
                         <a href="{% url 'courses:course_detail' course.id %}" target="_blank" class="btn btn-ghost btn-sm" title="View Public Page">👁️</a>
                         <a href="{% url 'dashboard:edit_course' course.id %}" class="btn btn-outline-dark btn-sm">Edit</a>
                         <a href="{% url 'dashboard:delete_course' course.id %}" class="btn btn-danger btn-sm">Delete</a>
