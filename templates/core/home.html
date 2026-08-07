@@ -65,10 +65,7 @@
             <span class="badge badge-primary">{{ course.duration }}</span>
             <h3 style="margin-top: 0.75rem;">{{ course.name }}</h3>
             <p style="color: var(--gray-600); font-size: 0.95rem; margin: 0.5rem 0 1rem;">{{ course.description|truncatewords:20 }}</p>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--gray-100);">
-                <strong style="color: var(--primary); font-size: 1.1rem;">
-                    {% if course.fee %}₹{{ course.fee }}{% else %}Free / Included{% endif %}
-                </strong>
+            <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--gray-100);">
                 <a href="{% url 'courses:course_detail' course.id %}" class="btn btn-outline-dark btn-sm">View Details</a>
             </div>
         </div>

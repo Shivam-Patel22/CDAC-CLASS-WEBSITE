@@ -34,10 +34,16 @@
 
             <nav class="nav-menu" id="nav-menu">
                 <ul class="nav-links">
+                    <li class="header-verify-item">
+                        <form action="{% url 'certificates:verify' %}" method="post" class="header-verify-form">
+                            {% csrf_token %}
+                            <input type="text" name="certificate_id" placeholder="Enter Certificate ID" class="header-verify-input" required autocomplete="off">
+                            <button type="submit" class="btn btn-primary header-verify-btn">Verify</button>
+                        </form>
+                    </li>
                     <li><a href="{% url 'core:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a></li>
                     <li><a href="{% url 'core:about' %}" class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a></li>
                     <li><a href="{% url 'courses:course_list' %}" class="nav-link {% if request.resolver_match.url_name == 'course_list' or request.resolver_match.url_name == 'course_detail' %}active{% endif %}">Courses</a></li>
-                    <li><a href="{% url 'certificates:verify' %}" class="nav-link {% if request.resolver_match.url_name == 'verify' %}active{% endif %}">Verify Certificate</a></li>
                     <li><a href="{% url 'core:contact' %}" class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a></li>
                 </ul>
             </nav>

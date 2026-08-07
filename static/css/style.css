@@ -108,7 +108,8 @@ img {
 .nav-container {
     max-width: 1320px;
     margin: 0 auto;
-    padding: 0.75rem 1.5rem;
+    padding: 0.95rem 1.5rem;
+    min-height: 72px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -165,7 +166,54 @@ img {
 
 .nav-links {
     display: flex;
+    align-items: center;
     gap: 1.5rem;
+}
+
+/* Direct Header Certificate Verification Form */
+.header-verify-item {
+    display: flex;
+    align-items: center;
+}
+
+.header-verify-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    padding: 0.25rem 0.3rem 0.25rem 0.75rem;
+    transition: var(--transition);
+}
+
+.header-verify-form:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    background: var(--white);
+}
+
+.header-verify-input {
+    border: none;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    color: var(--gray-800);
+    width: 175px;
+    outline: none;
+}
+
+.header-verify-input::placeholder {
+    color: var(--gray-400);
+    font-size: 0.85rem;
+}
+
+.header-verify-btn {
+    padding: 0.38rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    border-radius: var(--radius-sm);
 }
 
 .nav-link {
@@ -736,6 +784,24 @@ textarea.form-control {
     .nav-links {
         flex-direction: column;
         width: 100%;
+    }
+
+    .header-verify-item {
+        width: 100%;
+        margin: 0.25rem 0;
+    }
+
+    .header-verify-form {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        background: #ffffff;
+    }
+
+    .header-verify-input {
+        width: 100%;
+        flex-grow: 1;
+        color: var(--gray-900);
     }
 
     .nav-auth {

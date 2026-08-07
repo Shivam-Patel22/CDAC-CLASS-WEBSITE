@@ -15,12 +15,11 @@ class AdminLoginForm(forms.Form):
 class AdminCourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['name', 'description', 'duration', 'fee', 'image']
+        fields = ['name', 'description', 'duration', 'image']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Course Name', 'required': 'required'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Detailed syllabus and overview', 'rows': 5, 'required': 'required'}),
             'duration': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 8 Weeks / 3 Months', 'required': 'required'}),
-            'fee': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Fee amount (e.g. 299.00)', 'step': '0.01'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
