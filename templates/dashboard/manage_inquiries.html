@@ -118,25 +118,25 @@
 
 <!-- Follow-Up Modal Overlay -->
 <div id="followup-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 9999; backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1rem;">
-    <div style="background: #ffffff; border-radius: var(--radius-lg, 12px); max-width: 650px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); padding: 1.75rem; border: 1px solid var(--gray-200, #e2e8f0); position: relative;">
+    <div class="modal-content-card" style="border-radius: var(--radius-lg, 12px); max-width: 650px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2); padding: 1.75rem; border: 1px solid var(--gray-200); position: relative;">
         
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--gray-200, #e2e8f0); padding-bottom: 1rem;">
-            <h3 style="font-size: 1.35rem; margin: 0; color: var(--gray-900, #0f172a); display: flex; align-items: center; gap: 0.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--gray-200); padding-bottom: 1rem;">
+            <h3 style="font-size: 1.35rem; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
                 💬 Inquiry Follow-Up
             </h3>
             <button type="button" class="close-followup-modal" style="background: none; border: none; font-size: 1.5rem; color: var(--gray-500); cursor: pointer; line-height: 1;">&times;</button>
         </div>
 
         <!-- Read-Only Customer Info -->
-        <div style="background: var(--gray-50, #f8fafc); border: 1px solid var(--gray-200, #e2e8f0); border-radius: var(--radius-md, 8px); padding: 1rem; margin-bottom: 1.5rem; font-size: 0.9rem;">
+        <div style="background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: var(--radius-md, 8px); padding: 1rem; margin-bottom: 1.5rem; font-size: 0.9rem;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 0.75rem;">
-                <div><span style="color: var(--gray-500);">Customer:</span> <strong id="modal-customer-name" style="color: var(--gray-900);"></strong></div>
-                <div><span style="color: var(--gray-500);">Contact:</span> <strong id="modal-customer-contact" style="color: var(--gray-900);"></strong></div>
+                <div><span style="color: var(--gray-600);">Customer:</span> <strong id="modal-customer-name"></strong></div>
+                <div><span style="color: var(--gray-600);">Contact:</span> <strong id="modal-customer-contact"></strong></div>
             </div>
-            <div style="margin-bottom: 0.5rem;"><span style="color: var(--gray-500);">Subject / Course:</span> <span id="modal-customer-subject" class="badge badge-primary"></span></div>
+            <div style="margin-bottom: 0.5rem;"><span style="color: var(--gray-600);">Subject / Course:</span> <span id="modal-customer-subject" class="badge badge-primary"></span></div>
             <div>
-                <span style="color: var(--gray-500); display: block; margin-bottom: 0.25rem;">Original Inquiry Message:</span>
-                <div id="modal-original-message" style="background: #ffffff; padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--gray-200, #e2e8f0); color: var(--gray-800, #334155); font-size: 0.88rem; white-space: pre-wrap;"></div>
+                <span style="color: var(--gray-600); display: block; margin-bottom: 0.25rem;">Original Inquiry Message:</span>
+                <div id="modal-original-message" style="background: var(--gray-50); padding: 0.65rem 0.85rem; border-radius: 6px; border: 1px solid var(--gray-200); font-size: 0.88rem; white-space: pre-wrap;"></div>
             </div>
         </div>
 
@@ -145,8 +145,8 @@
             {% csrf_token %}
             
             <div style="margin-bottom: 1.25rem;">
-                <label for="followup-status" style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; color: var(--gray-800);">Follow-up Status *</label>
-                <select id="followup-status" name="status" class="form-control" required style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid var(--gray-300); font-size: 0.9rem;">
+                <label for="followup-status" style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; color: var(--gray-900);">Follow-up Status *</label>
+                <select id="followup-status" name="status" class="form-control" required style="width: 100%; padding: 0.6rem; border-radius: 6px; font-size: 0.9rem;">
                     <option value="pending">Pending</option>
                     <option value="contacted" selected>Contacted</option>
                     <option value="interested">Interested</option>
@@ -156,14 +156,14 @@
                 </select>
             </div>
 
-            <div id="callback-reminder-box" style="display: none; margin-bottom: 1.25rem; background: #EFF6FF; border: 1px solid #BFDBFE; padding: 0.85rem; border-radius: 6px;">
-                <label for="callback-at" style="display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 0.35rem; color: #1E40AF;">📅 Callback Reminder Date & Time (Optional)</label>
-                <input type="datetime-local" id="callback-at" name="callback_at" class="form-control" style="width: 100%; padding: 0.5rem; border-radius: 6px; border: 1px solid #93C5FD; font-size: 0.88rem;">
+            <div id="callback-reminder-box" style="display: none; margin-bottom: 1.25rem; background: var(--gray-100); border: 1px solid var(--primary); padding: 0.85rem; border-radius: 6px;">
+                <label for="callback-at" style="display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 0.35rem; color: var(--primary);">📅 Callback Reminder Date & Time (Optional)</label>
+                <input type="datetime-local" id="callback-at" name="callback_at" class="form-control" style="width: 100%; padding: 0.5rem; border-radius: 6px; font-size: 0.88rem;">
             </div>
 
             <div style="margin-bottom: 1.25rem;">
-                <label for="followup-message" style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; color: var(--gray-800);">Follow-up Notes / Message *</label>
-                <textarea id="followup-message" name="message" rows="3" class="form-control" required placeholder="Enter notes from call/email conversation..." style="width: 100%; padding: 0.65rem; border-radius: 6px; border: 1px solid var(--gray-300); font-size: 0.9rem;"></textarea>
+                <label for="followup-message" style="display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; color: var(--gray-900);">Follow-up Notes / Message *</label>
+                <textarea id="followup-message" name="message" rows="3" class="form-control" required placeholder="Enter notes from call/email conversation..." style="width: 100%; padding: 0.65rem; border-radius: 6px; font-size: 0.9rem;"></textarea>
             </div>
 
             <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-bottom: 1.5rem;">
@@ -178,7 +178,7 @@
                 <span>📜</span> Previous Follow-Up History
             </h4>
             <div id="followup-history-list" style="max-height: 200px; overflow-y: auto;">
-                <p style="color: var(--gray-500); font-size: 0.88rem;">Loading history...</p>
+                <p style="color: var(--gray-600); font-size: 0.88rem;">Loading history...</p>
             </div>
         </div>
     </div>
@@ -235,16 +235,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         else if (item.status === 'not_interested') statusBadgeClass = 'badge-danger';
                         else if (item.status === 'callback_later') statusBadgeClass = 'badge-warning';
 
-                        html += '<div style="background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 6px; padding: 0.75rem; margin-bottom: 0.6rem; font-size: 0.85rem;">';
-                        html += '  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">';
+                        html += '<div style="background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 6px; padding: 0.75rem; margin-bottom: 0.6rem; font-size: 0.88rem;">';
+                        html += '  <div style="display: flex; justify-content: space-between; margin-bottom: 0.35rem;">';
                         html += '    <strong style="color: var(--gray-900);">' + item.admin_name + '</strong>';
                         html += '    <span class="badge ' + statusBadgeClass + '" style="font-size: 0.75rem;">' + item.status_display + '</span>';
                         html += '  </div>';
-                        html += '  <div style="color: var(--gray-800); margin-bottom: 0.35rem; white-space: pre-wrap;">' + item.message + '</div>';
+                        html += '  <div style="color: var(--gray-900); margin-bottom: 0.35rem; white-space: pre-wrap;">' + item.message + '</div>';
                         if (item.callback_at) {
-                            html += '  <div style="font-size: 0.8rem; color: #1E40AF; font-weight: 500;">📅 Callback set for: ' + item.callback_at + '</div>';
+                            html += '  <div style="font-size: 0.8rem; color: var(--primary); font-weight: 600;">📅 Callback set for: ' + item.callback_at + '</div>';
                         }
-                        html += '  <div style="font-size: 0.78rem; color: var(--gray-500); text-align: right; margin-top: 0.25rem;">' + item.created_at + '</div>';
+                        html += '  <div style="font-size: 0.78rem; color: var(--gray-600); text-align: right; margin-top: 0.25rem;">' + item.created_at + '</div>';
                         html += '</div>';
                     });
                     historyList.innerHTML = html;
