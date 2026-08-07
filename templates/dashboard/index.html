@@ -20,7 +20,7 @@
     </div>
 
     <!-- Quick Stats Grid -->
-    <div class="grid grid-4" style="margin-bottom: 2.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+    <div class="grid grid-3" style="margin-bottom: 2.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
         <div class="card" style="border-left: 4px solid var(--primary);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
@@ -41,17 +41,6 @@
                 <div style="font-size: 2.5rem; opacity: 0.8;">📜</div>
             </div>
             <a href="{% url 'dashboard:manage_certificates' %}" style="display: inline-block; margin-top: 1rem; font-size: 0.85rem; font-weight: 600; color: var(--success);">Manage Certificates &rarr;</a>
-        </div>
-
-        <div class="card" style="border-left: 4px solid var(--secondary);">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <span style="color: var(--gray-500); font-size: 0.9rem; text-transform: uppercase; font-weight: 600;">Registered Students</span>
-                    <h2 style="font-size: 2.5rem; color: var(--secondary); margin-top: 0.25rem;">{{ total_students }}</h2>
-                </div>
-                <div style="font-size: 2.5rem; opacity: 0.8;">👨‍🎓</div>
-            </div>
-            <a href="{% url 'dashboard:active_students' %}" style="display: inline-block; margin-top: 1rem; font-size: 0.85rem; font-weight: 600; color: var(--secondary);">Active Student Accounts &rarr;</a>
         </div>
 
         <div class="card" style="border-left: 4px solid #38BDF8; background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), transparent);">
