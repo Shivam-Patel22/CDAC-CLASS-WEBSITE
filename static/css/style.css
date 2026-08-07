@@ -731,20 +731,25 @@ textarea.form-control {
 .footer-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 4rem 1.5rem 2rem;
+    padding: 2rem 1.5rem 1rem;
     display: grid;
     grid-template-columns: 2fr repeat(3, 1fr);
-    gap: 2.5rem;
+    gap: 2rem;
 }
 
 .footer-col h4 {
     color: var(--white);
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.65rem;
     font-size: 1.1rem;
 }
 
+.footer-col p {
+    margin-bottom: 0.4rem;
+    line-height: 1.5;
+}
+
 .footer-col ul li {
-    margin-bottom: 0.65rem;
+    margin-bottom: 0.4rem;
 }
 
 .footer-col ul a {
@@ -763,13 +768,13 @@ textarea.form-control {
     font-size: 1.35rem;
     font-weight: 700;
     color: var(--white);
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .footer-bottom {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 1.5rem;
+    padding: 0.85rem 1.5rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     text-align: center;
     font-size: 0.875rem;
