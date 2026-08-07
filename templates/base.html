@@ -47,6 +47,10 @@
                     <li><a href="{% url 'core:contact' %}" class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a></li>
                 </ul>
             </nav>
+
+            <div class="header-right-logo">
+                <img src="{% static 'images/Citi logo .png' %}" alt="Citi" class="citi-header-logo-img">
+            </div>
         </div>
     </header>
 

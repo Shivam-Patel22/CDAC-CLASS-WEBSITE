@@ -146,6 +146,26 @@ img {
     transform: scale(1.02);
 }
 
+.header-right-logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+}
+
+.citi-header-logo-img {
+    height: 44px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.citi-header-logo-img:hover {
+    transform: scale(1.03);
+}
+
 .cdac-footer-logo-img {
     height: 46px;
     width: auto;
@@ -763,6 +783,10 @@ textarea.form-control {
 }
 
 @media (max-width: 768px) {
+    .citi-header-logo-img {
+        height: 32px;
+    }
+
     .mobile-toggle {
         display: flex;
     }
