@@ -20,7 +20,6 @@
                     <th>ID</th>
                     <th>Course Name</th>
                     <th>Duration</th>
-                    <th>Fee</th>
                     <th>Created At</th>
                     <th>Actions</th>
                 </tr>
@@ -31,7 +30,6 @@
                     <td>#{{ course.id }}</td>
                     <td><strong>{{ course.name }}</strong></td>
                     <td><span class="badge badge-primary">{{ course.duration }}</span></td>
-                    <td>{% if course.fee %}₹{{ course.fee }}{% else %}Free{% endif %}</td>
                     <td>{{ course.created_at|date:"Y-m-d" }}</td>
                     <td style="display: flex; gap: 0.5rem;">
                         <a href="{% url 'courses:course_detail' course.id %}" target="_blank" class="btn btn-ghost btn-sm" title="View Public Page">👁️</a>

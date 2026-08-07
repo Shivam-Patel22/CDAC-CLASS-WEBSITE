@@ -24,12 +24,6 @@
                         <span style="color: var(--gray-600);">Course Duration:</span>
                         <strong>{{ course.duration }}</strong>
                     </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
-                        <span style="color: var(--gray-600);">Tuition Fee:</span>
-                        <strong style="color: var(--primary); font-size: 1.2rem;">
-                            {% if course.fee %}₹{{ course.fee }}{% else %}Free / Included{% endif %}
-                        </strong>
-                    </div>
                     <div style="display: flex; justify-content: space-between;">
                         <span style="color: var(--gray-600);">Certification:</span>
                         <strong style="color: var(--success);">Included upon passing</strong>
