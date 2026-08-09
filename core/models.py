@@ -85,6 +85,16 @@ class AboutContent(models.Model):
 
 class ContactContent(models.Model):
     phone = models.CharField(max_length=100, default="+91 (020) 2570-4100")
+    whatsapp_number = models.CharField(max_length=30, default="919876543210", help_text="WhatsApp number with country code (e.g. 919876543210)")
+    whatsapp_auto_message = models.TextField(
+        default="Hello, I am interested in your courses and would like to contact the admin.",
+        blank=True,
+        help_text="Automatic pre-filled message when user taps WhatsApp button"
+    )
+    whatsapp_auto_message_enabled = models.BooleanField(
+        default=True,
+        help_text="Enable or disable the automatic pre-filled message"
+    )
     email = models.EmailField(default="contact@cdac.in")
     address = models.TextField(default="Gandhinagar, Gujarat, India")
     working_hours = models.CharField(max_length=150, default="Mon - Sat: 9:00 AM - 6:00 PM")
@@ -97,6 +107,18 @@ class ContactContent(models.Model):
 
     def __str__(self):
         return f"Contact Content (Last updated: {self.updated_at.strftime('%Y-%m-%d %H:%M')})"
+
+    @property
+    def formatted_whatsapp_number(self):
+        if not self.whatsapp_number:
+            return "919876543210"
+        digits = ''.join(c for c in str(self.whatsapp_number) if c.isdigit())
+        return digits or "919876543210"
+
+    @property
+    def whatsapp_url(self):
+        num = self.formatted_whatsapp_number
+        return f"https://wa.me/{num}"
 
     @classmethod
     def get_solo(cls):

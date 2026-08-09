@@ -1563,3 +1563,47 @@ textarea.form-control {
 [data-theme="dark"] .badge-programming { background: rgba(30, 64, 175, 0.4); color: #93c5fd; }
 [data-theme="dark"] .badge-leadership { background: rgba(153, 27, 27, 0.4); color: #fca5a5; }
 
+/* ==========================================================================
+   Mobile-Only WhatsApp Contact Button (Inquiry / Contact Page)
+   ========================================================================== */
+.mobile-whatsapp-container {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-whatsapp-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 1.25rem;
+        width: 100%;
+    }
+
+    .mobile-whatsapp-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        background-color: #25D366;
+        color: #ffffff !important;
+        font-family: var(--font-body);
+        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 0.75rem 1.4rem;
+        border-radius: var(--radius-md, 8px);
+        text-decoration: none;
+        box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .mobile-whatsapp-btn:hover,
+    .mobile-whatsapp-btn:active {
+        background-color: #1da851;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(37, 211, 102, 0.45);
+        color: #ffffff !important;
+    }
+}
+

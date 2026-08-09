@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Inquiry, InquiryFollowUp
+from .models import Inquiry, InquiryFollowUp, ContactContent, AboutContent
 
 @admin.register(Inquiry)
 class InquiryAdmin(admin.ModelAdmin):
@@ -15,3 +15,11 @@ class InquiryFollowUpAdmin(admin.ModelAdmin):
     list_filter = ('status', 'created_at')
     search_fields = ('inquiry__name', 'message', 'admin_user__username')
     readonly_fields = ('created_at',)
+
+@admin.register(ContactContent)
+class ContactContentAdmin(admin.ModelAdmin):
+    list_display = ('phone', 'whatsapp_number', 'email', 'updated_at')
+
+@admin.register(AboutContent)
+class AboutContentAdmin(admin.ModelAdmin):
+    list_display = ('heading', 'updated_at')
