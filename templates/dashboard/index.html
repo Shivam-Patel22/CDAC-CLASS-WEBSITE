@@ -81,17 +81,17 @@
         </div>
 
         {% if recent_inquiries %}
-        <div class="table-container" style="overflow-x: hidden;">
-            <table class="custom-table" style="width: 100%; table-layout: auto;">
+        <div class="table-container" style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; max-width: 100%;">
+            <table class="custom-table" style="width: 100%; min-width: 850px; table-layout: auto;">
                 <thead>
                     <tr>
-                        <th style="white-space: nowrap; padding-left: 0.85rem; width: 75px;">Status</th>
-                        <th style="white-space: nowrap; width: 135px;">Name</th>
-                        <th style="white-space: nowrap; width: 175px;">Phone / Email</th>
-                        <th style="width: 160px;">Course / Subject</th>
-                        <th>Message</th>
-                        <th style="white-space: nowrap; width: 140px;">Submitted At</th>
-                        <th style="white-space: nowrap; text-align: right; padding-right: 0.85rem; width: 105px;">Actions</th>
+                        <th style="white-space: nowrap; padding-left: 0.85rem; min-width: 75px;">Status</th>
+                        <th style="white-space: nowrap; min-width: 135px;">Name</th>
+                        <th style="white-space: nowrap; min-width: 175px;">PHONE / EMAIL</th>
+                        <th style="min-width: 160px;">Course / Subject</th>
+                        <th style="min-width: 180px;">Message</th>
+                        <th style="white-space: nowrap; min-width: 140px;">Submitted At</th>
+                        <th style="white-space: nowrap; text-align: right; padding-right: 0.85rem; min-width: 105px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -587,6 +587,8 @@ textarea.form-control {
     border: 1px solid var(--gray-200);
     box-shadow: var(--shadow-sm);
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
 }
 
 .custom-table {
