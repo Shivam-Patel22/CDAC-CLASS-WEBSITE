@@ -39,21 +39,10 @@
                         💬 WhatsApp Contact Settings
                     </h4>
 
-                    <div class="form-group" style="margin-bottom: 1rem;">
+                    <div class="form-group" style="margin-bottom: 0;">
                         <label style="font-weight: 600; color: var(--gray-800); margin-bottom: 0.35rem; display: block;">WhatsApp Number *</label>
                         {{ form.whatsapp_number }}
                         <small style="color: var(--gray-500); font-size: 0.8rem; display: block; margin-top: 0.25rem;">Enter with country code, e.g. <code>919876543210</code> (without + or spaces).</small>
-                    </div>
-
-                    <div class="form-group" style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem;">
-                        {{ form.whatsapp_auto_message_enabled }}
-                        <label style="font-weight: 600; color: var(--gray-800); cursor: pointer; margin: 0;">Enable Auto Welcome Message</label>
-                    </div>
-
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label style="font-weight: 600; color: var(--gray-800); margin-bottom: 0.35rem; display: block;">Auto Welcome Message</label>
-                        {{ form.whatsapp_auto_message }}
-                        <small style="color: var(--gray-500); font-size: 0.8rem; display: block; margin-top: 0.25rem;">Pre-filled message inserted automatically when user taps WhatsApp button.</small>
                     </div>
                 </div>
 
@@ -108,18 +97,7 @@
                     <div style="color: #166534; font-weight: 600; font-size: 0.9rem; margin-top: 0.2rem;">
                         Number: +{{ contact_obj.formatted_whatsapp_number }}
                     </div>
-                    <div style="font-size: 0.85rem; color: var(--gray-700); margin-top: 0.25rem;">
-                        Auto Message: 
-                        {% if contact_obj.whatsapp_auto_message_enabled %}
-                            <span class="badge" style="background: #dcfce7; color: #166534; font-weight: 700;">ON</span>
-                            <div style="font-style: italic; color: var(--gray-600); margin-top: 0.2rem; word-break: break-word;">
-                                "{{ contact_obj.whatsapp_auto_message }}"
-                            </div>
-                        {% else %}
-                            <span class="badge" style="background: #fee2e2; color: #991b1b; font-weight: 700;">OFF</span> (No pre-filled message)
-                        {% endif %}
-                    </div>
-                    <div style="margin-top: 0.5rem;">
+                    <div style="margin-top: 0.4rem;">
                         <a href="{{ contact_obj.whatsapp_url }}" target="_blank" style="font-size: 0.8rem; color: #25D366; text-decoration: underline; font-weight: 600;">
                             🔗 Test WhatsApp Link &rarr;
                         </a>

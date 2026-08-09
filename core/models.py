@@ -86,15 +86,6 @@ class AboutContent(models.Model):
 class ContactContent(models.Model):
     phone = models.CharField(max_length=100, default="+91 (020) 2570-4100")
     whatsapp_number = models.CharField(max_length=30, default="919876543210", help_text="WhatsApp number with country code (e.g. 919876543210)")
-    whatsapp_auto_message = models.TextField(
-        default="Hello, I am interested in your courses and would like to contact the admin.",
-        blank=True,
-        help_text="Automatic pre-filled message when user taps WhatsApp button"
-    )
-    whatsapp_auto_message_enabled = models.BooleanField(
-        default=True,
-        help_text="Enable or disable the automatic pre-filled message"
-    )
     email = models.EmailField(default="contact@cdac.in")
     address = models.TextField(default="Gandhinagar, Gujarat, India")
     working_hours = models.CharField(max_length=150, default="Mon - Sat: 9:00 AM - 6:00 PM")
