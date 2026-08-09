@@ -725,7 +725,7 @@ textarea.form-control {
 /* Footer */
 .footer {
     background: var(--dark-surface);
-    color: var(--gray-400);
+    color: rgba(255, 255, 255, 0.65);
     margin-top: auto;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -755,7 +755,7 @@ textarea.form-control {
 }
 
 .footer-col ul a {
-    color: var(--gray-400);
+    color: rgba(255, 255, 255, 0.65);
 }
 
 .footer-col ul a:hover {
