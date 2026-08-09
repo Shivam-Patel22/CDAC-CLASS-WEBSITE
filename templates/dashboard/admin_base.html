@@ -107,7 +107,7 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Custom Admin Confirmation Modal -->
+    <!-- Custom Admin Confirmation / Notification Modal -->
     <div id="customConfirmModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 99999; justify-content: center; align-items: center; padding: 1rem;">
         <div style="background: var(--card-bg, #ffffff); width: 100%; max-width: 440px; border-radius: 12px; padding: 1.75rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); position: relative; border: 1px solid var(--gray-200); box-sizing: border-box; text-align: center;">
             <button type="button" onclick="closeCustomConfirmModal(false)" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--gray-400); line-height: 1;">&times;</button>
@@ -115,7 +115,7 @@
             <h3 id="customConfirmTitle" style="margin: 0 0 0.5rem; font-size: 1.25rem; color: var(--gray-900);">Confirm Deletion</h3>
             <p id="customConfirmMessage" style="color: var(--gray-600); font-size: 0.92rem; line-height: 1.5; margin-bottom: 1.5rem;">Are you sure you want to delete this item? This action cannot be undone.</p>
             <div style="display: flex; gap: 0.75rem; justify-content: center;">
-                <button type="button" onclick="closeCustomConfirmModal(false)" class="btn btn-outline-dark btn-sm" style="padding: 0.5rem 1.25rem; min-width: 95px;">Cancel</button>
+                <button type="button" id="customConfirmCancelBtn" onclick="closeCustomConfirmModal(false)" class="btn btn-outline-dark btn-sm" style="padding: 0.5rem 1.25rem; min-width: 95px;">Cancel</button>
                 <button type="button" id="customConfirmBtn" onclick="closeCustomConfirmModal(true)" class="btn btn-danger btn-sm" style="padding: 0.5rem 1.25rem; min-width: 95px;">Delete</button>
             </div>
         </div>
@@ -131,7 +131,9 @@
             const msgEl = document.getElementById('customConfirmMessage');
             const iconEl = document.getElementById('customConfirmIcon');
             const btnEl = document.getElementById('customConfirmBtn');
+            const cancelBtn = document.getElementById('customConfirmCancelBtn');
 
+            if (cancelBtn) cancelBtn.style.display = 'inline-block';
             titleEl.innerText = options.title || 'Confirm Deletion';
             msgEl.innerText = message || 'Are you sure you want to delete this item?';
             iconEl.innerText = options.icon || '🗑️';
@@ -142,14 +144,36 @@
             modal.style.display = 'flex';
         }
 
+        function showNotificationModal(message, options = {}) {
+            const modal = document.getElementById('customConfirmModal');
+            const titleEl = document.getElementById('customConfirmTitle');
+            const msgEl = document.getElementById('customConfirmMessage');
+            const iconEl = document.getElementById('customConfirmIcon');
+            const btnEl = document.getElementById('customConfirmBtn');
+            const cancelBtn = document.getElementById('customConfirmCancelBtn');
+
+            if (cancelBtn) cancelBtn.style.display = options.hideCancel ? 'none' : 'inline-block';
+            titleEl.innerText = options.title || 'Notification';
+            msgEl.innerText = message || '';
+            iconEl.innerText = options.icon || 'ℹ️';
+            btnEl.innerText = options.confirmText || 'OK';
+            btnEl.className = options.confirmClass || 'btn btn-primary btn-sm';
+
+            pendingConfirmAction = options.onConfirm || null;
+            modal.style.display = 'flex';
+        }
+
         function closeCustomConfirmModal(confirmed) {
             const modal = document.getElementById('customConfirmModal');
+            const cancelBtn = document.getElementById('customConfirmCancelBtn');
             modal.style.display = 'none';
+            if (cancelBtn) cancelBtn.style.display = 'inline-block';
             if (confirmed && typeof pendingConfirmAction === 'function') {
                 pendingConfirmAction();
             }
             pendingConfirmAction = null;
         }
+
 
         function confirmAction(event, message, options = {}) {
             if (event) {

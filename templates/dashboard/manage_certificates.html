@@ -105,10 +105,11 @@
                     📦 Download All
                 </a>
             {% else %}
-                <button type="button" onclick="alert('Please select a Starting Date and Ending Date using the date filter above to download certificates ZIP.');" class="btn btn-success" style="padding: 0.55rem 1.5rem; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;">
+                <button type="button" onclick="showNotificationModal('Please select a Starting Date and Ending Date using the date filter above to download certificates ZIP.', { title: 'Date Range Required', icon: '📅', hideCancel: true, confirmText: 'OK', confirmClass: 'btn btn-primary btn-sm' });" class="btn btn-success" style="padding: 0.55rem 1.5rem; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;">
                     📦 Download All
                 </button>
             {% endif %}
+
         </div>
     </div>
 
