@@ -97,12 +97,12 @@ img {
 
 /* Navbar Header */
 .navbar-header {
-    background: #ffffff;
+    background: var(--secondary);
     backdrop-filter: blur(12px);
     position: sticky;
     top: 0;
     z-index: 1000;
-    border-bottom: 1px solid var(--gray-200);
+    border-bottom: transparent;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
@@ -124,7 +124,7 @@ img {
     font-family: var(--font-heading);
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--gray-900);
+    color: #ffffff;
     text-decoration: none;
     flex-shrink: 0;
 }
@@ -238,7 +238,7 @@ img {
 }
 
 .nav-link {
-    color: var(--gray-700);
+    color: #ffffff;
     font-size: 0.95rem;
     font-weight: 500;
     padding: 0.4rem 0.6rem;
@@ -247,8 +247,8 @@ img {
 }
 
 .nav-link:hover, .nav-link.active {
-    color: var(--primary);
-    background: var(--primary-light);
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .navbar-header .btn-outline {
@@ -1142,13 +1142,7 @@ textarea.form-control {
     color: #f8fafc;
 }
 
-[data-theme="dark"] .navbar-header {
-    background: var(--secondary);
-    border-bottom-color: transparent;
-}
-
 [data-theme="dark"] .nav-logo,
-[data-theme="dark"] .nav-link,
 [data-theme="dark"] .page-title,
 [data-theme="dark"] .course-title,
 [data-theme="dark"] h1,
@@ -1280,15 +1274,12 @@ textarea.form-control {
 .btn-nav-auth {
     font-size: 0.95rem;
     font-weight: 500;
-    color: var(--gray-700);
+    color: #ffffff;
     text-decoration: none;
 }
-[data-theme="dark"] .btn-nav-auth {
-    color: #ffffff;
-}
 .btn-nav-primary {
-    background: var(--primary);
-    color: var(--white);
+    background: var(--white);
+    color: var(--secondary);
     padding: 0.5rem 1.25rem;
     border-radius: var(--radius-full);
     text-decoration: none;
@@ -1296,14 +1287,6 @@ textarea.form-control {
     font-size: 0.95rem;
 }
 .btn-nav-primary:hover {
-    background: var(--primary-hover);
-    color: var(--white);
-}
-[data-theme="dark"] .btn-nav-primary {
-    background: var(--white);
-    color: var(--secondary);
-}
-[data-theme="dark"] .btn-nav-primary:hover {
     background: var(--gray-100);
 }
 
