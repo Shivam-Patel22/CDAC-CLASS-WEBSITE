@@ -5,37 +5,9 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="ref-hero-section">
-    <div class="hero-content">
-        <h1 class="ref-hero-title">Teaching in the Internet age means we must teach <br><span class="text-orange">tomorrow's</span> <span class="text-blue">skills today</span></h1>
-        <p class="ref-hero-subtitle">Provides you with the latest online learning system and material that help your</p>
-        
-        <div class="hero-join-actions">
-            <div class="join-action-group">
-                <div class="join-avatar-ring ring-orange">
-                    <img src="https://ui-avatars.com/api/?name=Instructor&background=F47F23&color=fff&size=128" alt="Instructor">
-                </div>
-                <a href="#" class="hero-join-btn btn-join-orange">Join as Instructor</a>
-            </div>
-            
-            <div class="hero-join-or">OR</div>
-            
-            <div class="join-action-group">
-                <div class="join-avatar-ring ring-blue">
-                    <img src="https://ui-avatars.com/api/?name=Student&background=264696&color=fff&size=128" alt="Student">
-                </div>
-                <a href="{% url 'certificates:verify' %}" class="hero-join-btn btn-join-blue">Join as Student</a>
-            </div>
-        </div>
-        
-        <!-- Sponsor Logos Row -->
-        <div class="sponsor-logos">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" alt="Microsoft">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Cisco_logo_blue_2016.svg" alt="Cisco">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
-        </div>
+<section class="hero-banner-section" style="width: 100%; display: flex; align-items: center; justify-content: center; background: var(--dark-surface); padding: 2rem 1rem;">
+    <div class="container" style="padding: 0; display: flex; justify-content: center;">
+        <img src="{% static 'images/hero_banner.png' %}" alt="C-DAC Authorized Training Center" style="width: 100%; max-width: 600px; height: auto; display: block; border-radius: var(--radius-md); box-shadow: 0 8px 30px rgba(0,0,0,0.25);">
     </div>
 </section>
 
