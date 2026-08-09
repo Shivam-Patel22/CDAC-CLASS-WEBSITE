@@ -13,8 +13,35 @@
             <a href="{% url 'dashboard:admin_verify_search' %}" class="btn btn-outline-dark">🔍 Verify Certificate ID</a>
             <a href="{% url 'dashboard:add_certificate' %}" class="btn btn-primary">+ Issue New Certificate</a>
         </div>
-
     </div>
+
+    <!-- Date Range Filter Bar -->
+    <div class="card" style="margin-bottom: 1.75rem; padding: 1.25rem 1.5rem; background: var(--card-bg, #ffffff); border-radius: var(--radius-md, 10px); border: 1px solid var(--gray-200, #e2e8f0);">
+        <form method="GET" action="{% url 'dashboard:manage_certificates' %}" style="display: flex; align-items: flex-end; gap: 1rem; flex-wrap: wrap;">
+            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="start_date" style="font-size: 0.85rem; font-weight: 600; color: var(--gray-700);">Starting Date</label>
+                <input type="date" id="start_date" name="start_date" value="{{ start_date }}" class="form-control" style="padding: 0.45rem 0.75rem; font-size: 0.88rem; border-radius: var(--radius-sm, 6px); border: 1px solid var(--gray-300, #cbd5e1); min-width: 160px;" required>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.35rem;">
+                <label for="end_date" style="font-size: 0.85rem; font-weight: 600; color: var(--gray-700);">Ending Date</label>
+                <input type="date" id="end_date" name="end_date" value="{{ end_date }}" class="form-control" style="padding: 0.45rem 0.75rem; font-size: 0.88rem; border-radius: var(--radius-sm, 6px); border: 1px solid var(--gray-300, #cbd5e1); min-width: 160px;" required>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <button type="submit" class="btn btn-primary" style="padding: 0.48rem 1.25rem; font-size: 0.88rem;">🔍 Search / Filter</button>
+                {% if has_searched or start_date or end_date %}
+                    <a href="{% url 'dashboard:manage_certificates' %}" class="btn btn-outline-dark" style="padding: 0.48rem 1rem; font-size: 0.88rem;">Clear Filter</a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- Error Validation Alert -->
+    {% if error_message %}
+    <div class="alert alert-danger" style="margin-bottom: 1.5rem; padding: 0.85rem 1.25rem; background-color: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: var(--radius-md, 8px); font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+        <span class="alert-icon">✕</span>
+        <span>{{ error_message }}</span>
+    </div>
+    {% endif %}
 
     {% if certificates %}
     <div class="table-container">
@@ -61,13 +88,47 @@
             </tbody>
         </table>
     </div>
-    {% else %}
-    <div class="empty-state">
-        <div class="empty-state-icon">📜</div>
-        <h3>No Certificates Issued</h3>
-        <p>Issue your first certificate to a student upon course completion!</p>
-        <a href="{% url 'dashboard:add_certificate' %}" class="btn btn-primary">+ Issue Certificate</a>
+
+    <!-- Download All Button Section -->
+    <div style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding: 1.1rem 1.5rem; background: var(--card-bg, #ffffff); border-radius: var(--radius-md, 10px); border: 1px solid var(--gray-200, #e2e8f0); box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <div>
+            <span style="font-size: 0.9rem; color: var(--gray-700);">
+                Total Certificates Matching Filter: <strong>{{ total_count }}</strong>
+                {% if start_date and end_date %}
+                    <span style="color: var(--gray-500); font-size: 0.85rem; margin-left: 0.5rem;">({{ start_date }} to {{ end_date }})</span>
+                {% endif %}
+            </span>
+        </div>
+        <div>
+            {% if start_date and end_date %}
+                <a href="{% url 'dashboard:download_certificates_zip' %}?start_date={{ start_date|urlencode }}&end_date={{ end_date|urlencode }}" class="btn btn-success" style="padding: 0.55rem 1.5rem; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;">
+                    📦 Download All
+                </a>
+            {% else %}
+                <button type="button" onclick="alert('Please select a Starting Date and Ending Date using the date filter above to download certificates ZIP.');" class="btn btn-success" style="padding: 0.55rem 1.5rem; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;">
+                    📦 Download All
+                </button>
+            {% endif %}
+        </div>
     </div>
+
+    {% else %}
+        {% if has_searched and not error_message %}
+        <div class="empty-state">
+            <div class="empty-state-icon">📜</div>
+            <h3>No Certificates Found</h3>
+            <p style="color: var(--gray-600); margin-bottom: 1rem;">No certificates found for the selected date range.</p>
+            <a href="{% url 'dashboard:manage_certificates' %}" class="btn btn-outline-dark">Reset Filter</a>
+        </div>
+        {% elif not error_message %}
+        <div class="empty-state">
+            <div class="empty-state-icon">📜</div>
+            <h3>No Certificates Issued</h3>
+            <p>Issue your first certificate to a student upon course completion!</p>
+            <a href="{% url 'dashboard:add_certificate' %}" class="btn btn-primary">+ Issue Certificate</a>
+        </div>
+        {% endif %}
     {% endif %}
 </div>
+
 {% endblock %}

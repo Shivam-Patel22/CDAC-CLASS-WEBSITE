@@ -188,4 +188,121 @@ class CertificatesTestCase(TestCase):
         self.assertFalse(form_invalid.is_valid())
         self.assertIn('issue_date', form_invalid.errors)
 
+    def test_certificate_date_filter_admin(self):
+        """Test filtering certificates by date range on Manage Certificates page."""
+        self.client.login(username='certadmin', password='adminpassword123')
+
+        # Create certificates on different dates
+        cert_aug8 = Certificate.objects.create(
+            certificate_id='CERT-2026-AUG08',
+            student_name='Shivam Patel',
+            course=self.course,
+            issue_date=date(2026, 8, 8),
+            grade='A+'
+        )
+        cert_aug9 = Certificate.objects.create(
+            certificate_id='CERT-2026-AUG09',
+            student_name='Rohan Sharma',
+            course=self.course,
+            issue_date=date(2026, 8, 9),
+            grade='A'
+        )
+        cert_aug15 = Certificate.objects.create(
+            certificate_id='CERT-2026-AUG15',
+            student_name='Priya Singh',
+            course=self.course,
+            issue_date=date(2026, 8, 15),
+            grade='B+'
+        )
+
+        url = reverse('dashboard:manage_certificates')
+        # Filter for 2026-08-08 to 2026-08-09
+        response = self.client.get(url, {'start_date': '2026-08-08', 'end_date': '2026-08-09'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Shivam Patel')
+        self.assertContains(response, 'Rohan Sharma')
+        self.assertNotContains(response, 'Priya Singh')
+
+    def test_download_certificates_zip_success(self):
+        """Test downloading ZIP file containing filtered certificates."""
+        import zipfile
+        import io
+
+        self.client.login(username='certadmin', password='adminpassword123')
+
+        cert1 = Certificate.objects.create(
+            certificate_id='CERT-ZIP-01',
+            student_name='Shivam Patel',
+            course=self.course,
+            issue_date=date(2026, 8, 8)
+        )
+        cert2 = Certificate.objects.create(
+            certificate_id='CERT-ZIP-02',
+            student_name='Aarav Mehta',
+            course=self.course,
+            issue_date=date(2026, 8, 9)
+        )
+
+        url = reverse('dashboard:download_certificates_zip')
+        response = self.client.get(url, {'start_date': '2026-08-08', 'end_date': '2026-08-09'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/zip')
+        self.assertIn('certificates_08-08-2026_to_09-08-2026.zip', response['Content-Disposition'])
+
+        zip_data = io.BytesIO(response.content)
+        with zipfile.ZipFile(zip_data, 'r') as zf:
+            namelist = zf.namelist()
+            self.assertEqual(len(namelist), 2)
+            self.assertIn('Shivampatel-Python-Web-Development.pdf', namelist)
+            self.assertIn('Aaravmehta-Python-Web-Development.pdf', namelist)
+
+    def test_download_certificates_zip_duplicate_filenames(self):
+        """Test safe duplicate filename handling in ZIP archive."""
+        import zipfile
+        import io
+
+        self.client.login(username='certadmin', password='adminpassword123')
+
+        # Two certificates with exact same student name and course
+        cert1 = Certificate.objects.create(
+            certificate_id='CERT-DUP-01',
+            student_name='Shivam Patel',
+            course=self.course,
+            issue_date=date(2026, 8, 8)
+        )
+        cert2 = Certificate.objects.create(
+            certificate_id='CERT-DUP-02',
+            student_name='Shivam Patel',
+            course=self.course,
+            issue_date=date(2026, 8, 8)
+        )
+
+        url = reverse('dashboard:download_certificates_zip')
+        response = self.client.get(url, {'start_date': '2026-08-08', 'end_date': '2026-08-08'})
+        self.assertEqual(response.status_code, 200)
+
+        zip_data = io.BytesIO(response.content)
+        with zipfile.ZipFile(zip_data, 'r') as zf:
+            namelist = zf.namelist()
+            self.assertEqual(len(namelist), 2)
+            self.assertIn('Shivampatel-Python-Web-Development.pdf', namelist)
+            self.assertIn('Shivampatel-Python-Web-Development-2.pdf', namelist)
+
+    def test_download_certificates_zip_invalid_date_range(self):
+        """Test start date > end date validation."""
+        self.client.login(username='certadmin', password='adminpassword123')
+        url = reverse('dashboard:manage_certificates')
+        response = self.client.get(url, {'start_date': '2026-08-10', 'end_date': '2026-08-08'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Starting date cannot be later than ending date.')
+
+    def test_download_certificates_zip_unauthorized_access(self):
+        """Test that non-staff or unauthenticated users cannot access zip download."""
+        url = reverse('dashboard:download_certificates_zip')
+        response = self.client.get(url, {'start_date': '2026-08-08', 'end_date': '2026-08-09'})
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse('dashboard:login'), response.url)
+
+
+
 

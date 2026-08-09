@@ -1,6 +1,9 @@
 import time
+import datetime
+import io
+import zipfile
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 from django.contrib.auth.models import User
@@ -9,13 +12,21 @@ from .decorators import staff_required
 from .forms import AdminLoginForm, AdminCourseForm, AdminCertificateForm, AdminOfferForm, AdminStudentForm, AdminAboutForm, AdminContactForm
 from courses.models import Course, CourseOffer
 from certificates.models import Certificate
-from certificates.utils import generate_certificate_id
+from certificates.utils import (
+    generate_certificate_id,
+    generate_certificate_pdf,
+    build_safe_certificate_filename,
+    FilenameDeduplicator,
+    parse_date_input
+)
 from certificates.forms import CertificateVerificationForm
 from core.models import Inquiry, InquiryFollowUp
 from django.utils import timezone
+from django.db.models import Q
 from django.core.mail import send_mail
 from django.conf import settings
 import urllib.parse
+
 
 
 
@@ -172,8 +183,112 @@ def toggle_course_featured(request, pk):
 
 @staff_required
 def manage_certificates(request):
+    start_date_str = request.GET.get('start_date', '').strip()
+    end_date_str = request.GET.get('end_date', '').strip()
+
     certificates = Certificate.objects.select_related('course', 'student').order_by('-created_at')
-    return render(request, 'dashboard/manage_certificates.html', {'certificates': certificates})
+    error_message = None
+    has_searched = False
+    start_date = None
+    end_date = None
+
+    if 'start_date' in request.GET or 'end_date' in request.GET:
+        has_searched = True
+
+        if not start_date_str:
+            error_message = "Please select a starting date."
+            certificates = Certificate.objects.none()
+        elif not end_date_str:
+            error_message = "Please select an ending date."
+            certificates = Certificate.objects.none()
+        else:
+            start_date = parse_date_input(start_date_str)
+            end_date = parse_date_input(end_date_str)
+
+            if not start_date or not end_date:
+                error_message = "Invalid date format. Please select valid starting and ending dates."
+                certificates = Certificate.objects.none()
+            elif start_date > end_date:
+                error_message = "Starting date cannot be later than ending date."
+                # Do not perform database query when start_date > end_date
+                certificates = Certificate.objects.none()
+            else:
+                start_dt = timezone.make_aware(datetime.datetime.combine(start_date, datetime.time.min))
+                end_dt = timezone.make_aware(datetime.datetime.combine(end_date, datetime.time.max))
+
+                certificates = Certificate.objects.select_related('course', 'student').filter(
+                    issue_date__range=(start_date, end_date)
+                ).order_by('-issue_date', '-created_at')
+
+    context = {
+        'certificates': certificates,
+        'start_date': start_date_str,
+        'end_date': end_date_str,
+        'error_message': error_message,
+        'has_searched': has_searched,
+        'total_count': certificates.count() if certificates is not None else 0,
+    }
+    return render(request, 'dashboard/manage_certificates.html', context)
+
+@staff_required
+def download_certificates_zip(request):
+    """
+    Downloads all certificates matching the specified date filter range as a ZIP archive.
+    Each PDF inside the ZIP is named: CertificateHolderName-CourseName.pdf (e.g. Shivampatel-Python.pdf).
+    Duplicates append incremental counters (-2, -3).
+    ZIP file named: certificates_DD-MM-YYYY_to_DD-MM-YYYY.zip.
+    """
+    start_date_str = request.GET.get('start_date', '').strip()
+    end_date_str = request.GET.get('end_date', '').strip()
+
+    if not start_date_str or not end_date_str:
+        messages.error(request, "Both starting date and ending date are required to download certificates.")
+        return redirect('dashboard:manage_certificates')
+
+    start_date = parse_date_input(start_date_str)
+    end_date = parse_date_input(end_date_str)
+
+    if not start_date or not end_date:
+        messages.error(request, "Invalid date format. Please select valid starting and ending dates.")
+        return redirect(f"{reverse('dashboard:manage_certificates')}?start_date={urllib.parse.quote(start_date_str)}&end_date={urllib.parse.quote(end_date_str)}")
+
+    if start_date > end_date:
+        messages.error(request, "Starting date cannot be later than ending date.")
+        return redirect(f"{reverse('dashboard:manage_certificates')}?start_date={urllib.parse.quote(start_date_str)}&end_date={urllib.parse.quote(end_date_str)}")
+
+    certificates = Certificate.objects.select_related('course', 'student').filter(
+        issue_date__range=(start_date, end_date)
+    ).order_by('issue_date', 'created_at')
+
+
+    if not certificates.exists():
+        messages.error(request, "No certificates found for the selected date range.")
+        return redirect(f"{reverse('dashboard:manage_certificates')}?start_date={urllib.parse.quote(start_date_str)}&end_date={urllib.parse.quote(end_date_str)}")
+
+    zip_buffer = io.BytesIO()
+    dedup = FilenameDeduplicator()
+
+    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+        for cert in certificates:
+            try:
+                pdf_bytes = generate_certificate_pdf(cert)
+                student_name = cert.student_name or 'Student'
+                course_name = cert.course.name if cert.course else 'Course'
+                filename = dedup.get_unique_filename(student_name, course_name)
+                zip_file.writestr(filename, pdf_bytes)
+            except Exception as e:
+                print(f"Error generating PDF for certificate {cert.certificate_id}: {e}")
+
+    zip_buffer.seek(0)
+
+    start_fmt = start_date.strftime('%d-%m-%Y')
+    end_fmt = end_date.strftime('%d-%m-%Y')
+    zip_filename = f"certificates_{start_fmt}_to_{end_fmt}.zip"
+
+    response = HttpResponse(zip_buffer.getvalue(), content_type='application/zip')
+    response['Content-Disposition'] = f'attachment; filename="{zip_filename}"'
+    return response
+
 
 @staff_required
 def add_certificate(request):

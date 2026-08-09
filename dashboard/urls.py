@@ -18,7 +18,9 @@ urlpatterns = [
     path('certificates/<int:pk>/revoke/', views.revoke_certificate, name='revoke_certificate'),
     path('certificates/<int:pk>/verify/', views.verify_certificate, name='verify_certificate'),
     path('certificates/<int:pk>/print/', views.print_certificate, name='print_certificate'),
+    path('certificates/download-zip/', views.download_certificates_zip, name='download_certificates_zip'),
     path('verify-certificate/', views.admin_verify_search, name='admin_verify_search'),
+
 
 
     path('inquiries/', views.manage_inquiries, name='manage_inquiries'),
