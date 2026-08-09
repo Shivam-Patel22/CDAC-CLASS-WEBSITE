@@ -25,79 +25,79 @@
     </div>
 
     {% if inquiries %}
-    <div class="table-container">
-        <table class="custom-table">
+    <div class="table-container" style="overflow-x: hidden;">
+        <table class="custom-table" style="width: 100%; table-layout: auto;">
             <thead>
                 <tr>
-                    <th style="width: 125px; min-width: 125px; white-space: nowrap;">Status</th>
-                    <th style="width: 150px; min-width: 140px; white-space: nowrap;">Customer Name</th>
-                    <th style="width: 200px; min-width: 180px; white-space: nowrap;">Phone / Email</th>
-                    <th style="width: 220px; min-width: 190px;">Subject / Course</th>
-                    <th style="min-width: 320px; max-width: 480px;">Message</th>
-                    <th style="width: 170px; min-width: 150px; white-space: nowrap;">Date & Time</th>
-                    <th style="width: 250px; min-width: 240px; white-space: nowrap; text-align: right;">Actions</th>
+                    <th style="white-space: nowrap; padding-left: 0.85rem; width: 110px;">Status</th>
+                    <th style="white-space: nowrap; width: 135px;">Customer Name</th>
+                    <th style="white-space: nowrap; width: 175px;">Phone / Email</th>
+                    <th style="width: 170px;">Subject / Course</th>
+                    <th>Message</th>
+                    <th style="white-space: nowrap; width: 145px;">Date & Time</th>
+                    <th style="white-space: nowrap; text-align: right; padding-right: 0.85rem; width: 215px;">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in inquiries %}
                 <tr style="{% if not item.is_read %}background-color: rgba(56, 189, 248, 0.05); font-weight: 500;{% endif %}">
-                    <td style="vertical-align: middle; white-space: nowrap;">
+                    <td style="vertical-align: middle; white-space: nowrap; padding-left: 0.85rem;">
                         {% if not item.is_read %}
-                            <span class="badge badge-danger" style="white-space: nowrap; padding: 4px 9px; border-radius: 6px; font-size: 0.75rem; display: inline-block;">NEW UNREAD</span>
+                            <span class="badge badge-danger" style="white-space: nowrap; padding: 3px 8px; border-radius: 6px; font-size: 0.72rem; display: inline-block;">NEW UNREAD</span>
                         {% else %}
-                            <span class="badge badge-secondary" style="white-space: nowrap; padding: 4px 9px; border-radius: 6px; font-size: 0.75rem; display: inline-block;">READ</span>
+                            <span class="badge badge-secondary" style="white-space: nowrap; padding: 3px 8px; border-radius: 6px; font-size: 0.72rem; display: inline-block;">READ</span>
                         {% endif %}
-                        <div style="margin-top: 6px;">
+                        <div style="margin-top: 4px;">
                             {% if item.followup_count == 0 %}
-                                <span style="font-size: 0.75rem; color: var(--gray-500); background: var(--gray-100); padding: 3px 8px; border-radius: 6px; display: inline-block; white-space: nowrap;">No Follow-up</span>
+                                <span style="font-size: 0.72rem; color: var(--gray-500); background: var(--gray-100); padding: 2px 7px; border-radius: 6px; display: inline-block; white-space: nowrap;">No Follow-up</span>
                             {% elif item.followup_count == 1 %}
-                                <span style="font-size: 0.75rem; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 6px; display: inline-block; font-weight: 600; white-space: nowrap;">1 Follow-up</span>
+                                <span style="font-size: 0.72rem; color: #0284c7; background: #e0f2fe; padding: 2px 7px; border-radius: 6px; display: inline-block; font-weight: 600; white-space: nowrap;">1 Follow-up</span>
                             {% else %}
-                                <span style="font-size: 0.75rem; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 6px; display: inline-block; font-weight: 600; white-space: nowrap;">{{ item.followup_count }} Follow-ups</span>
+                                <span style="font-size: 0.72rem; color: #0284c7; background: #e0f2fe; padding: 2px 7px; border-radius: 6px; display: inline-block; font-weight: 600; white-space: nowrap;">{{ item.followup_count }} Follow-ups</span>
                             {% endif %}
                         </div>
                     </td>
                     <td style="vertical-align: middle; white-space: nowrap;"><strong>{{ item.name }}</strong></td>
                     <td style="vertical-align: middle;">
-                        <div style="display: flex; align-items: center; gap: 8px; white-space: nowrap;">
-                            <span style="display: inline-flex; align-items: center; color: #D946EF; font-size: 1.1rem; line-height: 1;">📞</span>
-                            <span style="font-weight: 500;">{{ item.phone }}</span>
+                        <div style="display: flex; align-items: center; gap: 6px; white-space: nowrap;">
+                            <span style="display: inline-flex; align-items: center; color: #D946EF; font-size: 1rem; line-height: 1;">📞</span>
+                            <span style="font-weight: 500; font-size: 0.82rem;">{{ item.phone }}</span>
                         </div>
                         {% if item.email %}
-                            <div style="display: flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 0.85rem; color: var(--gray-500); margin-top: 4px;">
+                            <div style="display: flex; align-items: center; gap: 6px; white-space: nowrap; font-size: 0.78rem; color: var(--gray-500); margin-top: 2px;">
                                 <span style="display: inline-flex; align-items: center; line-height: 1;">✉️</span>
                                 <span>{{ item.email }}</span>
                             </div>
                         {% endif %}
                     </td>
-                    <td style="vertical-align: middle; min-width: 190px; max-width: 240px;">
+                    <td style="vertical-align: middle; max-width: 170px;">
                         {% if item.course %}
-                            <span class="badge badge-primary" style="display: inline-block; border-radius: 6px; padding: 5px 10px; font-weight: 500; font-size: 0.82rem; line-height: 1.4; word-break: break-word; text-align: left; max-width: 220px; white-space: normal;">{{ item.course.name }}</span>
+                            <span class="badge badge-primary" style="display: inline-block; border-radius: 6px; padding: 4px 8px; font-weight: 500; font-size: 0.78rem; line-height: 1.35; word-break: break-word; text-align: left; max-width: 160px; white-space: normal;">{{ item.course.name }}</span>
                         {% else %}
-                            <span class="badge badge-secondary" style="display: inline-block; border-radius: 6px; padding: 5px 10px; font-weight: 500; font-size: 0.82rem; line-height: 1.4; word-break: break-word; text-align: left; max-width: 220px; white-space: normal;">{{ item.subject }}</span>
+                            <span class="badge badge-secondary" style="display: inline-block; border-radius: 6px; padding: 4px 8px; font-weight: 500; font-size: 0.78rem; line-height: 1.35; word-break: break-word; text-align: left; max-width: 160px; white-space: normal;">{{ item.subject }}</span>
                         {% endif %}
                     </td>
-                    <td style="min-width: 320px; max-width: 480px; vertical-align: middle;">
-                        <p style="margin: 0; font-size: 0.88rem; color: var(--gray-800); line-height: 1.5; word-wrap: break-word; overflow-wrap: break-word;">{{ item.message }}</p>
+                    <td style="vertical-align: middle;">
+                        <p style="margin: 0; font-size: 0.82rem; color: var(--gray-800); line-height: 1.4; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">{{ item.message }}</p>
                     </td>
                     <td style="vertical-align: middle; white-space: nowrap;">
-                        <span style="font-size: 0.85rem; color: var(--gray-500); white-space: nowrap;">{{ item.created_at|date:"M j, Y — g:i A" }}</span>
+                        <span style="font-size: 0.8rem; color: var(--gray-500); white-space: nowrap;">{{ item.created_at|date:"M j, Y — g:i A" }}</span>
                     </td>
-                    <td style="vertical-align: middle; text-align: right;">
-                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; white-space: nowrap; justify-content: flex-end;">
+                    <td style="vertical-align: middle; text-align: right; padding-right: 0.85rem;">
+                        <div style="display: flex; align-items: center; gap: 4px; flex-wrap: nowrap; white-space: nowrap; justify-content: flex-end;">
                             <button type="button" class="btn btn-outline-dark btn-sm open-followup-btn" 
                                     data-inquiry-id="{{ item.id }}"
                                     data-name="{{ item.name }}"
                                     data-contact="{{ item.phone }}{% if item.email %} | {{ item.email }}{% endif %}"
                                     data-subject="{% if item.course %}{{ item.course.name }}{% else %}{{ item.subject }}{% endif %}"
                                     data-message="{{ item.message }}"
-                                    style="white-space: nowrap;">
+                                    style="white-space: nowrap; padding: 0.25rem 0.45rem; font-size: 0.78rem;">
                                 💬 Follow Up
                             </button>
-                            <a href="{% url 'dashboard:toggle_inquiry_read' item.id %}" class="btn btn-outline-dark btn-sm" style="white-space: nowrap;">
+                            <a href="{% url 'dashboard:toggle_inquiry_read' item.id %}" class="btn btn-outline-dark btn-sm" style="white-space: nowrap; padding: 0.25rem 0.45rem; font-size: 0.78rem;">
                                 {% if item.is_read %}Mark Unread{% else %}Mark Read{% endif %}
                             </a>
-                            <a href="{% url 'dashboard:delete_inquiry' item.id %}" class="btn btn-danger btn-sm" style="white-space: nowrap;" onclick="return confirmAction(event, 'Are you sure you want to delete this inquiry?');">
+                            <a href="{% url 'dashboard:delete_inquiry' item.id %}" class="btn btn-danger btn-sm" style="white-space: nowrap; padding: 0.25rem 0.45rem; font-size: 0.78rem;" onclick="return confirmAction(event, 'Are you sure you want to delete this inquiry?');">
                                 Delete
                             </a>
                         </div>
@@ -107,6 +107,7 @@
             </tbody>
         </table>
     </div>
+
     {% else %}
     <div class="empty-state">
         <div class="empty-state-icon">📥</div>
