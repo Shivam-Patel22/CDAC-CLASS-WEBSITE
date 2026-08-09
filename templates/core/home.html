@@ -5,81 +5,97 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero-section">
+<section class="ref-hero-section">
     <div class="hero-content">
-        <h1 class="hero-title">Master In-Demand Computer & Software Skills</h1>
-        <p class="hero-subtitle">Transform your career with hands-on computer training, expert-led courses, and industry-recognized certifications.</p>
-        <div class="hero-buttons">
-            <a href="{% url 'courses:course_list' %}" class="btn btn-primary btn-lg">Explore Courses</a>
-            <a href="{% url 'certificates:verify' %}" class="btn btn-outline btn-lg">Verify Certificate</a>
+        <h1 class="ref-hero-title">Teaching in the Internet age means we must teach <br><span class="text-orange">tomorrow's</span> <span class="text-blue">skills today</span></h1>
+        <p class="ref-hero-subtitle">Provides you with the latest online learning system and material that help your</p>
+        
+        <div class="hero-join-actions">
+            <div class="join-action-group">
+                <div class="join-avatar-ring ring-orange">
+                    <img src="https://ui-avatars.com/api/?name=Instructor&background=F47F23&color=fff&size=128" alt="Instructor">
+                </div>
+                <a href="#" class="hero-join-btn btn-join-orange">Join as Instructor</a>
+            </div>
+            
+            <div class="hero-join-or">OR</div>
+            
+            <div class="join-action-group">
+                <div class="join-avatar-ring ring-blue">
+                    <img src="https://ui-avatars.com/api/?name=Student&background=264696&color=fff&size=128" alt="Student">
+                </div>
+                <a href="{% url 'certificates:verify' %}" class="hero-join-btn btn-join-blue">Join as Student</a>
+            </div>
         </div>
-    </div>
-</section>
-
-<!-- Highlights Section -->
-<section class="container">
-    <div class="page-header">
-        <h2 class="page-title">Why Choose C-DAC?</h2>
-        <p class="page-subtitle">We provide high-quality education with practical hands-on experience</p>
-    </div>
-
-    <div class="grid grid-3">
-        <div class="card card-hover">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem;">💻</div>
-            <h3>Modern Computer Labs</h3>
-            <p style="color: var(--gray-600); margin-top: 0.5rem;">Fully equipped computer workstations with up-to-date software tools, IDEs, and high-speed internet.</p>
-        </div>
-
-        <div class="card card-hover">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎓</div>
-            <h3>Expert Instructors</h3>
-            <p style="color: var(--gray-600); margin-top: 0.5rem;">Learn directly from experienced software engineers, database admins, and IT professionals.</p>
-        </div>
-
-        <div class="card card-hover">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem;">📜</div>
-            <h3>Verified Certification</h3>
-            <p style="color: var(--gray-600); margin-top: 0.5rem;">Receive unique, cryptographically verifiable certificates upon successful course completion.</p>
+        
+        <!-- Sponsor Logos Row -->
+        <div class="sponsor-logos">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" alt="Microsoft">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Cisco_logo_blue_2016.svg" alt="Cisco">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
         </div>
     </div>
 </section>
 
 <!-- Featured Courses Section -->
-<section class="container" style="background: var(--gray-50); border-radius: var(--radius-lg); border: 1px solid var(--gray-200); margin-bottom: 3rem; padding: 3rem 2rem;">
-    <div class="page-header">
-        <h2 class="page-title">Featured Courses</h2>
-        <p class="page-subtitle">Get started with our most popular training programs</p>
+<section class="container" style="margin-bottom: 3rem; padding: 2rem 0;">
+    <div class="popular-courses-header">
+        <div>
+            <h2>Our Most <span>Popular Courses</span></h2>
+            <p>Let's join our best classes with our famous instructor and institutes</p>
+        </div>
+        <a href="{% url 'courses:course_list' %}" class="explore-link">Explore Courses &rarr;</a>
     </div>
 
     {% if featured_courses %}
     <div class="grid grid-3">
         {% for course in featured_courses %}
-        <div class="card card-hover">
-            {% if course.image %}
-                <img src="{{ course.image.url }}" alt="{{ course.name }}" style="width: 100%; height: 180px; object-fit: cover; border-radius: var(--radius-md); margin-bottom: 1rem;">
-            {% else %}
-                <div style="width: 100%; height: 180px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: var(--radius-md); margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
-                    🖥️
+        <div class="ref-course-card">
+            <div class="ref-course-img-wrapper">
+                {% if course.image %}
+                    <img src="{{ course.image.url }}" alt="{{ course.name }}">
+                {% else %}
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem;">
+                        🖥️
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="ref-course-body">
+                <div class="ref-course-meta">
+                    <div class="lesson-count">
+                        <div class="lesson-dot dot-blue"></div>
+                        25x Lesson
+                    </div>
+                    <div class="course-stars">
+                        ★★★★<span class="star-empty">★</span>
+                    </div>
                 </div>
-            {% endif %}
-            <span class="badge badge-primary">{{ course.duration }}</span>
-            <h3 style="margin-top: 0.75rem;">{{ course.name }}</h3>
-            <p style="color: var(--gray-600); font-size: 0.95rem; margin: 0.5rem 0 1rem;">{{ course.description|truncatewords:20 }}</p>
-            <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--gray-100);">
-                <a href="{% url 'courses:course_detail' course.id %}" class="btn btn-outline-dark btn-sm">View Details</a>
+                
+                <a href="{% url 'courses:course_detail' course.id %}" class="ref-course-title">{{ course.name }}</a>
+                
+                <div class="ref-course-footer">
+                    <div class="ref-instructor-info">
+                        <img src="https://ui-avatars.com/api/?name={{ course.name }}&background=random&color=fff" alt="Instructor" class="ref-instructor-avatar">
+                        <div class="ref-instructor-details">
+                            <span class="ref-instructor-name">Expert Instructor</span>
+                            <span class="ref-instructor-role">Developer</span>
+                        </div>
+                    </div>
+                    <span class="ref-course-badge badge-programming">Programming</span>
+                </div>
             </div>
         </div>
         {% endfor %}
-    </div>
-    <div style="text-align: center; margin-top: 2.5rem;">
-        <a href="{% url 'courses:course_list' %}" class="btn btn-primary">Browse All Courses &rarr;</a>
     </div>
     {% else %}
     <div class="empty-state">
         <div class="empty-state-icon">📚</div>
         <h3>Courses Being Updated</h3>
         <p>Our upcoming course catalog is being prepared. Check back soon or view all courses!</p>
-        <a href="{% url 'courses:course_list' %}" class="btn btn-primary">View Course Catalog</a>
+        <a href="{% url 'courses:course_list' %}" class="btn-nav-primary">View Course Catalog</a>
     </div>
     {% endif %}
 </section>

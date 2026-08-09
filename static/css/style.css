@@ -1138,13 +1138,13 @@ textarea.form-control {
 }
 
 [data-theme="dark"] body {
-    background-color: #090d16;
+    background-color: var(--dark); /* #211F1C */
     color: #f8fafc;
 }
 
 [data-theme="dark"] .navbar-header {
-    background: #0f172a;
-    border-bottom-color: #1e293b;
+    background: var(--secondary);
+    border-bottom-color: transparent;
 }
 
 [data-theme="dark"] .nav-logo,
@@ -1253,4 +1253,326 @@ textarea.form-control {
 [data-theme="dark"] #followup-history-list p {
     color: #e2e8f0 !important;
 }
+
+/* ==========================================================================
+   Redesigned UI Components (Onlinetutor Reference)
+   ========================================================================== */
+
+/* Navbar Adjustments */
+.nav-container {
+    justify-content: space-between;
+}
+.nav-menu {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+.nav-links {
+    gap: 2rem;
+}
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Auth Buttons in Navbar */
+.btn-nav-auth {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--gray-700);
+    text-decoration: none;
+}
+[data-theme="dark"] .btn-nav-auth {
+    color: #ffffff;
+}
+.btn-nav-primary {
+    background: var(--primary);
+    color: var(--white);
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+.btn-nav-primary:hover {
+    background: var(--primary-hover);
+    color: var(--white);
+}
+[data-theme="dark"] .btn-nav-primary {
+    background: var(--white);
+    color: var(--secondary);
+}
+[data-theme="dark"] .btn-nav-primary:hover {
+    background: var(--gray-100);
+}
+
+/* Hero Typography & Layout */
+.ref-hero-section {
+    padding: 6rem 1.5rem 4rem;
+    text-align: center;
+    position: relative;
+    background: transparent;
+    overflow: hidden;
+}
+.ref-hero-title {
+    font-size: 4.5rem;
+    line-height: 1.1;
+    font-weight: 800;
+    color: var(--gray-900);
+    max-width: 900px;
+    margin: 0 auto 1.5rem;
+}
+.ref-hero-title span.text-orange { color: var(--secondary); }
+.ref-hero-title span.text-blue { color: var(--primary); }
+[data-theme="dark"] .ref-hero-title { color: #ffffff; }
+
+.ref-hero-subtitle {
+    font-size: 1.15rem;
+    color: var(--gray-500);
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    font-weight: 400;
+}
+[data-theme="dark"] .ref-hero-subtitle { color: var(--gray-300); }
+
+/* Circular Join Buttons */
+.hero-join-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+}
+
+.join-action-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.join-avatar-ring {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    padding: 4px;
+    background: #ffffff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.join-avatar-ring img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+[data-theme="dark"] .join-avatar-ring {
+    background: var(--dark-surface);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.join-avatar-ring.ring-orange { border: 2px solid var(--secondary); }
+.join-avatar-ring.ring-blue { border: 2px solid var(--primary); }
+
+.hero-join-btn {
+    padding: 0.65rem 1.5rem;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    color: #fff !important;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: transform 0.2s;
+}
+.hero-join-btn:hover { transform: translateY(-2px); color: #fff !important; }
+.btn-join-orange { background: var(--secondary); }
+.btn-join-blue { background: var(--primary); }
+
+.hero-join-or {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-400);
+    padding: 0 1rem;
+    margin-top: 40px;
+}
+[data-theme="dark"] .hero-join-or { color: var(--gray-500); }
+
+/* Sponsor Logos Row */
+.sponsor-logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--gray-200);
+    border-bottom: 1px solid var(--gray-200);
+    opacity: 0.6;
+    margin-top: 2rem;
+}
+[data-theme="dark"] .sponsor-logos {
+    border-color: var(--gray-700);
+    opacity: 0.4;
+}
+.sponsor-logos img {
+    height: 30px;
+    filter: grayscale(100%);
+}
+
+/* Popular Courses Section Header */
+.popular-courses-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2.5rem;
+}
+.popular-courses-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--gray-900);
+}
+.popular-courses-header h2 span { color: var(--primary); }
+.popular-courses-header p {
+    color: var(--gray-500);
+    font-size: 1.05rem;
+}
+[data-theme="dark"] .popular-courses-header h2 { color: #ffffff; }
+
+.explore-link {
+    color: var(--primary);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+.explore-link:hover { color: var(--primary-hover); }
+
+/* Course Card Redesign */
+.ref-course-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-200);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+[data-theme="dark"] .ref-course-card {
+    background: var(--card-bg);
+    border-color: var(--gray-700);
+}
+
+.ref-course-img-wrapper {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    padding: 1rem;
+}
+.ref-course-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+}
+
+.ref-course-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.ref-course-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--gray-500);
+}
+.lesson-count {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.lesson-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+.dot-green { background: #10b981; }
+.dot-blue { background: #3b82f6; }
+.dot-red { background: #ef4444; }
+
+.course-stars {
+    color: #fbbf24;
+    letter-spacing: 2px;
+}
+.course-stars .star-empty { color: var(--gray-300); }
+[data-theme="dark"] .course-stars .star-empty { color: var(--gray-600); }
+
+.ref-course-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    line-height: 1.4;
+    margin-bottom: 1.5rem;
+    text-decoration: none;
+    display: block;
+}
+.ref-course-title:hover { color: var(--primary); }
+[data-theme="dark"] .ref-course-title { color: #ffffff; }
+[data-theme="dark"] .ref-course-title:hover { color: var(--primary-light); }
+
+.ref-course-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gray-100);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+[data-theme="dark"] .ref-course-footer { border-color: var(--gray-700); }
+
+.ref-instructor-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.ref-instructor-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.ref-instructor-details {
+    display: flex;
+    flex-direction: column;
+}
+.ref-instructor-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--gray-900);
+}
+[data-theme="dark"] .ref-instructor-name { color: #ffffff; }
+.ref-instructor-role {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+}
+
+.ref-course-badge {
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.badge-design { background: #dcfce7; color: #166534; }
+.badge-programming { background: #dbeafe; color: #1e40af; }
+.badge-leadership { background: #fee2e2; color: #991b1b; }
+[data-theme="dark"] .badge-design { background: rgba(22, 101, 52, 0.4); color: #86efac; }
+[data-theme="dark"] .badge-programming { background: rgba(30, 64, 175, 0.4); color: #93c5fd; }
+[data-theme="dark"] .badge-leadership { background: rgba(153, 27, 27, 0.4); color: #fca5a5; }
 
