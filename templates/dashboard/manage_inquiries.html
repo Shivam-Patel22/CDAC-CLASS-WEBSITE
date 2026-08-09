@@ -40,7 +40,7 @@
             </thead>
             <tbody>
                 {% for item in inquiries %}
-                <tr style="{% if not item.is_read %}background-color: rgba(56, 189, 248, 0.05); font-weight: 500;{% endif %}">
+                <tr style="{% if not item.is_read %}background-color: rgba(47, 155, 212, 0.05); font-weight: 500;{% endif %}">
                     <td style="vertical-align: middle; white-space: nowrap; padding-left: 0.85rem;">
                         {% if not item.is_read %}
                             <span class="badge badge-danger" style="white-space: nowrap; padding: 3px 8px; border-radius: 6px; font-size: 0.72rem; display: inline-block;">NEW UNREAD</span>
@@ -51,16 +51,16 @@
                             {% if item.followup_count == 0 %}
                                 <span style="font-size: 0.72rem; color: var(--gray-500); background: var(--gray-100); padding: 2px 7px; border-radius: 6px; display: inline-block; white-space: nowrap;">No Follow-up</span>
                             {% elif item.followup_count == 1 %}
-                                <span style="font-size: 0.72rem; color: #0284c7; background: #e0f2fe; padding: 2px 7px; border-radius: 6px; display: inline-block; font-weight: 600; white-space: nowrap;">1 Follow-up</span>
+                                <span style="font-size: 0.72rem; color: #264696; background: #e0f2fe; padding: 2px 7px; border-radius: 6px; display: inline-block; font-weight: 600; white-space: nowrap;">1 Follow-up</span>
                             {% else %}
-                                <span style="font-size: 0.72rem; color: #0284c7; background: #e0f2fe; padding: 2px 7px; border-radius: 6px; display: inline-block; font-weight: 600; white-space: nowrap;">{{ item.followup_count }} Follow-ups</span>
+                                <span style="font-size: 0.72rem; color: #264696; background: #e0f2fe; padding: 2px 7px; border-radius: 6px; display: inline-block; font-weight: 600; white-space: nowrap;">{{ item.followup_count }} Follow-ups</span>
                             {% endif %}
                         </div>
                     </td>
                     <td style="vertical-align: middle; white-space: nowrap;"><strong>{{ item.name }}</strong></td>
                     <td style="vertical-align: middle;">
                         <div style="display: flex; align-items: center; gap: 6px; white-space: nowrap;">
-                            <span style="display: inline-flex; align-items: center; color: #D946EF; font-size: 1rem; line-height: 1;">📞</span>
+                            <span style="display: inline-flex; align-items: center; color: #F47F23; font-size: 1rem; line-height: 1;">📞</span>
                             <span style="font-weight: 500; font-size: 0.82rem;">{{ item.phone }}</span>
                         </div>
                         {% if item.email %}

@@ -13,7 +13,7 @@
         </div>
         <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
             <a href="{% url 'dashboard:add_certificate' %}" class="btn btn-outline btn-sm">+ Issue Certificate</a>
-            <a href="{% url 'dashboard:manage_offers' %}" class="btn btn-outline btn-sm" style="border-color: #38BDF8; color: #38BDF8;">🏷️ Offers</a>
+            <a href="{% url 'dashboard:manage_offers' %}" class="btn btn-outline btn-sm" style="border-color: #2F9BD4; color: #2F9BD4;">🏷️ Offers</a>
             <a href="{% url 'dashboard:edit_about' %}" class="btn btn-outline btn-sm">About Update</a>
             <a href="{% url 'dashboard:edit_contact' %}" class="btn btn-outline btn-sm">Contact Update</a>
             <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle dark/light theme" title="Switch Theme">
@@ -37,23 +37,23 @@
             <a href="{% url 'dashboard:manage_courses' %}" style="display: inline-block; margin-top: 1rem; font-size: 0.85rem; font-weight: 600;">Manage Courses &rarr;</a>
         </div>
 
-        <div class="card" style="border-left: 4px solid var(--success);">
+        <div class="card" style="border-left: 4px solid var(--secondary);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <span style="color: var(--gray-500); font-size: 0.9rem; text-transform: uppercase; font-weight: 600;">Issued Certificates</span>
-                    <h2 style="font-size: 2.5rem; color: var(--success); margin-top: 0.25rem;">{{ total_certificates }}</h2>
+                    <h2 style="font-size: 2.5rem; color: var(--secondary); margin-top: 0.25rem;">{{ total_certificates }}</h2>
                 </div>
                 <div style="font-size: 2.5rem; opacity: 0.8;">📜</div>
             </div>
-            <a href="{% url 'dashboard:manage_certificates' %}" style="display: inline-block; margin-top: 1rem; font-size: 0.85rem; font-weight: 600; color: var(--success);">Manage Certificates &rarr;</a>
+            <a href="{% url 'dashboard:manage_certificates' %}" style="display: inline-block; margin-top: 1rem; font-size: 0.85rem; font-weight: 600; color: var(--secondary);">Manage Certificates &rarr;</a>
         </div>
 
-        <div class="card" style="border-left: 4px solid #38BDF8; background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), transparent);">
+        <div class="card" style="border-left: 4px solid #2F9BD4; background: linear-gradient(135deg, rgba(47, 155, 212, 0.08), transparent);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <span style="color: var(--gray-500); font-size: 0.9rem; text-transform: uppercase; font-weight: 600;">Customer Inquiries</span>
                     <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
-                        <h2 style="font-size: 2.5rem; color: #38BDF8; margin: 0;">{{ total_inquiries }}</h2>
+                        <h2 style="font-size: 2.5rem; color: #2F9BD4; margin: 0;">{{ total_inquiries }}</h2>
                         {% if unread_inquiries_count > 0 %}
                             <span class="badge badge-danger" style="font-size: 0.8rem;">{{ unread_inquiries_count }} NEW</span>
                         {% endif %}
@@ -61,7 +61,7 @@
                 </div>
                 <div style="font-size: 2.5rem; opacity: 0.8;">📥</div>
             </div>
-            <a href="{% url 'dashboard:manage_inquiries' %}" style="display: inline-block; margin-top: 1rem; font-size: 0.85rem; font-weight: 600; color: #38BDF8;">View All Messages &rarr;</a>
+            <a href="{% url 'dashboard:manage_inquiries' %}" style="display: inline-block; margin-top: 1rem; font-size: 0.85rem; font-weight: 600; color: #2F9BD4;">View All Messages &rarr;</a>
         </div>
 
     </div>
@@ -96,7 +96,7 @@
                 </thead>
                 <tbody>
                     {% for inquiry in recent_inquiries %}
-                    <tr style="{% if not inquiry.is_read %}background-color: rgba(56, 189, 248, 0.06); font-weight: 500;{% endif %}">
+                    <tr style="{% if not inquiry.is_read %}background-color: rgba(47, 155, 212, 0.06); font-weight: 500;{% endif %}">
                         <td style="vertical-align: middle; white-space: nowrap; padding-left: 0.85rem;">
                             {% if not inquiry.is_read %}
                                 <span class="badge badge-danger" style="white-space: nowrap; padding: 3px 7px; border-radius: 6px; font-size: 0.72rem; display: inline-block;">NEW</span>
@@ -107,7 +107,7 @@
                         <td style="vertical-align: middle; white-space: nowrap;"><strong>{{ inquiry.name }}</strong></td>
                         <td style="vertical-align: middle;">
                             <div style="display: flex; align-items: center; gap: 6px; white-space: nowrap;">
-                                <span style="display: inline-flex; align-items: center; color: #D946EF; font-size: 1rem; line-height: 1;">📞</span>
+                                <span style="display: inline-flex; align-items: center; color: #F47F23; font-size: 1rem; line-height: 1;">📞</span>
                                 <span style="font-weight: 500; font-size: 0.82rem;">{{ inquiry.phone }}</span>
                             </div>
                             {% if inquiry.email %}

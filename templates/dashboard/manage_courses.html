@@ -31,7 +31,7 @@
                     <td><span class="badge badge-primary">{{ course.duration }}</span></td>
                     <td style="vertical-align: middle;">
                         {% if course.is_featured %}
-                            <a href="{% url 'dashboard:toggle_course_featured' course.id %}" class="btn btn-sm" style="background: #FEF3C7; color: #D97706; border: 1px solid #FCD34D; font-weight: 600; padding: 4px 10px; text-decoration: none; border-radius: 6px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.3rem;" title="Click to remove from home featured list">
+                            <a href="{% url 'dashboard:toggle_course_featured' course.id %}" class="btn btn-sm" style="background: #FEF3C7; color: #F47F23; border: 1px solid #F47F23; font-weight: 600; padding: 4px 10px; text-decoration: none; border-radius: 6px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.3rem;" title="Click to remove from home featured list">
                                 ⭐ Featured
                             </a>
                         {% else %}
