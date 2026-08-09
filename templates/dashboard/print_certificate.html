@@ -33,7 +33,7 @@
         .print-toolbar h2 {
             margin: 0;
             font-size: 1.1rem;
-            color: #0f172a;
+            color: #211f1c;
         }
 
         .print-toolbar-btns {
@@ -51,7 +51,7 @@
 
         .certificate-card-printable {
             background: #ffffff;
-            border: 12px double #0f172a;
+            border: 12px double #211f1c;
             border-radius: 12px;
             padding: 3rem 2.5rem;
             box-shadow: 0 10px 25px rgba(0,0,0,0.08);
@@ -65,7 +65,7 @@
             position: absolute;
             width: 30px;
             height: 30px;
-            border: 3px solid var(--primary, #2563eb);
+            border: 3px solid var(--primary, #264696);
         }
 
         .cert-corner-tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
@@ -74,7 +74,7 @@
         .cert-corner-br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
 
         .cert-header {
-            border-bottom: 2px solid #2563eb;
+            border-bottom: 2px solid #264696;
             padding-bottom: 1.25rem;
             margin-bottom: 1.75rem;
         }
@@ -90,7 +90,7 @@
         .cert-org-title {
             font-size: 0.9rem;
             font-weight: 700;
-            color: #2563eb;
+            color: #264696;
             letter-spacing: 1.5px;
             text-transform: uppercase;
             margin-bottom: 0.25rem;
@@ -99,7 +99,7 @@
         .cert-main-heading {
             font-size: 2.2rem;
             font-weight: 800;
-            color: #0f172a;
+            color: #211f1c;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin: 0;
@@ -116,7 +116,7 @@
 
         .cert-student-name {
             font-size: 2.25rem;
-            color: #2563eb;
+            color: #264696;
             font-weight: 800;
             margin: 0.5rem 0 1rem;
             font-family: var(--font-heading, 'Outfit', sans-serif);
@@ -135,14 +135,14 @@
 
         .cert-course-name {
             font-size: 1.75rem;
-            color: #0f172a;
+            color: #211f1c;
             font-weight: 700;
             font-family: var(--font-heading, 'Outfit', sans-serif);
             margin-bottom: 0.5rem;
         }
 
         .cert-course-duration {
-            color: #2563eb;
+            color: #264696;
             font-weight: 600;
             font-size: 0.95rem;
             margin-bottom: 2rem;
@@ -206,7 +206,7 @@
 
         .cert-sig-line {
             width: 140px;
-            border-bottom: 2px solid #0f172a;
+            border-bottom: 2px solid #211f1c;
             margin-bottom: 0.35rem;
             height: 35px;
             display: flex;
@@ -220,7 +220,7 @@
         .cert-sig-title {
             font-size: 0.8rem;
             font-weight: 700;
-            color: #0f172a;
+            color: #211f1c;
         }
 
         .cert-sig-sub {
@@ -241,7 +241,7 @@
         }
 
         .cert-meta-bar strong {
-            color: #0f172a;
+            color: #211f1c;
         }
 
         /* Print Media Queries */
@@ -270,7 +270,7 @@
 
             .certificate-card-printable {
                 box-shadow: none !important;
-                border: 8px double #0f172a !important;
+                border: 8px double #211f1c !important;
                 margin: 1cm auto !important;
                 width: 92% !important;
                 page-break-inside: avoid !important;
@@ -385,14 +385,14 @@
 
             const grid = 21;
             const cell = size / grid;
-            ctx.fillStyle = '#0f172a';
+            ctx.fillStyle = '#211f1c';
 
             // Draw Finder Patterns (Corners)
             function drawFinder(x, y) {
                 ctx.fillRect(x*cell, y*cell, 7*cell, 7*cell);
                 ctx.fillStyle = '#ffffff';
                 ctx.fillRect((x+1)*cell, (y+1)*cell, 5*cell, 5*cell);
-                ctx.fillStyle = '#0f172a';
+                ctx.fillStyle = '#211f1c';
                 ctx.fillRect((x+2)*cell, (y+2)*cell, 3*cell, 3*cell);
             }
 

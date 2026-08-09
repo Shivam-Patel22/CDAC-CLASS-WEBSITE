@@ -5,24 +5,24 @@
    ========================================================================== */
 
 :root {
-    --auth-blue-600: #1e40af;
-    --auth-blue-500: #2563eb;
-    --auth-blue-400: #3b82f6;
+    --auth-blue-600: #264696;
+    --auth-blue-500: #2F9BD4;
+    --auth-blue-400: #2F9BD4;
     --auth-blue-100: #dbeafe;
     --auth-blue-50:  #eff6ff;
     
-    --auth-admin-indigo: #4f46e5;
-    --auth-admin-light:  #e0e7ff;
-    --auth-admin-accent: #6366f1;
+    --auth-admin-indigo: #F47F23;
+    --auth-admin-light:  #fce6d3;
+    --auth-admin-accent: #f69345;
     --auth-admin-badge:  #dc2626;
 
-    --auth-gray-900: #0f172a;
-    --auth-gray-800: #1e293b;
-    --auth-gray-700: #334155;
+    --auth-gray-900: #211f1c;
+    --auth-gray-800: #3a3b3e;
+    --auth-gray-700: #3a3b3e;
     --auth-gray-600: #475569;
     --auth-gray-500: #64748b;
     --auth-gray-400: #94a3b8;
-    --auth-gray-300: #cbd5e1;
+    --auth-gray-300: #cfc3bf;
     --auth-gray-200: #e2e8f0;
     --auth-gray-100: #f8fafc;
     --auth-white:    #ffffff;

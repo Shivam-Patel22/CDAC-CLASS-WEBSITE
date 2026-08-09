@@ -40,27 +40,19 @@
 
             <nav class="nav-menu" id="nav-menu">
                 <ul class="nav-links">
-                    <li class="header-verify-item">
-                        <form action="{% url 'certificates:verify' %}" method="post" class="header-verify-form">
-                            {% csrf_token %}
-                            <input type="text" name="certificate_id" placeholder="Enter Certificate ID" class="header-verify-input" required autocomplete="off">
-                            <button type="submit" class="btn btn-primary header-verify-btn">Verify</button>
-                        </form>
-                    </li>
                     <li><a href="{% url 'core:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a></li>
-                    <li><a href="{% url 'core:about' %}" class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a></li>
                     <li><a href="{% url 'courses:course_list' %}" class="nav-link {% if request.resolver_match.url_name == 'course_list' or request.resolver_match.url_name == 'course_detail' %}active{% endif %}">Courses</a></li>
-                    <li><a href="{% url 'core:contact' %}" class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a></li>
+                    <li><a href="{% url 'core:about' %}" class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">About Us</a></li>
+                    <li><a href="{% url 'certificates:verify' %}" class="nav-link">Verify Certificate</a></li>
                 </ul>
             </nav>
 
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div class="navbar-actions">
+                <a href="#" class="btn-nav-auth">Sign in</a>
+                <a href="{% url 'core:contact' %}" class="btn-nav-primary">Contact us</a>
                 <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle dark/light theme" title="Switch Theme">
                     <span class="theme-toggle-icon">🌙</span>
                 </button>
-                <div class="header-right-logo">
-                    <img src="{% static 'images/Citi logo .png' %}" alt="Citi" class="citi-header-logo-img">
-                </div>
             </div>
         </div>
     </header>
