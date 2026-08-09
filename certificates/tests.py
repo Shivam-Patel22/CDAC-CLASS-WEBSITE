@@ -303,6 +303,25 @@ class CertificatesTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse('dashboard:login'), response.url)
 
+    def test_download_certificates_zip_all_without_dates(self):
+        """Test downloading ALL certificates when no date filter parameters are provided."""
+        import zipfile
+        import io
+
+        self.client.login(username='certadmin', password='adminpassword123')
+        url = reverse('dashboard:download_certificates_zip')
+
+        response = self.client.get(url)  # No start_date or end_date GET parameters
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/zip')
+        self.assertIn('certificates_all.zip', response['Content-Disposition'])
+
+        zip_data = io.BytesIO(response.content)
+        with zipfile.ZipFile(zip_data, 'r') as zf:
+            namelist = zf.namelist()
+            self.assertGreaterEqual(len(namelist), 1)
+
+
 
 
 

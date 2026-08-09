@@ -20,11 +20,11 @@
         <form method="GET" action="{% url 'dashboard:manage_certificates' %}" style="display: flex; align-items: flex-end; gap: 1rem; flex-wrap: wrap;">
             <div style="display: flex; flex-direction: column; gap: 0.35rem;">
                 <label for="start_date" style="font-size: 0.85rem; font-weight: 600; color: var(--gray-700);">Starting Date</label>
-                <input type="date" id="start_date" name="start_date" value="{{ start_date }}" class="form-control" style="padding: 0.45rem 0.75rem; font-size: 0.88rem; border-radius: var(--radius-sm, 6px); border: 1px solid var(--gray-300, #cbd5e1); min-width: 160px;" required>
+                <input type="date" id="start_date" name="start_date" value="{{ start_date }}" class="form-control" style="padding: 0.45rem 0.75rem; font-size: 0.88rem; border-radius: var(--radius-sm, 6px); border: 1px solid var(--gray-300, #cbd5e1); min-width: 160px;">
             </div>
             <div style="display: flex; flex-direction: column; gap: 0.35rem;">
                 <label for="end_date" style="font-size: 0.85rem; font-weight: 600; color: var(--gray-700);">Ending Date</label>
-                <input type="date" id="end_date" name="end_date" value="{{ end_date }}" class="form-control" style="padding: 0.45rem 0.75rem; font-size: 0.88rem; border-radius: var(--radius-sm, 6px); border: 1px solid var(--gray-300, #cbd5e1); min-width: 160px;" required>
+                <input type="date" id="end_date" name="end_date" value="{{ end_date }}" class="form-control" style="padding: 0.45rem 0.75rem; font-size: 0.88rem; border-radius: var(--radius-sm, 6px); border: 1px solid var(--gray-300, #cbd5e1); min-width: 160px;">
             </div>
             <div style="display: flex; gap: 0.5rem; align-items: center;">
                 <button type="submit" class="btn btn-primary" style="padding: 0.48rem 1.25rem; font-size: 0.88rem;">🔍 Search / Filter</button>
@@ -100,16 +100,9 @@
             </span>
         </div>
         <div>
-            {% if start_date and end_date %}
-                <a href="{% url 'dashboard:download_certificates_zip' %}?start_date={{ start_date|urlencode }}&end_date={{ end_date|urlencode }}" class="btn btn-success" style="padding: 0.55rem 1.5rem; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;">
-                    📦 Download All
-                </a>
-            {% else %}
-                <button type="button" onclick="showNotificationModal('Please select a Starting Date and Ending Date using the date filter above to download certificates ZIP.', { title: 'Date Range Required', icon: '📅', hideCancel: true, confirmText: 'OK', confirmClass: 'btn btn-primary btn-sm' });" class="btn btn-success" style="padding: 0.55rem 1.5rem; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;">
-                    📦 Download All
-                </button>
-            {% endif %}
-
+            <button type="button" onclick="handleDownloadAllClick();" class="btn btn-success" style="padding: 0.55rem 1.5rem; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.4rem;">
+                📦 Download All
+            </button>
         </div>
     </div>
 
@@ -131,5 +124,47 @@
         {% endif %}
     {% endif %}
 </div>
+
+{% block extra_js %}
+<script>
+function handleDownloadAllClick() {
+    const sInput = document.getElementById('start_date');
+    const eInput = document.getElementById('end_date');
+    const startDate = sInput ? sInput.value.trim() : '';
+    const endDate = eInput ? eInput.value.trim() : '';
+
+    const downloadZipUrl = "{% url 'dashboard:download_certificates_zip' %}";
+
+    if (startDate && endDate) {
+        window.location.href = downloadZipUrl + '?start_date=' + encodeURIComponent(startDate) + '&end_date=' + encodeURIComponent(endDate);
+    } else if (!startDate && !endDate) {
+        showConfirmModal(
+            'Are you sure you want to download all certificates?',
+            function() {
+                window.location.href = downloadZipUrl;
+            },
+            {
+                title: 'Confirm Full Download',
+                icon: '⚠️',
+                confirmText: 'Download All',
+                confirmClass: 'btn btn-success btn-sm'
+            }
+        );
+    } else {
+        showNotificationModal(
+            'Please select both Starting Date and Ending Date, or clear both to download all certificates.',
+            {
+                title: 'Incomplete Date Range',
+                icon: '📅',
+                hideCancel: true,
+                confirmText: 'OK',
+                confirmClass: 'btn btn-primary btn-sm'
+            }
+        );
+    }
+}
+</script>
+{% endblock %}
+
 
 {% endblock %}

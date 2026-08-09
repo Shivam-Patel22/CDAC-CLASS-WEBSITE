@@ -233,37 +233,46 @@ def manage_certificates(request):
 @staff_required
 def download_certificates_zip(request):
     """
-    Downloads all certificates matching the specified date filter range as a ZIP archive.
+    Downloads certificates matching the specified date filter range as a ZIP archive.
+    If no start_date and end_date are provided, downloads ALL certificates in the database.
     Each PDF inside the ZIP is named: CertificateHolderName-CourseName.pdf (e.g. Shivampatel-Python.pdf).
     Duplicates append incremental counters (-2, -3).
-    ZIP file named: certificates_DD-MM-YYYY_to_DD-MM-YYYY.zip.
+    ZIP file named: certificates_DD-MM-YYYY_to_DD-MM-YYYY.zip or certificates_all.zip.
     """
     start_date_str = request.GET.get('start_date', '').strip()
     end_date_str = request.GET.get('end_date', '').strip()
 
-    if not start_date_str or not end_date_str:
-        messages.error(request, "Both starting date and ending date are required to download certificates.")
-        return redirect('dashboard:manage_certificates')
+    if not start_date_str and not end_date_str:
+        # No dates specified -> Download ALL certificates
+        certificates = Certificate.objects.select_related('course', 'student').all().order_by('issue_date', 'created_at')
+        zip_filename = "certificates_all.zip"
+    else:
+        if not start_date_str or not end_date_str:
+            messages.error(request, "Both starting date and ending date are required to filter certificates, or leave both empty to download all.")
+            return redirect('dashboard:manage_certificates')
 
-    start_date = parse_date_input(start_date_str)
-    end_date = parse_date_input(end_date_str)
+        start_date = parse_date_input(start_date_str)
+        end_date = parse_date_input(end_date_str)
 
-    if not start_date or not end_date:
-        messages.error(request, "Invalid date format. Please select valid starting and ending dates.")
-        return redirect(f"{reverse('dashboard:manage_certificates')}?start_date={urllib.parse.quote(start_date_str)}&end_date={urllib.parse.quote(end_date_str)}")
+        if not start_date or not end_date:
+            messages.error(request, "Invalid date format. Please select valid starting and ending dates.")
+            return redirect(f"{reverse('dashboard:manage_certificates')}?start_date={urllib.parse.quote(start_date_str)}&end_date={urllib.parse.quote(end_date_str)}")
 
-    if start_date > end_date:
-        messages.error(request, "Starting date cannot be later than ending date.")
-        return redirect(f"{reverse('dashboard:manage_certificates')}?start_date={urllib.parse.quote(start_date_str)}&end_date={urllib.parse.quote(end_date_str)}")
+        if start_date > end_date:
+            messages.error(request, "Starting date cannot be later than ending date.")
+            return redirect(f"{reverse('dashboard:manage_certificates')}?start_date={urllib.parse.quote(start_date_str)}&end_date={urllib.parse.quote(end_date_str)}")
 
-    certificates = Certificate.objects.select_related('course', 'student').filter(
-        issue_date__range=(start_date, end_date)
-    ).order_by('issue_date', 'created_at')
+        certificates = Certificate.objects.select_related('course', 'student').filter(
+            issue_date__range=(start_date, end_date)
+        ).order_by('issue_date', 'created_at')
 
+        start_fmt = start_date.strftime('%d-%m-%Y')
+        end_fmt = end_date.strftime('%d-%m-%Y')
+        zip_filename = f"certificates_{start_fmt}_to_{end_fmt}.zip"
 
     if not certificates.exists():
-        messages.error(request, "No certificates found for the selected date range.")
-        return redirect(f"{reverse('dashboard:manage_certificates')}?start_date={urllib.parse.quote(start_date_str)}&end_date={urllib.parse.quote(end_date_str)}")
+        messages.error(request, "No certificates found to download.")
+        return redirect('dashboard:manage_certificates')
 
     zip_buffer = io.BytesIO()
     dedup = FilenameDeduplicator()
@@ -281,13 +290,10 @@ def download_certificates_zip(request):
 
     zip_buffer.seek(0)
 
-    start_fmt = start_date.strftime('%d-%m-%Y')
-    end_fmt = end_date.strftime('%d-%m-%Y')
-    zip_filename = f"certificates_{start_fmt}_to_{end_fmt}.zip"
-
     response = HttpResponse(zip_buffer.getvalue(), content_type='application/zip')
     response['Content-Disposition'] = f'attachment; filename="{zip_filename}"'
     return response
+
 
 
 @staff_required
