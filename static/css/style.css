@@ -1146,6 +1146,14 @@ textarea.form-control {
     color: #f8fafc;
 }
 
+[data-theme="dark"] a {
+    color: #8ba5ec;
+}
+
+[data-theme="dark"] a:hover {
+    color: #a5bbf2;
+}
+
 [data-theme="dark"] .nav-logo,
 [data-theme="dark"] .page-title,
 [data-theme="dark"] .course-title,
