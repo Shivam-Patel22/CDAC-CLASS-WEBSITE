@@ -61,7 +61,7 @@
                 {% for cert in certificates %}
                 <tr>
                     <td style="white-space: nowrap; padding-left: 0.85rem;">
-                        <code style="background: var(--gray-100); padding: 0.25rem 0.45rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.82rem; color: var(--primary); white-space: nowrap; display: inline-block;">{{ cert.certificate_id }}</code>
+                        <code class="cert-id-code">{{ cert.certificate_id }}</code>
                     </td>
                     <td style="white-space: nowrap; font-size: 0.88rem;"><strong>{{ cert.student_name }}</strong></td>
                     <td style="white-space: nowrap; font-size: 0.82rem;">

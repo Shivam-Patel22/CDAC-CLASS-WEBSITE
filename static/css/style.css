@@ -628,6 +628,17 @@ textarea.form-control {
     background: var(--gray-50);
 }
 
+.cert-id-code {
+    background: var(--gray-100);
+    padding: 0.25rem 0.45rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.82rem;
+    color: var(--primary);
+    white-space: nowrap;
+    display: inline-block;
+}
+
 /* Badges */
 .badge {
     display: inline-block;
@@ -1211,6 +1222,10 @@ textarea.form-control {
     color: #e2e8f0;
     font-weight: 700;
     border-bottom-color: #4a4b4e;
+}
+
+[data-theme="dark"] .cert-id-code {
+    color: #8ba5ec;
 }
 
 [data-theme="dark"] .custom-table td {
