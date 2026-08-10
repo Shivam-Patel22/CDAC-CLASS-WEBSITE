@@ -33,18 +33,6 @@
                     {{ form.phone }}
                 </div>
 
-                <!-- Settings → WhatsApp Contact Settings -->
-                <div style="background: rgba(37, 211, 102, 0.06); border: 1px solid rgba(37, 211, 102, 0.3); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.25rem;">
-                    <h4 style="margin-top: 0; margin-bottom: 1rem; color: #166534; font-size: 1.05rem; display: flex; align-items: center; gap: 0.4rem;">
-                        💬 WhatsApp Contact Settings
-                    </h4>
-
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label style="font-weight: 600; color: var(--gray-800); margin-bottom: 0.35rem; display: block;">WhatsApp Number *</label>
-                        {{ form.whatsapp_number }}
-                        <small style="color: var(--gray-500); font-size: 0.8rem; display: block; margin-top: 0.25rem;">Enter with country code, e.g. <code>919876543210</code> (without + or spaces).</small>
-                    </div>
-                </div>
 
                 <div class="form-group" style="margin-bottom: 1.25rem;">
                     <label style="font-weight: 600; color: var(--gray-800); margin-bottom: 0.35rem; display: block;">Official Email Address *</label>
@@ -92,17 +80,6 @@
                     <div style="color: var(--primary); font-weight: 600; font-size: 0.9rem;">{{ contact_obj.phone }}</div>
                 </div>
 
-                <div style="margin-bottom: 0.75rem; background: var(--card-bg); padding: 0.85rem; border-radius: 8px; border: 1px solid rgba(37, 211, 102, 0.4);">
-                    <strong style="color: var(--gray-900); display: block; font-size: 0.95rem;">💬 WhatsApp Settings:</strong>
-                    <div style="color: #166534; font-weight: 600; font-size: 0.9rem; margin-top: 0.2rem;">
-                        Number: +{{ contact_obj.formatted_whatsapp_number }}
-                    </div>
-                    <div style="margin-top: 0.4rem;">
-                        <a href="{{ contact_obj.whatsapp_url }}" target="_blank" style="font-size: 0.8rem; color: #25D366; text-decoration: underline; font-weight: 600;">
-                            🔗 Test WhatsApp Link &rarr;
-                        </a>
-                    </div>
-                </div>
 
                 <div style="margin-bottom: 0.75rem;">
                     <strong style="color: var(--gray-900); display: block; font-size: 0.95rem;">📧 Email:</strong>

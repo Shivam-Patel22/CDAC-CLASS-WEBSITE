@@ -220,19 +220,12 @@ class AdminAboutForm(forms.ModelForm):
 class AdminContactForm(forms.ModelForm):
     class Meta:
         model = ContactContent
-        fields = ['phone', 'whatsapp_number', 'email', 'address', 'working_hours', 'map_embed_url']
+        fields = ['phone', 'email', 'address', 'working_hours', 'map_embed_url']
         widgets = {
             'phone': forms.TextInput(attrs={'class': 'form-control', 'required': 'required'}),
-            'whatsapp_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. 919876543210', 'required': 'required'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'required': 'required'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'required': 'required'}),
             'working_hours': forms.TextInput(attrs={'class': 'form-control'}),
             'map_embed_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Google Maps Embed URL'}),
         }
 
-    def clean_whatsapp_number(self):
-        val = self.cleaned_data.get('whatsapp_number', '').strip()
-        digits = ''.join(c for c in val if c.isdigit())
-        if not digits:
-            raise forms.ValidationError("Please enter a valid WhatsApp number with country code (e.g. 919876543210).")
-        return digits
