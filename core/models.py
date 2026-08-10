@@ -24,6 +24,15 @@ class Inquiry(models.Model):
         return self.followups.count()
 
     @property
+    def whatsapp_url(self):
+        if not self.phone:
+            return None
+        digits = ''.join(c for c in str(self.phone) if c.isdigit())
+        if not digits:
+            return None
+        return f"https://wa.me/{digits}"
+
+    @property
     def latest_followup(self):
         return self.followups.first()
 
