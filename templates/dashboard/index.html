@@ -88,7 +88,7 @@
                         <th style="white-space: nowrap; padding-left: 0.85rem; min-width: 75px;">Status</th>
                         <th style="white-space: nowrap; min-width: 135px;">Name</th>
                         <th style="white-space: nowrap; min-width: 175px;">PHONE / EMAIL</th>
-                        <th style="min-width: 160px;">Course / Subject</th>
+                        <th style="min-width: 170px;">Course / Subject</th>
                         <th style="min-width: 180px;">Message</th>
                         <th style="white-space: nowrap; min-width: 140px;">Submitted At</th>
                         <th style="white-space: nowrap; text-align: right; padding-right: 0.85rem; min-width: 105px;">Actions</th>
@@ -117,11 +117,11 @@
                                 </div>
                             {% endif %}
                         </td>
-                        <td style="vertical-align: middle; max-width: 170px;">
+                        <td style="vertical-align: middle; min-width: 170px; max-width: 240px;">
                             {% if inquiry.course %}
-                                <span class="badge badge-primary" style="display: inline-block; border-radius: 6px; padding: 3px 7px; font-weight: 500; font-size: 0.78rem; line-height: 1.3; word-break: break-word; text-align: left; max-width: 160px; white-space: normal;">{{ inquiry.course.name }}</span>
+                                <span class="badge badge-primary" style="display: inline-block; border-radius: 6px; padding: 3px 7px; font-weight: 500; font-size: 0.78rem; line-height: 1.3; word-break: normal; overflow-wrap: break-word; text-align: left; max-width: 230px; white-space: normal;">{{ inquiry.course.name }}</span>
                             {% else %}
-                                <span class="badge badge-secondary" style="display: inline-block; border-radius: 6px; padding: 3px 7px; font-weight: 500; font-size: 0.78rem; line-height: 1.3; word-break: break-word; text-align: left; max-width: 160px; white-space: normal;">{{ inquiry.subject }}</span>
+                                <span class="badge badge-secondary" style="display: inline-block; border-radius: 6px; padding: 3px 7px; font-weight: 500; font-size: 0.78rem; line-height: 1.3; word-break: normal; overflow-wrap: break-word; text-align: left; max-width: 230px; white-space: normal;">{{ inquiry.subject }}</span>
                             {% endif %}
                         </td>
                         <td style="vertical-align: middle;">

@@ -32,7 +32,7 @@
                     <th style="white-space: nowrap; padding-left: 0.85rem;">Status</th>
                     <th style="white-space: nowrap;">Customer Name</th>
                     <th style="white-space: nowrap;">PHONE / EMAIL</th>
-                    <th>Subject / Course</th>
+                    <th style="white-space: nowrap; min-width: 170px;">Subject / Course</th>
                     <th>Message</th>
                     <th style="white-space: nowrap;">Date & Time</th>
                     <th style="white-space: nowrap; text-align: right; padding-right: 0.85rem;">Actions</th>
@@ -77,11 +77,11 @@
                             </div>
                         {% endif %}
                     </td>
-                    <td style="vertical-align: middle; max-width: 170px;">
+                    <td style="vertical-align: middle; min-width: 170px; max-width: 240px;">
                         {% if item.course %}
-                            <span class="badge badge-primary" style="display: inline-block; border-radius: 6px; padding: 4px 8px; font-weight: 500; font-size: 0.78rem; line-height: 1.35; word-break: break-word; text-align: left; max-width: 160px; white-space: normal;">{{ item.course.name }}</span>
+                            <span class="badge badge-primary" style="display: inline-block; border-radius: 6px; padding: 4px 8px; font-weight: 500; font-size: 0.78rem; line-height: 1.35; word-break: normal; overflow-wrap: break-word; text-align: left; max-width: 230px; white-space: normal;">{{ item.course.name }}</span>
                         {% else %}
-                            <span class="badge badge-secondary" style="display: inline-block; border-radius: 6px; padding: 4px 8px; font-weight: 500; font-size: 0.78rem; line-height: 1.35; word-break: break-word; text-align: left; max-width: 160px; white-space: normal;">{{ item.subject }}</span>
+                            <span class="badge badge-secondary" style="display: inline-block; border-radius: 6px; padding: 4px 8px; font-weight: 500; font-size: 0.78rem; line-height: 1.35; word-break: normal; overflow-wrap: break-word; text-align: left; max-width: 230px; white-space: normal;">{{ item.subject }}</span>
                         {% endif %}
                     </td>
                     <td style="vertical-align: middle;">
