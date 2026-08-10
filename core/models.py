@@ -110,9 +110,9 @@ class ContactContent(models.Model):
 
     @property
     def formatted_whatsapp_number(self):
-        if not self.whatsapp_number:
+        if not self.phone:
             return "919876543210"
-        digits = ''.join(c for c in str(self.whatsapp_number) if c.isdigit())
+        digits = ''.join(c for c in str(self.phone) if c.isdigit())
         return digits or "919876543210"
 
     @property
