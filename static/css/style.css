@@ -1153,11 +1153,11 @@ textarea.form-control {
     color: #f8fafc;
 }
 
-[data-theme="dark"] a {
+[data-theme="dark"] a:not(.btn) {
     color: #8ba5ec;
 }
 
-[data-theme="dark"] a:hover {
+[data-theme="dark"] a:not(.btn):hover {
     color: #a5bbf2;
 }
 
