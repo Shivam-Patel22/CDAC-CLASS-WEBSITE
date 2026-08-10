@@ -1164,12 +1164,12 @@ textarea.form-control {
     color: #f8fafc;
 }
 
-[data-theme="dark"] a:not(.btn) {
+[data-theme="dark"] a:not(.btn):not(.nav-link) {
     color: #8ba5ec;
 }
 
-[data-theme="dark"] a:not(.btn):hover {
-    color: #a5bbf2;
+[data-theme="dark"] a:not(.btn):not(.nav-link):hover {
+    color: #a4baf3;
 }
 
 [data-theme="dark"] .nav-logo,
