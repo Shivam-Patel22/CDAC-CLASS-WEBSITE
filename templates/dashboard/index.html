@@ -26,7 +26,7 @@
 
     <!-- Quick Stats Grid -->
     <div class="grid grid-3" style="margin-bottom: 2.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
-        <div class="card" style="border-left: 4px solid var(--primary); background: linear-gradient(135deg, rgba(38, 70, 150, 0.08), transparent);">
+        <div class="card" style="border-left: 4px solid var(--primary); background: var(--gradient-primary);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <span style="color: var(--gray-500); font-size: 0.9rem; text-transform: uppercase; font-weight: 600;">Total Courses</span>
@@ -37,7 +37,7 @@
             <a href="{% url 'dashboard:manage_courses' %}" style="display: inline-block; margin-top: 1rem; font-size: 0.85rem; font-weight: 600;">Manage Courses &rarr;</a>
         </div>
 
-        <div class="card" style="border-left: 4px solid var(--secondary); background: linear-gradient(135deg, rgba(244, 127, 35, 0.08), transparent);">
+        <div class="card" style="border-left: 4px solid var(--secondary); background: var(--gradient-secondary);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <span style="color: var(--gray-500); font-size: 0.9rem; text-transform: uppercase; font-weight: 600;">Issued Certificates</span>
@@ -48,7 +48,7 @@
             <a href="{% url 'dashboard:manage_certificates' %}" style="display: inline-block; margin-top: 1rem; font-size: 0.85rem; font-weight: 600; color: var(--secondary);">Manage Certificates &rarr;</a>
         </div>
 
-        <div class="card" style="border-left: 4px solid #2F9BD4; background: linear-gradient(135deg, rgba(47, 155, 212, 0.08), transparent);">
+        <div class="card" style="border-left: 4px solid var(--accent); background: var(--gradient-accent);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <span style="color: var(--gray-500); font-size: 0.9rem; text-transform: uppercase; font-weight: 600;">Customer Inquiries</span>

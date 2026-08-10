@@ -33,7 +33,10 @@
     --warning-bg: rgba(244, 127, 35, 0.1);
     --info: #264696; /* Primary Blue */
     --info-bg: rgba(38, 70, 150, 0.1);
-
+    
+    --gradient-primary: linear-gradient(135deg, rgba(38, 70, 150, 0.08), transparent);
+    --gradient-secondary: linear-gradient(135deg, rgba(244, 127, 35, 0.08), transparent);
+    --gradient-accent: linear-gradient(135deg, rgba(47, 155, 212, 0.08), transparent);
     --font-heading: 'Outfit', -apple-system, sans-serif;
     --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
     --radius-sm: 6px;
@@ -1135,6 +1138,10 @@ textarea.form-control {
     --gray-900: #ffffff;
     --dark-surface: #211F1C;
     --primary-light: rgba(38, 70, 150, 0.3);
+    
+    --gradient-primary: linear-gradient(135deg, rgba(38, 70, 150, 0.25), transparent);
+    --gradient-secondary: linear-gradient(135deg, rgba(244, 127, 35, 0.25), transparent);
+    --gradient-accent: linear-gradient(135deg, rgba(47, 155, 212, 0.25), transparent);
 
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
