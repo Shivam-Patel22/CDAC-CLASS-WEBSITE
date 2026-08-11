@@ -48,7 +48,10 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(f"[OK] Staff Instructor: '{instructor_user.username}' (Password: staffpassword123)"))
 
         # 2. Seed Courses
-        courses_data = [
+        from django.core.management import call_command
+        call_command('sync_courses')
+        created_courses = list(Course.objects.all())
+
             {
                 'name': 'Python Web Development (Django & FastAPI)',
                 'description': 'Master backend web development using Python, Django, REST APIs, and PostgreSQL. Build scalable real-world applications with modern deployment patterns.',

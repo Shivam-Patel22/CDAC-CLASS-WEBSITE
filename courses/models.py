@@ -3,7 +3,23 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 class Course(models.Model):
+    CATEGORY_CHOICES = [
+        ('basic', 'Basic'),
+        ('accounting', 'Accounting'),
+        ('programming', 'Programming'),
+        ('diploma-6-months', 'Diploma (6 Months)'),
+        ('advance-diploma-12-months', 'Advance Diploma (12 Months)'),
+        ('frontend-full-stack-development', 'Frontend / Full Stack Development'),
+        ('modular-courses', 'Modular Courses'),
+    ]
+
     name = models.CharField(max_length=200)
+    category = models.CharField(
+        max_length=100,
+        choices=CATEGORY_CHOICES,
+        default='basic',
+        help_text="Select the main Course Category"
+    )
     description = models.TextField()
     duration = models.CharField(max_length=50)
     fee = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
@@ -12,7 +28,8 @@ class Course(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.get_category_display()})"
+
 
 
 class CourseOffer(models.Model):
