@@ -223,12 +223,22 @@ class AdminAboutForm(forms.ModelForm):
 class AdminContactForm(forms.ModelForm):
     class Meta:
         model = ContactContent
-        fields = ['phone', 'email', 'address', 'working_hours', 'map_embed_url']
+        fields = ['phone', 'whatsapp_number', 'email', 'address', 'working_hours', 'map_embed_url']
         widgets = {
-            'phone': forms.TextInput(attrs={'class': 'form-control', 'required': 'required'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. +91 98765 43210', 'required': 'required'}),
+            'whatsapp_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. +91 91049 94493'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'required': 'required'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'required': 'required'}),
             'working_hours': forms.TextInput(attrs={'class': 'form-control'}),
             'map_embed_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Google Maps Embed URL'}),
         }
+        labels = {
+            'phone': 'Contact Phone Number *',
+            'whatsapp_number': 'WhatsApp Contact Number',
+            'email': 'Official Email Address *',
+            'address': 'Campus Office Address *',
+            'working_hours': 'Working / Office Hours',
+            'map_embed_url': 'Google Maps Embed URL',
+        }
+
 

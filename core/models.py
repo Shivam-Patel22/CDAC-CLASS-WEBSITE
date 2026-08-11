@@ -110,10 +110,13 @@ class ContactContent(models.Model):
 
     @property
     def formatted_whatsapp_number(self):
-        if not self.phone:
-            return "919876543210"
-        digits = ''.join(c for c in str(self.phone) if c.isdigit())
-        return digits or "919876543210"
+        target = self.whatsapp_number or self.phone
+        if target:
+            digits = ''.join(c for c in str(target) if c.isdigit())
+            if digits:
+                return digits
+        return "919876543210"
+
 
     @property
     def whatsapp_url(self):
