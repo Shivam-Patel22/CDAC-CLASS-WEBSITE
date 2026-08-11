@@ -3,9 +3,11 @@ from .models import Course, CourseOffer
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ('name', 'duration', 'fee', 'created_at')
+    list_display = ('name', 'category', 'duration', 'fee', 'is_featured', 'created_at')
     search_fields = ('name', 'description')
-    list_filter = ('created_at',)
+    list_filter = ('category', 'is_featured', 'created_at')
+    list_editable = ('category', 'is_featured')
+
 
 @admin.register(CourseOffer)
 class CourseOfferAdmin(admin.ModelAdmin):

@@ -18,6 +18,7 @@
             <thead>
                 <tr>
                     <th>Course Name</th>
+                    <th>Category</th>
                     <th>Duration</th>
                     <th>Home Featured</th>
                     <th>Created At</th>
@@ -28,7 +29,9 @@
                 {% for course in courses %}
                 <tr>
                     <td><strong>{{ course.name }}</strong></td>
+                    <td><span class="badge" style="background: var(--primary-light); color: var(--primary); font-weight: 600;">{{ course.get_category_display }}</span></td>
                     <td><span class="badge badge-primary">{{ course.duration }}</span></td>
+
                     <td style="vertical-align: middle;">
                         {% if course.is_featured %}
                             <a href="{% url 'dashboard:toggle_course_featured' course.id %}" class="btn btn-sm" style="background: #FEF3C7; color: #F47F23; border: 1px solid #F47F23; font-weight: 600; padding: 4px 10px; text-decoration: none; border-radius: 6px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.3rem;" title="Click to remove from home featured list">

@@ -10,6 +10,7 @@ class Command(BaseCommand):
         COURSES_DATA = [
             # CATEGORY 1: BASIC
             {
+                "cat_id": "basic",
                 "category": "Basic",
                 "duration": "Basic Skills",
                 "sub_courses": [
@@ -25,6 +26,7 @@ class Command(BaseCommand):
             },
             # CATEGORY 2: ACCOUNTING
             {
+                "cat_id": "accounting",
                 "category": "Accounting",
                 "duration": "Specialized",
                 "sub_courses": [
@@ -35,6 +37,7 @@ class Command(BaseCommand):
             },
             # CATEGORY 3: PROGRAMMING
             {
+                "cat_id": "programming",
                 "category": "Programming",
                 "duration": "Modular Tracks",
                 "sub_courses": [
@@ -56,6 +59,7 @@ class Command(BaseCommand):
             },
             # CATEGORY 4: DIPLOMA (6 MONTHS)
             {
+                "cat_id": "diploma-6-months",
                 "category": "Diploma (6 Months)",
                 "duration": "6 Months",
                 "sub_courses": [
@@ -83,6 +87,7 @@ class Command(BaseCommand):
             },
             # CATEGORY 5: ADVANCE DIPLOMA (12 MONTHS)
             {
+                "cat_id": "advance-diploma-12-months",
                 "category": "Advance Diploma (12 Months)",
                 "duration": "12 Months",
                 "sub_courses": [
@@ -107,6 +112,7 @@ class Command(BaseCommand):
             },
             # CATEGORY 6: FRONTEND / FULL STACK DEVELOPMENT
             {
+                "cat_id": "frontend-full-stack-development",
                 "category": "Frontend / Full Stack Development",
                 "duration": "Career Track",
                 "sub_courses": [
@@ -122,6 +128,7 @@ class Command(BaseCommand):
             },
             # CATEGORY 7: MODULAR COURSES
             {
+                "cat_id": "modular-courses",
                 "category": "Modular Courses",
                 "duration": "Flexible",
                 "sub_courses": [
@@ -145,30 +152,16 @@ class Command(BaseCommand):
         total_updated = 0
 
         for cat_data in COURSES_DATA:
+            cat_id = cat_data["cat_id"]
             cat_name = cat_data["category"]
             duration = cat_data["duration"]
-
-            # Also create/update main category entry in Course model
-            cat_obj, created = Course.objects.get_or_create(
-                name=cat_name,
-                defaults={
-                    "description": f"Main course category for {cat_name}.",
-                    "duration": duration,
-                    "is_featured": True
-                }
-            )
-            if created:
-                total_created += 1
-            else:
-                cat_obj.duration = duration
-                cat_obj.save()
-                total_updated += 1
 
             # Create/update sub-courses in Course model
             for sub_title, sub_desc in cat_data["sub_courses"]:
                 sub_obj, sub_created = Course.objects.get_or_create(
                     name=sub_title,
                     defaults={
+                        "category": cat_id,
                         "description": sub_desc,
                         "duration": duration,
                         "is_featured": False
@@ -177,6 +170,7 @@ class Command(BaseCommand):
                 if sub_created:
                     total_created += 1
                 else:
+                    sub_obj.category = cat_id
                     sub_obj.description = sub_desc
                     sub_obj.duration = duration
                     sub_obj.save()
