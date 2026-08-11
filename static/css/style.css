@@ -2027,4 +2027,217 @@ textarea.form-control {
     color: var(--secondary);
 }
 
+/* Course Detail Modal Popup */
+.course-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 1.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+.course-modal-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.course-modal-container {
+    background: var(--card-bg);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    max-width: 680px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transform: scale(0.95);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.course-modal-backdrop.active .course-modal-container {
+    transform: scale(1);
+}
+
+.course-modal-header {
+    padding: 1.5rem 1.75rem;
+    border-bottom: 1px solid var(--gray-100);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    position: sticky;
+    top: 0;
+    background: var(--card-bg);
+    z-index: 2;
+}
+
+.course-modal-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.course-modal-close {
+    background: var(--gray-100);
+    border: none;
+    font-size: 1.2rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--gray-600);
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.course-modal-close:hover {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.course-modal-body {
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.course-modal-highlights {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+@media (max-width: 640px) {
+    .course-modal-highlights {
+        grid-template-columns: 1fr;
+    }
+}
+
+.highlight-box {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.highlight-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.highlight-value {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.modal-section-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 0.5rem;
+}
+
+.modal-topics-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.modal-topic-chip {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-full);
+}
+
+.course-modal-footer {
+    padding: 1.25rem 1.75rem;
+    border-top: 1px solid var(--gray-100);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    background: var(--gray-50);
+    border-bottom-left-radius: var(--radius-lg);
+    border-bottom-right-radius: var(--radius-lg);
+    position: sticky;
+    bottom: 0;
+}
+
+/* Dark theme overrides for course modal */
+[data-theme="dark"] .course-modal-container {
+    background: var(--dark-surface, #212529);
+    border-color: var(--gray-700);
+}
+
+[data-theme="dark"] .course-modal-header {
+    background: var(--dark-surface, #212529);
+    border-color: var(--gray-700);
+}
+
+[data-theme="dark"] .course-modal-close {
+    background: var(--gray-700);
+    color: var(--gray-200);
+}
+
+[data-theme="dark"] .course-modal-close:hover {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+[data-theme="dark"] .highlight-box {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--gray-700);
+}
+
+[data-theme="dark"] .highlight-label {
+    color: var(--gray-400);
+}
+
+[data-theme="dark"] .highlight-value {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .modal-section-title {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .modal-topic-chip {
+    background: rgba(38, 70, 150, 0.3);
+    color: #93c5fd;
+}
+
+[data-theme="dark"] .course-modal-footer {
+    background: rgba(0, 0, 0, 0.2);
+    border-color: var(--gray-700);
+}
+
+
 

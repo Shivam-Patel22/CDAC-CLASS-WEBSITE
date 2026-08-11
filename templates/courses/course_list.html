@@ -52,6 +52,61 @@
     </div>
 </div>
 
+<!-- Course Details Modal Popup -->
+<div class="course-modal-backdrop" id="course-detail-modal" aria-hidden="true" role="dialog">
+    <div class="course-modal-container">
+        <div class="course-modal-header">
+            <div class="course-modal-title-group">
+                <span class="subcourse-badge" id="modal-category-badge">Category</span>
+                <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--gray-900);" id="modal-course-title">Course Title</h2>
+            </div>
+            <button type="button" class="course-modal-close" onclick="closeCourseDetailModal()" aria-label="Close modal">&times;</button>
+        </div>
+        <div class="course-modal-body">
+            <!-- Key Info Highlights Grid -->
+            <div class="course-modal-highlights">
+                <div class="highlight-box">
+                    <span class="highlight-label">⏱️ Duration / Track</span>
+                    <span class="highlight-value" id="modal-duration">Flexible</span>
+                </div>
+                <div class="highlight-box">
+                    <span class="highlight-label">🎓 Certification</span>
+                    <span class="highlight-value">C-DAC Certified</span>
+                </div>
+                <div class="highlight-box">
+                    <span class="highlight-label">💻 Training Mode</span>
+                    <span class="highlight-value">Hands-on Practical</span>
+                </div>
+            </div>
+
+            <!-- Course Overview & Description -->
+            <div>
+                <h3 class="modal-section-title">Course Overview</h3>
+                <p style="color: var(--gray-600); line-height: 1.6; font-size: 0.95rem;" id="modal-description">
+                    Detailed overview of course skills, practical labs, and certification.
+                </p>
+            </div>
+
+            <!-- Learning Outcomes & Topics -->
+            <div>
+                <h3 class="modal-section-title">Curriculum Highlights</h3>
+                <div class="modal-topics-list" id="modal-topics">
+                    <span class="modal-topic-chip">Practical Lab Work</span>
+                    <span class="modal-topic-chip">Industry Concepts</span>
+                    <span class="modal-topic-chip">Project Work</span>
+                    <span class="modal-topic-chip">Certification Exam</span>
+                </div>
+            </div>
+        </div>
+        <div class="course-modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="closeCourseDetailModal()" style="background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-300); padding: 0.6rem 1.25rem; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer;">Close</button>
+            <a href="{% url 'core:contact' %}" id="modal-inquiry-btn" class="btn btn-primary" style="padding: 0.65rem 1.4rem; font-weight: 600; text-decoration: none;">
+                Inquire Now / Apply &rarr;
+            </a>
+        </div>
+    </div>
+</div>
+
 <script>
 // Data-Driven Course Hierarchy (Exact Course Data)
 const COURSES_DATA = [
@@ -62,14 +117,14 @@ const COURSES_DATA = [
         description: "Essential computer fundamentals, office productivity software, data entry, desktop publishing, and CAD basics.",
         duration: "Basic Skills",
         subCourses: [
-            { name: "CCC", description: "Course on Computer Concepts certified foundation module." },
-            { name: "MS Office", description: "Microsoft Word, Excel, PowerPoint, and Outlook essentials." },
-            { name: "Adv. Excel", description: "Advanced functions, pivot tables, data visualization, and formulas." },
-            { name: "Adv. MSOffice", description: "Advanced office productivity suite, macros, and document automation." },
-            { name: "DEO", description: "Data Entry Operator skill training & typing accuracy." },
-            { name: "CPT", description: "Computer Proficiency Test preparation and core practicals." },
-            { name: "DTP", description: "Desktop Publishing fundamentals for layout, typesetting, and print." },
-            { name: "CAD", description: "Computer-Aided Design fundamentals for technical drawings." }
+            { name: "CCC", description: "Course on Computer Concepts certified foundation module covering computer hardware, operating systems, word processing, spreadsheets, internet concepts, and digital financial services." },
+            { name: "MS Office", description: "Microsoft Word, Excel, PowerPoint, and Outlook essentials for desktop productivity and document creation." },
+            { name: "Adv. Excel", description: "Advanced functions, VLOOKUP/XLOOKUP, pivot tables, dynamic charts, data validation, and formulas." },
+            { name: "Adv. MSOffice", description: "Advanced office productivity suite, document automation, advanced formatting, and macros." },
+            { name: "DEO", description: "Data Entry Operator skill training focusing on high-speed accurate touch typing, data processing, and verification." },
+            { name: "CPT", description: "Computer Proficiency Test preparation and core practicals for government & corporate exams." },
+            { name: "DTP", description: "Desktop Publishing fundamentals for page layout, typography, vector design, and print prepress." },
+            { name: "CAD", description: "Computer-Aided Design fundamentals for technical drawings and drafting concepts." }
         ]
     },
     {
@@ -79,9 +134,9 @@ const COURSES_DATA = [
         description: "Professional computerized financial accounting, Tally Prime modules, GST compliance, and inventory management.",
         duration: "Specialized",
         subCourses: [
-            { name: "Tally Prime Basic", description: "Fundamental accounting principles, vouchers, ledger, and inventory in Tally." },
-            { name: "Tally Prime Specialist", description: "Intermediate Tally Prime with GST taxation, payroll, and banking features." },
-            { name: "Tally Prime Xpert", description: "Advanced Tally Prime master module including MIS reporting and audit features." }
+            { name: "Tally Prime Basic", description: "Fundamental accounting principles, journal vouchers, ledger management, trial balance, and basic inventory in Tally Prime." },
+            { name: "Tally Prime Specialist", description: "Intermediate Tally Prime with GST taxation, TDS/TCS configuration, payroll accounting, and banking reconciliation." },
+            { name: "Tally Prime Xpert", description: "Advanced Tally Prime master module including MIS reporting, financial auditing features, cost centers, and multi-currency transactions." }
         ]
     },
     {
@@ -91,20 +146,20 @@ const COURSES_DATA = [
         description: "Core and object-oriented programming languages, web scripting, backend technology, and database management.",
         duration: "Modular Tracks",
         subCourses: [
-            { name: "C", description: "Procedural programming logic, memory structures, and algorithms." },
-            { name: "C++", description: "Object-oriented concepts, STL containers, and low-level development." },
-            { name: "C#", description: "Object-oriented C# development for desktop and enterprise apps." },
-            { name: "Python", description: "Python scripting, data structures, functional code, and backend concepts." },
-            { name: "JAVA", description: "Core Java OOPs, multithreading, collections framework, and JVM memory." },
-            { name: "PHP", description: "Server-side web scripting, dynamic database integration, and backend." },
-            { name: ".NET", description: "Microsoft .NET application architecture and enterprise services." },
-            { name: "HTML", description: "HTML5 semantic markup, page architecture, and web standards." },
-            { name: "CSS", description: "CSS3 styling, Flexbox, Grid, animations, and responsive layout design." },
-            { name: "JavaScript", description: "Modern ES6+ JavaScript syntax, asynchronous JS, and DOM API." },
-            { name: "React", description: "Frontend React library, functional components, hooks, and state management." },
-            { name: "React Native", description: "Cross-platform mobile application development for Android & iOS." },
-            { name: "Flutter", description: "Google Flutter framework and Dart programming for cross-platform apps." },
-            { name: "MySQL", description: "Relational SQL database queries, joins, indexes, and database design." }
+            { name: "C", description: "Procedural programming logic, memory control, pointers, data structures, arrays, and algorithms." },
+            { name: "C++", description: "Object-oriented programming concepts (OOPs), STL containers, memory management, and low-level development." },
+            { name: "C#", description: "Object-oriented C# development for Windows desktop applications and enterprise services." },
+            { name: "Python", description: "Python programming, object-oriented concepts, data structures, file handling, and scripting automation." },
+            { name: "JAVA", description: "Core Java OOPs, multithreading, exception handling, collections framework, and JVM architecture." },
+            { name: "PHP", description: "Server-side web scripting, dynamic database integration with MySQL, session management, and backend logic." },
+            { name: ".NET", description: "Microsoft .NET framework application architecture, C# integration, and enterprise software engineering." },
+            { name: "HTML", description: "HTML5 semantic markup, page architecture, web accessibility, and standard layout design." },
+            { name: "CSS", description: "CSS3 styling, Flexbox, Grid layouts, animations, transitions, and responsive web design." },
+            { name: "JavaScript", description: "Modern ES6+ JavaScript syntax, asynchronous JS, DOM API, fetch API, and interactive UI logic." },
+            { name: "React", description: "Frontend React library, functional components, hooks, JSX, state management, and SPA architecture." },
+            { name: "React Native", description: "Cross-platform mobile application development for Android & iOS using React & JavaScript." },
+            { name: "Flutter", description: "Google Flutter framework and Dart programming for cross-platform mobile and web applications." },
+            { name: "MySQL", description: "Relational SQL database queries, joins, indexes, database normalisation, stored procedures, and triggers." }
         ]
     },
     {
@@ -215,6 +270,15 @@ const searchResultsView = document.getElementById('search-results-view');
 const searchResultsGrid = document.getElementById('search-results-grid');
 const searchInput = document.getElementById('course-search-input');
 
+// Modal Elements
+const modalBackdrop = document.getElementById('course-detail-modal');
+const modalTitle = document.getElementById('modal-course-title');
+const modalBadge = document.getElementById('modal-category-badge');
+const modalDuration = document.getElementById('modal-duration');
+const modalDesc = document.getElementById('modal-description');
+const modalInquiryBtn = document.getElementById('modal-inquiry-btn');
+const modalTopicsContainer = document.getElementById('modal-topics');
+
 let currentActiveCategoryId = null;
 
 // Render Level 1 Main Course Categories
@@ -290,9 +354,9 @@ function openCategory(catId) {
                     <p class="subcourse-desc">${desc}</p>
                 </div>
                 <div class="subcourse-footer">
-                    <a href="${CONTACT_URL}" class="btn-subcourse-action">
-                        Inquire / Enroll <span>&rarr;</span>
-                    </a>
+                    <button type="button" class="btn-subcourse-action" style="background:none; border:none; cursor:pointer;" onclick="openCourseDetailModal('${escapeJsString(sub.name)}', '${escapeJsString(category.name)}', '${escapeJsString(category.duration)}', '${escapeJsString(desc)}')">
+                        View Details <span>&rarr;</span>
+                    </button>
                 </div>
             `;
             subcoursesGrid.appendChild(subCard);
@@ -303,7 +367,7 @@ function openCategory(catId) {
             <div style="grid-column: 1 / -1; background: var(--card-bg); border: 1px solid var(--gray-200); padding: 3rem; text-align: center; border-radius: var(--radius-lg);">
                 <h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.75rem;">${category.name}</h3>
                 <p style="color: var(--gray-600); margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">${category.description}</p>
-                <a href="${CONTACT_URL}" class="btn btn-primary">Enquire About ${category.name}</a>
+                <button type="button" class="btn btn-primary" onclick="openCourseDetailModal('${escapeJsString(category.name)}', '${escapeJsString(category.name)}', '${escapeJsString(category.duration)}', '${escapeJsString(category.description)}')">View Details &rarr;</button>
             </div>
         `;
     }
@@ -331,6 +395,50 @@ function showCategoriesView() {
     if (searchInput) searchInput.value = '';
 }
 
+// Helper to escape strings safely for inline onclick handlers
+function escapeJsString(str) {
+    if (!str) return '';
+    return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+// Open Course Details Modal
+function openCourseDetailModal(courseTitle, categoryName, duration, description) {
+    modalTitle.textContent = courseTitle;
+    modalBadge.textContent = categoryName;
+    modalDuration.textContent = duration || "Standard Track";
+    modalDesc.textContent = description || `Comprehensive training program for ${courseTitle} designed with practical assignments and official certification.`;
+
+    // Set Inquiry Button redirect with pre-selected course param
+    modalInquiryBtn.href = `${CONTACT_URL}?course=${encodeURIComponent(courseTitle)}`;
+
+    // Generate topic chips
+    modalTopicsContainer.innerHTML = '';
+    const topics = [
+        `Hands-on ${courseTitle} Practicals`,
+        `Core ${categoryName} Concepts`,
+        'Lab Exercises & Assignments',
+        'C-DAC Certification Preparation'
+    ];
+    topics.forEach(topic => {
+        const chip = document.createElement('span');
+        chip.className = 'modal-topic-chip';
+        chip.textContent = topic;
+        modalTopicsContainer.appendChild(chip);
+    });
+
+    // Show modal
+    modalBackdrop.classList.add('active');
+    modalBackdrop.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+}
+
+// Close Course Details Modal
+function closeCourseDetailModal() {
+    modalBackdrop.classList.remove('active');
+    modalBackdrop.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+}
+
 // Search Filter Logic
 function handleSearch(query) {
     const q = query.toLowerCase().trim();
@@ -354,7 +462,8 @@ function handleSearch(query) {
                 title: cat.name,
                 desc: cat.description,
                 icon: cat.icon,
-                catId: cat.id
+                catId: cat.id,
+                duration: cat.duration
             });
         }
 
@@ -368,7 +477,8 @@ function handleSearch(query) {
                         title: sub.name,
                         desc: sub.description || `Specialized ${sub.name} training under ${cat.name}.`,
                         icon: cat.icon,
-                        catId: cat.id
+                        catId: cat.id,
+                        duration: cat.duration
                     });
                 }
             });
@@ -408,8 +518,8 @@ function handleSearch(query) {
                         <p class="subcourse-desc">${res.desc}</p>
                     </div>
                     <div class="subcourse-footer">
-                        <button type="button" class="btn-subcourse-action" style="background:none; border:none; padding:0; cursor:pointer;" onclick="openCategory('${res.catId}')">
-                            View in ${res.categoryName} <span>&rarr;</span>
+                        <button type="button" class="btn-subcourse-action" style="background:none; border:none; cursor:pointer;" onclick="openCourseDetailModal('${escapeJsString(res.title)}', '${escapeJsString(res.categoryName)}', '${escapeJsString(res.duration)}', '${escapeJsString(res.desc)}')">
+                            View Details <span>&rarr;</span>
                         </button>
                     </div>
                 `;
@@ -457,6 +567,22 @@ document.addEventListener('DOMContentLoaded', () => {
             handleSearch(e.target.value);
         });
     }
+
+    // Modal backdrop click to close
+    if (modalBackdrop) {
+        modalBackdrop.addEventListener('click', (e) => {
+            if (e.target === modalBackdrop) {
+                closeCourseDetailModal();
+            }
+        });
+    }
+
+    // Keydown listener for ESC key to close modal
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modalBackdrop.classList.contains('active')) {
+            closeCourseDetailModal();
+        }
+    });
 });
 
 // Window Hash Change Event Listener
