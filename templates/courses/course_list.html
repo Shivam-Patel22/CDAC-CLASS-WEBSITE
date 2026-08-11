@@ -1,52 +1,475 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}All Courses | Centre for Development of Advanced Computing (C-DAC){% endblock %}
+{% block title %}Course Catalog & Training Programs | C-DAC{% endblock %}
 
 {% block content %}
 <div class="container">
-    <div class="page-header">
-        <h1 class="page-title">Computer & IT Courses</h1>
-        <p class="page-subtitle">Explore our professional training programs designed to advance your technical skills.</p>
+    <!-- Section Header -->
+    <div class="page-header" style="text-align: center; margin-bottom: 2rem;">
+        <h1 class="page-title">Explore Our Course Catalog</h1>
+        <p class="page-subtitle">Choose a domain category below to discover specialized diploma, degree, and certification tracks.</p>
     </div>
 
-    <!-- Search filter bar -->
-    <div style="max-width: 600px; margin: 0 auto 2.5rem;">
-        <input type="text" id="course-search-input" class="form-control" placeholder="🔍 Search courses by name or keyword..." style="font-size: 1rem; padding: 0.85rem 1.2rem; border-radius: var(--radius-full); box-shadow: var(--shadow-sm);">
+    <!-- Search & Filter Bar -->
+    <div style="max-width: 650px; margin: 0 auto 2.5rem; position: relative;">
+        <div style="position: relative; display: flex; align-items: center;">
+            <input type="text" id="course-search-input" class="form-control" placeholder="🔍 Search categories or sub-courses (e.g. Tally, Python, Diploma, Figma)..." style="font-size: 1rem; padding: 0.9rem 1.25rem 0.9rem 3rem; border-radius: var(--radius-full); box-shadow: var(--shadow-sm); width: 100%;">
+            <span style="position: absolute; left: 1.2rem; font-size: 1.2rem; pointer-events: none; opacity: 0.6;">🔍</span>
+        </div>
     </div>
 
-    {% if courses %}
-    <div class="grid grid-3" id="course-grid">
-        {% for course in courses %}
-        <div class="card card-hover course-card" data-course-name="{{ course.name }}">
-            {% if course.image %}
-                <img src="{{ course.image.url }}" alt="{{ course.name }}" style="width: 100%; height: 200px; object-fit: cover; border-radius: var(--radius-md); margin-bottom: 1.25rem;">
-            {% else %}
-                <div style="width: 100%; height: 200px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: var(--radius-md); margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 3.5rem;">
-                    💻
-                </div>
-            {% endif %}
-
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                <span class="badge badge-primary">{{ course.duration }}</span>
-            </div>
-
-            <h3 class="course-title" style="margin-bottom: 0.5rem; font-size: 1.3rem;">{{ course.name }}</h3>
-            <p class="course-description" style="color: var(--gray-600); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.6;">
-                {{ course.description|truncatewords:25 }}
-            </p>
-
-            <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--gray-100);">
-                <a href="{% url 'courses:course_detail' course.id %}" class="btn btn-primary btn-sm">View Details &rarr;</a>
+    <!-- Dynamic Courses Navigation Container -->
+    <div class="courses-navigation-wrapper">
+        <!-- LEVEL 1: Main Course Categories View -->
+        <div id="categories-view" class="fade-in-view">
+            <div class="courses-grid" id="categories-grid">
+                <!-- Dynamically rendered via JavaScript -->
             </div>
         </div>
-        {% endfor %}
+
+        <!-- LEVEL 2: Sub-Courses Listing View (Hidden initially) -->
+        <div id="subcourses-view" class="fade-in-view" style="display: none;">
+            <!-- Category Banner Header -->
+            <div class="category-header-banner" id="category-banner">
+                <!-- Dynamically rendered banner -->
+            </div>
+
+            <!-- Sub-Courses Grid -->
+            <div class="courses-grid" id="subcourses-grid">
+                <!-- Dynamically rendered sub-courses -->
+            </div>
+        </div>
+
+        <!-- Search Results View (Fallback when searching globally) -->
+        <div id="search-results-view" class="fade-in-view" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 style="font-size: 1.3rem; font-weight: 700;">Search Results</h3>
+                <button type="button" class="btn-back-courses" onclick="resetSearchAndShowCategories()">Clear Search</button>
+            </div>
+            <div class="courses-grid" id="search-results-grid"></div>
+        </div>
     </div>
-    {% else %}
-    <div class="empty-state">
-        <div class="empty-state-icon">📚</div>
-        <h3>No Courses Found</h3>
-        <p>No courses are currently available in the catalog. Check back later or contact admin!</p>
-    </div>
-    {% endif %}
 </div>
+
+<script>
+// Data-Driven Course Hierarchy (Exact Course Data)
+const COURSES_DATA = [
+    {
+        id: "basic",
+        name: "Basic",
+        icon: "💻",
+        description: "Essential computer fundamentals, office productivity software, data entry, desktop publishing, and CAD basics.",
+        duration: "Basic Skills",
+        subCourses: [
+            { name: "CCC", description: "Course on Computer Concepts certified foundation module." },
+            { name: "MS Office", description: "Microsoft Word, Excel, PowerPoint, and Outlook essentials." },
+            { name: "Adv. Excel", description: "Advanced functions, pivot tables, data visualization, and formulas." },
+            { name: "Adv. MSOffice", description: "Advanced office productivity suite, macros, and document automation." },
+            { name: "DEO", description: "Data Entry Operator skill training & typing accuracy." },
+            { name: "CPT", description: "Computer Proficiency Test preparation and core practicals." },
+            { name: "DTP", description: "Desktop Publishing fundamentals for layout, typesetting, and print." },
+            { name: "CAD", description: "Computer-Aided Design fundamentals for technical drawings." }
+        ]
+    },
+    {
+        id: "accounting",
+        name: "Accounting",
+        icon: "📊",
+        description: "Professional computerized financial accounting, Tally Prime modules, GST compliance, and inventory management.",
+        duration: "Specialized",
+        subCourses: [
+            { name: "Tally Prime Basic", description: "Fundamental accounting principles, vouchers, ledger, and inventory in Tally." },
+            { name: "Tally Prime Specialist", description: "Intermediate Tally Prime with GST taxation, payroll, and banking features." },
+            { name: "Tally Prime Xpert", description: "Advanced Tally Prime master module including MIS reporting and audit features." }
+        ]
+    },
+    {
+        id: "programming",
+        name: "Programming",
+        icon: "⚙️",
+        description: "Core and object-oriented programming languages, web scripting, backend technology, and database management.",
+        duration: "Modular Tracks",
+        subCourses: [
+            { name: "C", description: "Procedural programming logic, memory structures, and algorithms." },
+            { name: "C++", description: "Object-oriented concepts, STL containers, and low-level development." },
+            { name: "C#", description: "Object-oriented C# development for desktop and enterprise apps." },
+            { name: "Python", description: "Python scripting, data structures, functional code, and backend concepts." },
+            { name: "JAVA", description: "Core Java OOPs, multithreading, collections framework, and JVM memory." },
+            { name: "PHP", description: "Server-side web scripting, dynamic database integration, and backend." },
+            { name: ".NET", description: "Microsoft .NET application architecture and enterprise services." },
+            { name: "HTML", description: "HTML5 semantic markup, page architecture, and web standards." },
+            { name: "CSS", description: "CSS3 styling, Flexbox, Grid, animations, and responsive layout design." },
+            { name: "JavaScript", description: "Modern ES6+ JavaScript syntax, asynchronous JS, and DOM API." },
+            { name: "React", description: "Frontend React library, functional components, hooks, and state management." },
+            { name: "React Native", description: "Cross-platform mobile application development for Android & iOS." },
+            { name: "Flutter", description: "Google Flutter framework and Dart programming for cross-platform apps." },
+            { name: "MySQL", description: "Relational SQL database queries, joins, indexes, and database design." }
+        ]
+    },
+    {
+        id: "diploma-6-months",
+        name: "Diploma (6 Months)",
+        icon: "🎓",
+        description: "Structured 6-month career diploma programs designed for specialized technical employment readiness.",
+        duration: "6 Months",
+        subCourses: [
+            { name: "Diploma in Office Automation" },
+            { name: "Diploma in Financial Accounting" },
+            { name: "Diploma in Office Automation & Financial Accounting" },
+            { name: "Diploma in Computer Programming" },
+            { name: "Diploma in Computer Applications" },
+            { name: "Diploma in Graphics Design" },
+            { name: "Diploma in Web Design" },
+            { name: "Diploma in Graphics and Web Design" },
+            { name: "Diploma in Frontend Development" },
+            { name: "Diploma in JAVA" },
+            { name: "Diploma in Web Development" },
+            { name: "Diploma in DOT Technologies" },
+            { name: "Diploma in Digital Marketing" },
+            { name: "Diploma in Data Analysis" },
+            { name: "Diploma in CAD - Civil Drawing" },
+            { name: "Diploma in CAD - Mechanical Drawing" },
+            { name: "Diploma in 2D and 3D Drawing" },
+            { name: "Diploma in Communication Skill" },
+            { name: "DIPLOMA in Python for Data Analysis" },
+            { name: "DIPLOMA in Using Artificial Intelligence (AI) Tools" }
+        ]
+    },
+    {
+        id: "advance-diploma-12-months",
+        name: "Advance Diploma (12 Months)",
+        icon: "🏆",
+        description: "Comprehensive 12-month master diploma programs offering extensive practical training and domain mastery.",
+        duration: "12 Months",
+        subCourses: [
+            { name: "Adv. Diploma in Office Automation" },
+            { name: "Adv. Diploma in Financial Accounting" },
+            { name: "Adv. Diploma in Office Automation & Financial Accounting" },
+            { name: "Adv. Diploma in Computer Programming" },
+            { name: "Adv. Diploma in Computer Applications" },
+            { name: "Adv. Diploma in Graphics Design" },
+            { name: "Adv. Diploma in Web Design" },
+            { name: "Adv. Diploma in Graphics and Web Design" },
+            { name: "Adv. Diploma in Frontend Development" },
+            { name: "Adv. Diploma in JAVA" },
+            { name: "Adv. Diploma in Web Development" },
+            { name: "Adv. Diploma in DOT Technologies" },
+            { name: "Adv. Diploma in Digital Marketing" },
+            { name: "Adv. Diploma in Data Analysis" },
+            { name: "Adv. Diploma in CAD - Civil Drawing" },
+            { name: "Adv. Diploma in CAD - Mechanical Drawing" },
+            { name: "Adv. Diploma in 2D and 3D Drawing" }
+        ]
+    },
+    {
+        id: "frontend-full-stack-development",
+        name: "Frontend / Full Stack Development",
+        icon: "🚀",
+        description: "Modern web stack specializations, full stack frameworks, mobile app engineering, and UI/UX design.",
+        duration: "Career Track",
+        subCourses: [
+            { name: "Frontend Development with React" },
+            { name: "Full Stack Development with Python + Django" },
+            { name: "Full Stack Development with PHP + Laravel" },
+            { name: "Full Stack Development with Angular + .Net Core" },
+            { name: "MERN Stack Development" },
+            { name: "Cross Platform App Development with React Native" },
+            { name: "Cross Platform App Development with Flutter" },
+            { name: "UI/UX Design with Figma" }
+        ]
+    },
+    {
+        id: "modular-courses",
+        name: "Modular Courses",
+        icon: "🧩",
+        description: "Focused standalone technical skill modules for specialized creative, analytical, and technical software.",
+        duration: "Flexible",
+        subCourses: [
+            { name: "PageMaker" },
+            { name: "Photoshop" },
+            { name: "CorelDraw" },
+            { name: "Illustrator" },
+            { name: "InDesign" },
+            { name: "Canva" },
+            { name: "PowerBI" },
+            { name: "Core JAVA" },
+            { name: "Adv. JAVA" },
+            { name: "WordPress" },
+            { name: "Figma" },
+            { name: "Bootstrap" }
+        ]
+    }
+];
+
+// Contact URL for Course Inquiry
+const CONTACT_URL = "{% url 'core:contact' %}";
+
+// DOM Elements
+const categoriesView = document.getElementById('categories-view');
+const categoriesGrid = document.getElementById('categories-grid');
+const subcoursesView = document.getElementById('subcourses-view');
+const categoryBanner = document.getElementById('category-banner');
+const subcoursesGrid = document.getElementById('subcourses-grid');
+const searchResultsView = document.getElementById('search-results-view');
+const searchResultsGrid = document.getElementById('search-results-grid');
+const searchInput = document.getElementById('course-search-input');
+
+let currentActiveCategoryId = null;
+
+// Render Level 1 Main Course Categories
+function renderCategories() {
+    categoriesGrid.innerHTML = '';
+    COURSES_DATA.forEach(cat => {
+        const subCount = cat.subCourses ? cat.subCourses.length : 0;
+        const countLabel = subCount > 0 ? `${subCount} ${subCount === 1 ? 'Sub-Course' : 'Sub-Courses'}` : 'Direct Course';
+
+        const card = document.createElement('div');
+        card.className = 'course-category-card';
+        card.onclick = () => openCategory(cat.id);
+
+        card.innerHTML = `
+            <div class="category-card-header">
+                <div class="category-icon-box">${cat.icon}</div>
+                <span class="category-count-badge">${countLabel}</span>
+            </div>
+            <div>
+                <h2 class="category-title">${cat.name}</h2>
+                <p class="category-desc">${cat.description}</p>
+            </div>
+            <div class="category-footer">
+                <span class="btn-view-category">
+                    Explore ${cat.name} <span>&rarr;</span>
+                </span>
+            </div>
+        `;
+        categoriesGrid.appendChild(card);
+    });
+}
+
+// Open a specific Category View
+function openCategory(catId) {
+    const category = COURSES_DATA.find(c => c.id === catId);
+    if (!category) return;
+
+    currentActiveCategoryId = catId;
+    window.location.hash = `cat-${catId}`;
+
+    // Render Banner
+    const subCount = category.subCourses ? category.subCourses.length : 0;
+    categoryBanner.innerHTML = `
+        <div class="category-banner-top">
+            <button type="button" class="btn-back-courses" onclick="showCategoriesView()">
+                <span>&larr;</span> Back to Course Categories
+            </button>
+            <span class="category-count-badge">${subCount} Total Sub-Courses</span>
+        </div>
+        <div class="category-banner-title-group">
+            <div class="category-banner-icon">${category.icon}</div>
+            <div>
+                <h2 class="category-banner-title">${category.name}</h2>
+                <p class="category-banner-meta">${category.description}</p>
+            </div>
+        </div>
+    `;
+
+    // Render Sub-Courses
+    subcoursesGrid.innerHTML = '';
+    if (category.subCourses && category.subCourses.length > 0) {
+        category.subCourses.forEach(sub => {
+            const subCard = document.createElement('div');
+            subCard.className = 'subcourse-card';
+
+            const defaultDesc = `Professional ${sub.name} course program tailored with practical lab training and certification.`;
+            const desc = sub.description || defaultDesc;
+
+            subCard.innerHTML = `
+                <div>
+                    <span class="subcourse-badge">${category.name}</span>
+                    <h3 class="subcourse-title">${sub.name}</h3>
+                    <p class="subcourse-desc">${desc}</p>
+                </div>
+                <div class="subcourse-footer">
+                    <a href="${CONTACT_URL}" class="btn-subcourse-action">
+                        Inquire / Enroll <span>&rarr;</span>
+                    </a>
+                </div>
+            `;
+            subcoursesGrid.appendChild(subCard);
+        });
+    } else {
+        // Fallback for category with no sub-courses
+        subcoursesGrid.innerHTML = `
+            <div style="grid-column: 1 / -1; background: var(--card-bg); border: 1px solid var(--gray-200); padding: 3rem; text-align: center; border-radius: var(--radius-lg);">
+                <h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.75rem;">${category.name}</h3>
+                <p style="color: var(--gray-600); margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">${category.description}</p>
+                <a href="${CONTACT_URL}" class="btn btn-primary">Enquire About ${category.name}</a>
+            </div>
+        `;
+    }
+
+    // Toggle Views
+    categoriesView.style.display = 'none';
+    searchResultsView.style.display = 'none';
+    subcoursesView.style.display = 'block';
+
+    // Scroll smoothly to top of grid
+    document.querySelector('.courses-navigation-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Return to Main Course Categories View
+function showCategoriesView() {
+    currentActiveCategoryId = null;
+    if (window.location.hash) {
+        history.replaceState(null, document.title, window.location.pathname + window.location.search);
+    }
+
+    subcoursesView.style.display = 'none';
+    searchResultsView.style.display = 'none';
+    categoriesView.style.display = 'block';
+
+    if (searchInput) searchInput.value = '';
+}
+
+// Search Filter Logic
+function handleSearch(query) {
+    const q = query.toLowerCase().trim();
+    if (!q) {
+        if (currentActiveCategoryId) {
+            openCategory(currentActiveCategoryId);
+        } else {
+            showCategoriesView();
+        }
+        return;
+    }
+
+    // Perform Search across categories and sub-courses
+    let results = [];
+    COURSES_DATA.forEach(cat => {
+        // Match category
+        if (cat.name.toLowerCase().includes(q) || cat.description.toLowerCase().includes(q)) {
+            results.push({
+                type: 'category',
+                categoryName: cat.name,
+                title: cat.name,
+                desc: cat.description,
+                icon: cat.icon,
+                catId: cat.id
+            });
+        }
+
+        // Match sub-courses
+        if (cat.subCourses) {
+            cat.subCourses.forEach(sub => {
+                if (sub.name.toLowerCase().includes(q) || (sub.description && sub.description.toLowerCase().includes(q))) {
+                    results.push({
+                        type: 'subcourse',
+                        categoryName: cat.name,
+                        title: sub.name,
+                        desc: sub.description || `Specialized ${sub.name} training under ${cat.name}.`,
+                        icon: cat.icon,
+                        catId: cat.id
+                    });
+                }
+            });
+        }
+    });
+
+    // Render Search Results
+    searchResultsGrid.innerHTML = '';
+    if (results.length > 0) {
+        results.forEach(res => {
+            const card = document.createElement('div');
+            card.className = res.type === 'category' ? 'course-category-card' : 'subcourse-card';
+
+            if (res.type === 'category') {
+                card.onclick = () => {
+                    if (searchInput) searchInput.value = '';
+                    openCategory(res.catId);
+                };
+                card.innerHTML = `
+                    <div class="category-card-header">
+                        <div class="category-icon-box">${res.icon}</div>
+                        <span class="category-count-badge">Category</span>
+                    </div>
+                    <div>
+                        <h3 class="category-title">${res.title}</h3>
+                        <p class="category-desc">${res.desc}</p>
+                    </div>
+                    <div class="category-footer">
+                        <span class="btn-view-category">View Category <span>&rarr;</span></span>
+                    </div>
+                `;
+            } else {
+                card.innerHTML = `
+                    <div>
+                        <span class="subcourse-badge">${res.categoryName}</span>
+                        <h3 class="subcourse-title">${res.title}</h3>
+                        <p class="subcourse-desc">${res.desc}</p>
+                    </div>
+                    <div class="subcourse-footer">
+                        <button type="button" class="btn-subcourse-action" style="background:none; border:none; padding:0; cursor:pointer;" onclick="openCategory('${res.catId}')">
+                            View in ${res.categoryName} <span>&rarr;</span>
+                        </button>
+                    </div>
+                `;
+            }
+            searchResultsGrid.appendChild(card);
+        });
+    } else {
+        searchResultsGrid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: var(--card-bg); border-radius: var(--radius-lg); border: 1px solid var(--gray-200);">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem;">No matching courses found</h3>
+                <p style="color: var(--gray-600); margin-bottom: 1.5rem;">Try searching for another term like "Tally", "Python", "Diploma", or "React".</p>
+                <button type="button" class="btn btn-primary btn-sm" onclick="resetSearchAndShowCategories()">View All Categories</button>
+            </div>
+        `;
+    }
+
+    categoriesView.style.display = 'none';
+    subcoursesView.style.display = 'none';
+    searchResultsView.style.display = 'block';
+}
+
+function resetSearchAndShowCategories() {
+    if (searchInput) searchInput.value = '';
+    showCategoriesView();
+}
+
+// Initial Load & Route Handling
+document.addEventListener('DOMContentLoaded', () => {
+    renderCategories();
+
+    // Check URL Hash (e.g. #cat-diploma-6-months)
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#cat-')) {
+        const catId = hash.replace('#cat-', '');
+        const exists = COURSES_DATA.some(c => c.id === catId);
+        if (exists) {
+            openCategory(catId);
+        }
+    }
+
+    // Search input listener
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            handleSearch(e.target.value);
+        });
+    }
+});
+
+// Window Hash Change Event Listener
+window.addEventListener('hashchange', () => {
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#cat-')) {
+        const catId = hash.replace('#cat-', '');
+        if (catId !== currentActiveCategoryId) {
+            openCategory(catId);
+        }
+    } else if (!hash) {
+        showCategoriesView();
+    }
+});
+</script>
 {% endblock %}
