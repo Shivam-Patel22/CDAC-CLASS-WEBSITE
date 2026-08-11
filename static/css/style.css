@@ -2270,5 +2270,35 @@ textarea.form-control {
     border-color: var(--gray-700);
 }
 
+/* Mobile WhatsApp Contact Button */
+.mobile-whatsapp-container {
+    margin-top: 1.25rem;
+    width: 100%;
+}
+
+.mobile-whatsapp-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: #25D366;
+    color: #ffffff !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.25);
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.mobile-whatsapp-btn:hover {
+    background: #20ba5a;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+}
+
+
 
 
