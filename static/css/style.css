@@ -1237,12 +1237,43 @@ textarea.form-control {
     background: #3A3B3E;
 }
 
-[data-theme="dark"] .badge-primary { background: rgba(38, 70, 150, 0.35); color: #8ba5ec; }
+.category-badge {
+    background: #eaf1fb;
+    color: #1c3574;
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(38, 70, 150, 0.2);
+    display: inline-block;
+    white-space: nowrap;
+}
+
+[data-theme="dark"] .category-badge {
+    background: rgba(38, 70, 150, 0.45) !important;
+    color: #93c5fd !important;
+    border: 1px solid rgba(147, 197, 253, 0.4) !important;
+}
+
+[data-theme="dark"] .badge-primary { background: rgba(38, 70, 150, 0.45) !important; color: #93c5fd !important; border: 1px solid rgba(147, 197, 253, 0.3) !important; }
 [data-theme="dark"] .badge-success { background: rgba(47, 155, 212, 0.3); color: #8dd0f5; }
 [data-theme="dark"] .badge-secondary { background: #3A3B3E; color: #f1f5f9; }
 [data-theme="dark"] .badge-danger { background: rgba(244, 127, 35, 0.3); color: #fcbda5; }
 [data-theme="dark"] .badge-warning { background: rgba(244, 127, 35, 0.3); color: #fde047; }
 [data-theme="dark"] .badge-info { background: rgba(47, 155, 212, 0.3); color: #7dd3fc; }
+
+[data-theme="dark"] select.form-control,
+[data-theme="dark"] select {
+    background-color: #211F1C !important;
+    color: #ffffff !important;
+    border-color: #4a4b4e !important;
+}
+
+[data-theme="dark"] select option {
+    background-color: #3A3B3E !important;
+    color: #ffffff !important;
+}
+
 
 [data-theme="dark"] .admin-back-btn,
 [data-theme="dark"] .btn-outline-dark,

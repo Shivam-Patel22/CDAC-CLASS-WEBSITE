@@ -29,7 +29,8 @@
                 {% for course in courses %}
                 <tr>
                     <td><strong>{{ course.name }}</strong></td>
-                    <td><span class="badge" style="background: var(--primary-light); color: var(--primary); font-weight: 600;">{{ course.get_category_display }}</span></td>
+                    <td><span class="badge category-badge">{{ course.get_category_display }}</span></td>
+
                     <td><span class="badge badge-primary">{{ course.duration }}</span></td>
 
                     <td style="vertical-align: middle;">
