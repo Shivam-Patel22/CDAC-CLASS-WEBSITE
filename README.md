@@ -1,4 +1,4 @@
-# 🎓 RAS Computer Education (C-DAC Portal)
+# 🎓 RAS-Computer-Educations
 
 [![Django](https://img.shields.io/badge/Django-6.0%2B-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.djangoproject.com/)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 [![Theme](https://img.shields.io/badge/Theme-Dark%20%2F%20Light%20Mode-6366F1?style=for-the-badge)](#-uiux--styling-features)
 
-A modern, full-featured web portal and administrative management system built with **Django** for **RAS Computer Education / C-DAC**. The platform provides an intuitive public interface for prospective students, an instant anti-tamper certificate verification engine, dynamic course promotion tickers, an inquiry CRM with WhatsApp integration, and a dedicated staff administration dashboard.
+A modern, full-featured web portal and administrative management system built with **Django** for **RAS-Computer-Educations**. The platform provides an intuitive public interface for prospective students, an instant anti-tamper certificate verification engine, dynamic course promotion tickers, an inquiry CRM with WhatsApp integration, and a dedicated staff administration dashboard.
 
 ---
 
@@ -16,7 +16,7 @@ A modern, full-featured web portal and administrative management system built wi
   - [🌐 Public Web Portal](#-public-web-portal)
   - [🛡️ Anti-Tamper Certificate Verification & PDF Engine](#️-anti-tamper-certificate-verification--pdf-engine)
   - [📬 Inquiry CRM & Lead Management](#-inquiry-crm--lead-management)
-  - [🎛️ Administrative Dashboard (`/cdac-admin/`)](#️-administrative-dashboard-cdac-admin)
+  - [🎛️ Administrative Dashboard](#️-administrative-dashboard)
   - [🌓 Modern UI/UX & Responsive Design](#-modern-uiux--responsive-design)
 - [🏗️ System Architecture & Apps](#️-system-architecture--apps)
 - [🛠️ Tech Stack](#️-tech-stack)
@@ -59,7 +59,7 @@ A modern, full-featured web portal and administrative management system built wi
   Example: CERT-2026-JD-8492-01
   ```
   *(Where `YYYY` = year, `FL` = initials of student, `RANDOM` = 4-digit entropy, `SEQ` = 2-digit sequential order)*.
-- **Dynamic PDF Rendering (ReportLab):** Generates print-ready high-resolution certificates with double-line borders, official seals, and custom typography.
+- **Dynamic PDF Rendering (ReportLab):** Generates print-ready high-resolution certificates with double-line borders, official seals, and custom typography matching RAS-Computer-Educations standards.
 - **Batch Export as ZIP:** Export all issued certificates into a single organized ZIP archive with smart duplicate filename deduplication.
 - **Direct Web Printing:** One-click browser print view with dedicated print media queries (`@media print`).
 
@@ -75,7 +75,7 @@ A modern, full-featured web portal and administrative management system built wi
 
 ---
 
-### 🎛️ Administrative Dashboard (`/cdac-admin/`)
+### 🎛️ Administrative Dashboard
 - **Protected Staff Authentication:** Restrict access exclusively to staff/admin accounts with session inactivity timeouts (`SESSION_COOKIE_AGE`).
 - **Real-Time Overview Metrics:** Quick metric cards for Total Courses, Total Certificates, Registered Students, and Pending Inquiries.
 - **Course Management:** Full CRUD operations (Add, Edit, Delete) with image upload and one-click "Featured on Homepage" toggling.
@@ -121,12 +121,12 @@ RAS-COMPUTER-EDUCATION/
 │   ├── context_processors.py  # Active course offers ticker injector
 │   ├── views.py               # Course listing and detail views
 │   └── urls.py                # Course catalog routes (/courses/)
-├── dashboard/                 # Staff administration portal (/cdac-admin/)
+├── dashboard/                 # Staff administration portal
 │   ├── decorators.py          # @staff_required access control decorator
 │   ├── forms.py               # Admin forms for CRUD operations & CMS editing
 │   ├── context_processors.py  # Inquiry notification counter injector
 │   ├── views.py               # Admin dashboard views, stats, CRUD controllers
-│   └── urls.py                # Admin portal routes
+│   └── urls.py                # Admin portal routes (/cdac-admin/)
 ├── computer_class_site/       # Django project configuration
 │   ├── settings.py            # Global project settings & context processors
 │   ├── urls.py                # Root URL dispatcher
@@ -217,7 +217,7 @@ python manage.py migrate
 ```
 
 ### 5. Create an Administrator (Staff) Account
-To access the `/cdac-admin/` management portal, create a superuser:
+To access the staff management portal, create a superuser:
 ```bash
 python manage.py createsuperuser
 ```
@@ -248,7 +248,7 @@ Open your browser and visit:
 | `/verify-certificate/` | `certificates:verify` | Certificate lookup & cryptographic verification |
 | `/verify/` | `certificates:verify_alt` | Alternate alias for certificate verification |
 
-### 🎛️ Staff Admin Dashboard (`/cdac-admin/`)
+### 🎛️ Staff Admin Dashboard
 | URL Route | View / Action | Description |
 | :--- | :--- | :--- |
 | `/cdac-admin/` | `dashboard:login` | Staff authentication portal |
@@ -277,7 +277,7 @@ Open your browser and visit:
    hashlib.sha256(f"{certificate_id}|{student_name}|{course_id}|{issue_date}|{grade}".encode('utf-8')).hexdigest()
    ```
 3. **Session Inactivity Guard:** Administrative sessions expire automatically after inactivity (`SESSION_COOKIE_AGE = 3600` seconds) and upon browser closure.
-4. **Role Segregation:** Only users with `is_staff = True` are granted access to the `/cdac-admin/` suite; student or anonymous requests are cleanly blocked and redirected.
+4. **Role Segregation:** Only users with `is_staff = True` are granted access to the staff dashboard suite; student or anonymous requests are cleanly blocked and redirected.
 
 ---
 
@@ -337,5 +337,5 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ---
 
 <div align="center">
-  <sub>Developed for <strong>RAS Computer Education / C-DAC</strong>. Built with ❤️ using Python & Django.</sub>
+  <sub>Developed for <strong>RAS-Computer-Educations</strong>. Built with ❤️ using Python & Django.</sub>
 </div>
